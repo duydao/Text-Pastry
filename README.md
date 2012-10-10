@@ -6,6 +6,6 @@ Based on insert-nums by markstahler (https://bitbucket.org/markstahler/insert-nu
 
 For further information please take the time to look at following links:
 
-Sublime Text 2: http://www.sublimetext.com
-Sublime Package Control: http://wbond.net/sublime_packages/package_control
-Insert Nums: https://bitbucket.org/markstahler/insert-nums
+* Sublime Text 2: http://www.sublimetext.com/
+* Sublime Package Control: http://wbond.net/sublime_packages/package_control
+* Insert Nums: https://bitbucket.org/markstahler/insert-nums/
