@@ -1,0 +1,3 @@
+[
+    { "keys": ["super+alt+t"], "command": "prompt_insert_text" }
+]
