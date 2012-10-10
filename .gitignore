@@ -1,3 +1,8 @@
+# Sublime Text 2 Package Control
+/package-metadata.json
+
+.DS_Store
+
 *.py[co]
 
 # Packages
