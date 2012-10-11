@@ -3,25 +3,13 @@ import sublime, sublime_plugin, re
 class OverlayInsertTextCommand(sublime_plugin.WindowCommand):
     def run(self):
         self.items = [
-            [ "Sequence: From 1 to X", "Command: \\i" ],
-            [ "Sequence: From 0 to X", "Command: \\i0" ],
-            [ "Sequence: From N to X by M", "Command: \i(N,M)", ],
-            [ "Clipboard: Use Data from Clipboard", "Command: \\p", ],
-            [ "Sample Text", "Command: first second third" ],
-            [ "Insert Nums Format", "Command: N M P" ]
-        ]
-        short_descriptions = [
-            [ "Inserts a series of numbers, starting at 1." ],
-            [ "Inserts a series of numbers, starting at 0." ],
-            [ "N: The start number; M: The step size. N and M may be < 0.", "P: Leading zero. Must be > 0" ],
-            [ "Uses your clipboard data as insertion list by splitting the words.", "See string.split() for further information." ],
-            [ "Words separated by one space."  ],
-            [ "Inserts a series of numbers by using the Insert Nums format, starting at N." ]
-        ]
-
-        for idx, val in enumerate(self.items):
-            for s in short_descriptions[idx]:
-                self.items[idx].append(s)
+                ["Sequence: From 1 to X", "Command: \\i", "Inserts a series of numbers, starting at 1."],
+                ["Sequence: From 0 to X", "Command: \\i0", "Inserts a series of numbers, starting at 0."],
+                ["Sequence: From N to X by M", "Command: \\i(N,M)", "N represents the start number, M is the step size. Both values may be below zero."],
+                ["Clipboard: Use Data from Clipboard", "Command: \\p", "Uses your clipboard data as insertion list by splitting the words. See string.split() for further information."],
+                ["Sample Text", "Command: first second third", "Words separated by one space. The first word will be inserted at the first cursor location, the second word at the second cursor location and so on."],
+                ["Insert Nums Format", "Command: N M P", "Inserts a series of numbers by using the Insert Nums format, starting at N.", "N: The start number. May be < 0.", "M: The step size. May be < 0.", "P: Leading zero. Must be > 0"]
+            ]
         self.window.show_quick_panel(self.items, self.on_done)
 
     def on_done(self, index):
