@@ -5,12 +5,7 @@ A Sublime Text 2-package to insert a sequence of text or numbers on multiple loc
 
 Based on [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) by [Mark Stahler](http://blog.markstahler.ca/)
 
-## Installation ##
-***
-
-
 ## Usage ##
-***
 
 To Insert Text, open a Document in [ST2](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to select the desired text.
 
@@ -21,7 +16,6 @@ enter "first second third" (without quotes) and hit enter to run the command. In
 Insert Text will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
 
 ## Command Reference ##
-***
 
 ### Text ###
 
@@ -78,11 +72,8 @@ Insert Text has a build in support for the [Insert Nums](https://bitbucket.org/m
 
 
 ## Examples ##
-***
 
 Here are some examples, assuming we have selected every ocurence of `null` and Insert Text was called by pressing **CMD + ALT + T**:
-
-***
 
 ### Using words ###
 
@@ -358,11 +349,12 @@ You can also use negative numbers to create a negative sequence
 	var f = 006;
 
 ## Todo ##
-***
-- Clipboard
+- Command List Overlay
+- Command History
+- Flags for word manipulation
+- Sequence Placeholder
 
 ## See Also ##
-***
 
 For further information please take the time to look at following links:
 
