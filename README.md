@@ -7,21 +7,25 @@ Based on [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) by [Mark 
 
 ## Usage ##
 
-To Insert Text, open a Document in [ST2](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to select the desired text.
+To use _Insert Text_, we need to open a Document in [ST2](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
+insert locations _(in this document also refered to as selections)_.
 
-Press **CMD + ALT + T** to show the Insert Text command line at the bottom of ST2.
+Please keep in mind that the selected text could be replaced when we run the _Insert Text_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
 
-enter "first second third" (without quotes) and hit enter to run the command. Insert Text will replace our first selection with "first", our second selection with "second" and so on.
+All we need to do now is to press **CMD + ALT + T** to open the _Insert Text_ command line. The input panel will show up at the bottom of [ST2](http://www.sublimetext.com/).
 
-Insert Text will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
+Now its time to run our first command. Let's enter `first second third` and hit enter to run the command. _Insert Text_ will add `first` to our first selection, `second` to the next selection and so on.
+
+_Insert Text_ will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
+
 
 ## Command Reference ##
 
 ### Text ###
 
-Replaces the first selection with **first**, the second selection with **second**, etc.:
+Replaces the first selection with **Lorem**, the second selection with **Ipsum**, etc.:
 	
-	first second third
+	Lorem Ipsum Dolor
 
 ### Number Sequence ###
 
@@ -62,7 +66,7 @@ Same as above with a specified [string separator](http://docs.python.org/library
 
 ### Insert Nums ###
 
-Insert Text has a build in support for the [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) syntax by providing three numbers separated by one space:
+_Insert Text_ has a build in support for the [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) syntax by providing three numbers separated by one space:
 
 	N M P
 
@@ -73,13 +77,13 @@ Insert Text has a build in support for the [Insert Nums](https://bitbucket.org/m
 
 ## Examples ##
 
-Here are some examples, assuming we have selected every ocurence of `null` and Insert Text was called by pressing **CMD + ALT + T**:
+Here are some examples, assuming we have selected every ocurence of `null` and _Insert Text_ was called by pressing **CMD + ALT + T**:
 
-### Using words ###
+### Using a text list ###
 
 
 
-Enter a list of words into the command line of Insert Text:
+Enter a list of words, separated by one space, into the command line:
 
 	INPUT SELECT TEXTAREA DIV P A
 
@@ -152,13 +156,10 @@ If we copy following list, we will get the same result:
 
 Lets assume we want to paste some test data into our code:
 
-	71602	White Hall	71603	Pine Bluff	71611	Pine Bluff	71612	White Hall	71613	Pine Bluff	71630	Arkansas City	71631	Banks	71635	Crossett	71638	Dermott	71639	Dumas	71640	Eudora	71642	Fountain Hill	71643	Gould	71644	Grady	71646	Hamburg	71647	Hermitage	71651	Jersey	71652	Kingsland	71653	Lake Village	71654	Mc Gehee	71655	Monticello	71656	Monticello	71657	Monticello	71658	Montrose	71659	Moscow	71660	New Edinburg
-	
+	71602	White Hall	71603	Pine Bluff	71611	Pine Bluff	71612	White Hall	71613	Pine Bluff	71630	Arkansas City	71631	Banks	71635	Crossett	71638	Dermott	71639	Dumas	
 #### Command ####
 
-Let's insert the following command into our input panel. 
-
-This will tell Insert Text to split up our clipboard data  by using the newline character as separator:
+This command will tell _Insert Text_ to split up our clipboard data by using the newline character as separator:
 
 	\p(\n)
 
@@ -204,7 +205,7 @@ Data with leading whitespace:
 		P
 	A
 
-We can change this behaviour in the **&lt;Packages&gt;/Insert Text/InsertText.sublime-settings** file:
+We can change this behaviour in the **&lt;Packages&gt;/_Insert Text_/InsertText.sublime-settings** file:
 
 	"clipboard_strip_newline": false
 
@@ -349,6 +350,7 @@ You can also use negative numbers to create a negative sequence
 	var f = 006;
 
 ## Todo ##
+
 - Command List Overlay
 - Command History
 - Flags for word manipulation
