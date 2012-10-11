@@ -38,7 +38,7 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
         try:
             #sublime.status_message("Text: " + str(text))
             if self.window.active_view() and len(text) > 0:
-                m1 = re.compile('(-?\d+) (-?\d+) (-?\d+)').match(text)
+                m1 = re.compile('(-?\d+) (-?\d+) (\d+)').match(text)
                 m2 = re.compile('\\\\i(\d*)(,(-?\d+))?').match(text)
                 m3 = re.compile('\\\\i\((\d*)(,(-?\d+))?\)').match(text)
 
@@ -88,12 +88,12 @@ class InsertTextCommand(sublime_plugin.TextCommand):
 
         strip = False
         settings = sublime.load_settings("InsertText.sublime-settings")
-        if (settings.has("clipboard_strip_newline")): strip = settings.get("clipboard_strip_newline")
+        if separator == "\n" and settings.has("clipboard_strip_newline"): strip = settings.get("clipboard_strip_newline")
 
         for idx, region in enumerate(sel):
             if idx < len(items):
                 current = items[idx]
-                if (separator == "\n"): current = current.strip()
+                if (strip): current = current.strip()
                 self.view.replace(edit, region, current)
             else:
                 regions.append(region)
