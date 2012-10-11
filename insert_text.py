@@ -38,8 +38,6 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
                     separator = m4.group(1)
                     if separator is None or separator == '':
                         separator = None
-                    else:
-                        separator = separator.encode('utf8').decode("string-escape")
 
                     sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                     self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard(), "separator": separator})
@@ -56,17 +54,18 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
 
         if c > 1 or True:
             x = str(c)
+            w = 9
             self.items = [
-                    ["Sequence: From 1 to " + x, "Command: \\i"],
-                    ["Sequence: From 0 to " + x, "Command: \\i0"],
-                    ["Sequence: From N to " + x + " by M", "Command: \\i(N,M)"],
-                    ["Clipboard: Paste", "Command: \\p"],
-                    ["Clipboard: Paste NewLine", "Command: \\p"],
-                    ["Insert Nums: From 1 to " + x, "Command: 1 1 1"],
-                    ["Insert Nums: From 0 to " + x, "Command: 0 1 1"],
-                    ["Text", "Command: first second third"]
-                ]
-            self.window.show_quick_panel(self.items, self.on_done)
+                ["\\i".ljust(w) + "From 1 to " + x],
+                ["\\i0".ljust(w) + "From 0 to " + x],
+                ["\\i(N,M)".ljust(w) + "From N to " + x + " by M"],
+                ["\\p(\\n)".ljust(w) + "Paste Line from Clipboard"],
+                ["\\p".ljust(w) + "Paste Words from Clipboard"],
+                ["1 1 1".ljust(w) + "From 1 to " + x],
+                ["0 1 1".ljust(w) + "From 0 to " + x],
+                ["a b c".ljust(w) + "Text separated by one space"]
+            ]
+            self.window.show_quick_panel(self.items, self.on_done, sublime.MONOSPACE_FONT)
         else:
             sublime.status_message("You need to make multiple selections to use Insert Text");
 
@@ -89,24 +88,36 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
 
 class InsertTextCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit, text, separator=None):
-        regions = []
-        sel = self.view.sel()
-        items = text.split(separator)
+    def run(self, edit, text=None, separator=None, clipboard=False):
+        try:
+            regions = []
+            sel = self.view.sel()
 
-        strip = False
-        settings = sublime.load_settings("InsertText.sublime-settings")
-        if separator == "\n" and settings.has("clipboard_strip_newline"): strip = settings.get("clipboard_strip_newline")
+            if separator: separator = separator.encode('utf8').decode("string-escape")
+            if (clipboard): text = sublime.get_clipboard()
 
-        for idx, region in enumerate(sel):
-            if idx < len(items):
-                current = items[idx]
-                if (strip): current = current.strip()
-                self.view.replace(edit, region, current)
+            if text:
+                items = text.split(separator)
+
+                strip = False
+                settings = sublime.load_settings("InsertText.sublime-settings")
+                if separator == "\n" and settings.has("clipboard_strip_newline"): strip = settings.get("clipboard_strip_newline")
+
+                for idx, region in enumerate(sel):
+                    if idx < len(items):
+                        current = items[idx]
+                        if (strip): current = current.strip()
+                        self.view.replace(edit, region, current)
+                    else:
+                        regions.append(region)
+
+                sel.clear()
+
+                for region in regions:
+                    sel.add(sublime.Region(region.begin(), region.end()))
             else:
-                regions.append(region)
+                sublime.status_message("No text found for Insert Text, canceled")
 
-        sel.clear()
-
-        for region in regions:
-            sel.add(sublime.Region(region.begin(), region.end()))
+        except ValueError:
+            sublime.status_message("Error while executing Insert Text, canceled")
+            pass

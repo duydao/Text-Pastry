@@ -1,5 +1,4 @@
 # Insert Text #
-===
 
 A Sublime Text 2-package to insert a sequence of text or numbers on multiple locations.
 
@@ -156,7 +155,17 @@ If we copy following list, we will get the same result:
 
 Lets assume we want to paste some test data into our code:
 
-	71602	White Hall	71603	Pine Bluff	71611	Pine Bluff	71612	White Hall	71613	Pine Bluff	71630	Arkansas City	71631	Banks	71635	Crossett	71638	Dermott	71639	Dumas	
+	71602	White Hall
+	71603	Pine Bluff
+	71611	Pine Bluff
+	71612	White Hall
+	71613	Pine Bluff
+	71630	Arkansas City
+	71631	Banks
+	71635	Crossett
+	71638	Dermott
+	71639	Dumas
+	
 #### Command ####
 
 This command will tell _Insert Text_ to split up our clipboard data by using the newline character as separator:
