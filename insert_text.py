@@ -1,6 +1,6 @@
 import sublime, sublime_plugin, re
 
-class OverlayInsertTextCommand(sublime_plugin.WindowCommand):
+class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
     def run(self):
         self.items = [
                 ["Sequence: From 1 to X", "Command: \\i", "Inserts a series of numbers, starting at 1."],
@@ -42,6 +42,7 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
                 m2 = re.compile('\\\\i(\d*)(,(-?\d+))?').match(text)
                 m3 = re.compile('\\\\i\((\d*)(,(-?\d+))?\)').match(text)
 
+                m4 = re.compile('\\\\p\((.*?)\)').match(text)
                 if m1:
                     sublime.status_message("Inserting Nums: " + text)
                     (current, step, padding) = map(str, text.split(" "))
@@ -62,6 +63,15 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
                 elif text == "\\p":
                     sublime.status_message("Inserting from clipboard")
                     self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
+                elif m4:
+                    separator = m4.group(1)
+                    if separator is None or separator == '':
+                        separator = None
+                    else:
+                        separator = separator.encode('utf8').decode("string-escape")
+
+                    sublime.status_message("Inserting from clipboard with separator: " + str(separator))
+                    self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard(), "separator": separator})
                 else:
                     sublime.status_message("Inserting " + text)
                     self.window.active_view().run_command("insert_text", {"text": text})
@@ -71,15 +81,19 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
 class InsertTextCommand(sublime_plugin.TextCommand):
 
-    def run(self, edit, text):
+    def run(self, edit, text, separator=None):
         regions = []
         sel = self.view.sel()
-        items = text.split()
+        items = text.split(separator)
+
+        strip = False
+        settings = sublime.load_settings("InsertText.sublime-settings")
+        if (settings.has("clipboard_strip_newline")): strip = settings.get("clipboard_strip_newline")
 
         for idx, region in enumerate(sel):
             if idx < len(items):
                 current = items[idx]
-                #sublime.status_message("Inserting #" + current)
+                if (separator == "\n"): current = current.strip()
                 self.view.replace(edit, region, current)
             else:
                 regions.append(region)
