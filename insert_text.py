@@ -1,34 +1,5 @@
 import sublime, sublime_plugin, re
 
-class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
-    def run(self):
-        self.items = [
-                ["Sequence: From 1 to X", "Command: \\i", "Inserts a series of numbers, starting at 1."],
-                ["Sequence: From 0 to X", "Command: \\i0", "Inserts a series of numbers, starting at 0."],
-                ["Sequence: From N to X by M", "Command: \\i(N,M)", "N represents the start number, M is the step size. Both values may be below zero."],
-                ["Clipboard: Use Data from Clipboard", "Command: \\p", "Uses your clipboard data as insertion list by splitting the words. See string.split() for further information."],
-                ["Sample Text", "Command: first second third", "Words separated by one space. The first word will be inserted at the first cursor location, the second word at the second cursor location and so on."],
-                ["Insert Nums Format", "Command: N M P", "Inserts a series of numbers by using the Insert Nums format, starting at N.", "N: The start number. May be < 0.", "M: The step size. May be < 0.", "P: Leading zero. Must be > 0"]
-            ]
-        self.window.show_quick_panel(self.items, self.on_done)
-
-    def on_done(self, index):
-        s = ""
-
-        if index >= 0 and index < len(self.items):
-            item = self.items[index]
-            s = item[1].replace("Command: ", "")
-            if s == "\\p":
-                self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
-            elif s == "\\i":
-                self.window.active_view().run_command("insert_nums", {"current": "1", "step": "1", "padding": "1"})
-            elif s == "\\i0":
-                self.window.active_view().run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
-
-            if len(s):
-                self.window.run_command("prompt_insert_text", { "text": s })
-                #self.window.show_input_panel('Enter a list of items, separated by spaces', s, None, None, None)
-
 class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
     def run(self, text):
@@ -78,6 +49,43 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
         except ValueError:
             pass
+
+class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        c = len(self.window.active_view().sel())
+
+        if c > 1 or True:
+            x = str(c)
+            self.items = [
+                    ["Sequence: From 1 to " + x, "Command: \\i"],
+                    ["Sequence: From 0 to " + x, "Command: \\i0"],
+                    ["Sequence: From N to " + x + " by M", "Command: \\i(N,M)"],
+                    ["Clipboard: Paste", "Command: \\p"],
+                    ["Clipboard: Paste NewLine", "Command: \\p"],
+                    ["Insert Nums: From 1 to " + x, "Command: 1 1 1"],
+                    ["Insert Nums: From 0 to " + x, "Command: 0 1 1"],
+                    ["Text", "Command: first second third"]
+                ]
+            self.window.show_quick_panel(self.items, self.on_done)
+        else:
+            sublime.status_message("You need to make multiple selections to use Insert Text");
+
+    def on_done(self, index):
+        s = ""
+
+        if index >= 0 and index < len(self.items):
+            item = self.items[index]
+            s = item[1].replace("Command: ", "")
+            if s == "\\p":
+                self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
+            elif s == "\\i":
+                self.window.active_view().run_command("insert_nums", {"current": "1", "step": "1", "padding": "1"})
+            elif s == "\\i0":
+                self.window.active_view().run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
+            elif len(s):
+                self.window.run_command("prompt_insert_text", { "text": s })
+            else:
+                pass
 
 class InsertTextCommand(sublime_plugin.TextCommand):
 
