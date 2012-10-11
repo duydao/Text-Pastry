@@ -7,7 +7,6 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
     def on_done(self, text):
         try:
-            #sublime.status_message("Text: " + str(text))
             if self.window.active_view() and len(text) > 0:
                 m1 = re.compile('(-?\d+) (-?\d+) (\d+)').match(text)
                 m2 = re.compile('\\\\i(\d*)(,(-?\d+))?').match(text)
@@ -50,31 +49,42 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
 class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
     def run(self):
-        c = len(self.window.active_view().sel())
+        try:
+            c = len(self.window.active_view().sel())
 
-        if c > 1 or True:
-            x = str(c)
-            w = 9
-            self.items = [
-                ["\\i".ljust(w) + "From 1 to " + x],
-                ["\\i0".ljust(w) + "From 0 to " + x],
-                ["\\i(N,M)".ljust(w) + "From N to " + x + " by M"],
-                ["\\p(\\n)".ljust(w) + "Paste Line from Clipboard"],
-                ["\\p".ljust(w) + "Paste Words from Clipboard"],
-                ["1 1 1".ljust(w) + "From 1 to " + x],
-                ["0 1 1".ljust(w) + "From 0 to " + x],
-                ["a b c".ljust(w) + "Text separated by one space"]
-            ]
-            self.window.show_quick_panel(self.items, self.on_done, sublime.MONOSPACE_FONT)
-        else:
-            sublime.status_message("You need to make multiple selections to use Insert Text");
+            if c > 1 or True:
+                x = c
+                self.items = [
+                    ["\\i", "From 1 to " + str(x)],
+                    ["\\i0", "From 0 to " + str(x-1)],
+                    ["\\i(N,M)", "From N to X by M"],
+                    ["\\p(\\n)", "Paste Line from Clipboard"],
+                    ["\\p", "Paste Words from Clipboard"],
+                    ["1 1 1", "From 1 to " + str(x)],
+                    ["0 1 1", "From 0 to " + str(x-1)],
+                    ["a b c", "Text separated by one space"]
+                ]
+
+                self.window.show_quick_panel(self.toListItem(self.items, 9), self.on_done, sublime.MONOSPACE_FONT)
+            else:
+                sublime.status_message("You need to make multiple selections to use Insert Text");
+        except ValueError:
+            sublime.status_message("Error while showing Insert Text overlay");
+
+    @staticmethod
+    def toListItem(items, width):
+        a = []
+        for item in items:
+            listitem = item[0].ljust(width) + item[1]
+            a.append(listitem)
+        return a
 
     def on_done(self, index):
         s = ""
 
         if index >= 0 and index < len(self.items):
-            item = self.items[index]
-            s = item[1].replace("Command: ", "")
+            s = self.items[index][0]
+
             if s == "\\p":
                 self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
             elif s == "\\i":
@@ -84,7 +94,10 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
             elif len(s):
                 self.window.run_command("prompt_insert_text", { "text": s })
             else:
+                sublime.status_message("Unknown command: " + s)
                 pass
+        else:
+            sublime.status_message("No item selected")
 
 class InsertTextCommand(sublime_plugin.TextCommand):
 
@@ -96,7 +109,7 @@ class InsertTextCommand(sublime_plugin.TextCommand):
             if separator: separator = separator.encode('utf8').decode("string-escape")
             if (clipboard): text = sublime.get_clipboard()
 
-            if text:
+            if True or text is not None and len(text) > 0:
                 items = text.split(separator)
 
                 strip = False
