@@ -1,3 +1,8 @@
 [
-    { "keys": ["super+alt+t"], "command": "prompt_insert_text" }
+    { "keys": ["super+alt+t"], "command": "prompt_insert_text", "args": { "text": "" } },
+    { "keys": ["super+alt+t"], "command": "overlay_insert_text", "context":
+        [
+            { "key": "panel_visible", "operator": "equal", "operand": true, "match_all": true }
+        ]
+    }
 ]
