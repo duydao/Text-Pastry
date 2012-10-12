@@ -7,15 +7,17 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
     def on_done(self, text):
         try:
-            if self.window.active_view() and len(text) > 0:
+            if self.window.active_view() and text:
                 m1 = re.compile('(-?\d+) (-?\d+) (\d+)').match(text)
                 m2 = re.compile('\\\\i(\d*)(,(-?\d+))?').match(text)
                 m3 = re.compile('\\\\i\((\d*)(,(-?\d+))?\)').match(text)
 
                 m4 = re.compile('\\\\p\((.*?)\)').match(text)
                 if m1:
-                    sublime.status_message("Inserting Nums: " + text)
                     (current, step, padding) = map(str, text.split(" "))
+
+                    InsertTextHistory.save_history("insert_nums", text)
+                    sublime.status_message("Inserting Nums: " + text)
                     self.window.active_view().run_command("insert_nums", {"current" : current, "step" : step, "padding" : padding})
 
                 elif m2 or m3:
@@ -25,14 +27,17 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
                     current = m.group(1)
                     step = m.group(3)
 
-                    if current is None or len(current) == 0: current = "1"
-                    if step is None or len(step) == 0: step = "1"
+                    if not current: current = "1"
+                    if not step: step = "1"
 
+                    InsertTextHistory.save_history("insert_nums", text)
                     sublime.status_message("Inserting #" + text)
                     self.window.active_view().run_command("insert_nums", {"current" : current, "step" : step, "padding" : "1"})
+                
                 elif text == "\\p":
                     sublime.status_message("Inserting from clipboard")
                     self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
+                
                 elif m4:
                     separator = m4.group(1)
                     if separator is None or separator == '':
@@ -40,6 +45,7 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
                     sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                     self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard(), "separator": separator})
+                
                 else:
                     sublime.status_message("Inserting " + text)
                     self.window.active_view().run_command("insert_text", {"text": text})
@@ -50,11 +56,24 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
     def run(self):
         try:
-            c = len(self.window.active_view().sel())
+            selection_count = len(self.window.active_view().sel())
 
-            if c > 1 or True:
-                x = c
-                self.items = [
+            if selection_count > 1 or True:
+                x = selection_count
+                self.items = []
+
+                entries = InsertTextHistory.load_history()
+                history_items = []
+                for entry in entries:
+                    command = entry.get("command", None)
+                    text = entry.get("text", None).decode("unicode-escape").decode("string-escape")
+                    separator = entry.get("separator", None)
+
+                    if text and command:
+                        self.items.append(["history", command, text, separator])
+                        history_items.append(' '.join(text[0:80].split()))
+
+                default_items = [
                     ["\\i", "From 1 to " + str(x)],
                     ["\\i0", "From 0 to " + str(x-1)],
                     ["\\i(N,M)", "From N to X by M"],
@@ -65,9 +84,13 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
                     ["a b c", "Text separated by one space"]
                 ]
 
-                self.window.show_quick_panel(self.toListItem(self.items, 9), self.on_done, sublime.MONOSPACE_FONT)
+                self.items.extend(default_items)
+                overlay_items = history_items + self.toListItem(default_items, 9);
+                self.window.show_quick_panel(overlay_items, self.on_done, sublime.MONOSPACE_FONT)
+            
             else:
                 sublime.status_message("You need to make multiple selections to use Insert Text");
+        
         except ValueError:
             sublime.status_message("Error while showing Insert Text overlay");
 
@@ -80,36 +103,56 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
         return a
 
     def on_done(self, index):
-        s = ""
-
         if index >= 0 and index < len(self.items):
-            s = self.items[index][0]
+            item = self.items[index]
+            s = item[0]
 
-            if s == "\\p":
+            sublime.status_message(s)
+            if (s == "history"):
+                sublime.status_message("history")
+                command = item[1]
+                text = item[2]
+                separator = item[3]
+                
+                if command == "insert_nums":
+                    (current, step, padding) = map(str, text.split(" "))
+                    self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
+
+                elif command == "insert_text":
+                    self.window.active_view().run_command(command, {"text": text, "separator": separator})
+                
+                else:
+                    self.window.run_command("prompt_insert_text", { "text": text })
+
+            elif s == "\\p":
                 self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
+            
             elif s == "\\i":
                 self.window.active_view().run_command("insert_nums", {"current": "1", "step": "1", "padding": "1"})
+            
             elif s == "\\i0":
                 self.window.active_view().run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
+            
             elif len(s):
                 self.window.run_command("prompt_insert_text", { "text": s })
+            
             else:
                 sublime.status_message("Unknown command: " + s)
-                pass
+
         else:
             sublime.status_message("No item selected")
 
 class InsertTextCommand(sublime_plugin.TextCommand):
-
     def run(self, edit, text=None, separator=None, clipboard=False):
         try:
-            regions = []
-            sel = self.view.sel()
-
-            if separator: separator = separator.encode('utf8').decode("string-escape")
-            if (clipboard): text = sublime.get_clipboard()
-
             if True or text is not None and len(text) > 0:
+                regions = []
+                sel = self.view.sel()
+
+                if separator: separator = separator.encode('utf8').decode("string-escape")
+                if clipboard: text = sublime.get_clipboard()
+
+                InsertTextHistory.save_history("insert_text", text, separator)
                 items = text.split(separator)
 
                 strip = False
@@ -134,3 +177,86 @@ class InsertTextCommand(sublime_plugin.TextCommand):
         except ValueError:
             sublime.status_message("Error while executing Insert Text, canceled")
             pass
+
+class InsertTextHistory:
+
+    @staticmethod
+    def save_history(command, text, separator=None):
+        name = "InsertTextHistory.sublime-settings"
+        hs = sublime.load_settings(name);
+        history = hs.get("history", {})
+
+        text = text.encode('unicode-escape')
+
+        key = str(hash(text+str(separator)))
+        if not key in history: history[key] = dict(command=command, text=text, separator=separator)
+
+        hs.set("history", history)
+
+        # last command
+        hs.set("last_command", dict(command=command, text=text, separator=separator));
+
+        sublime.save_settings(name)
+        #sublime.message_dialog("saved: " + str(key))
+
+    @staticmethod
+    def load_history():
+        name = "InsertTextHistory.sublime-settings"
+        hs = sublime.load_settings(name);
+        history = hs.get("history", {})
+
+        entries = []
+        for key, item in history.iteritems():
+            command = None
+            text = None
+            separator = None
+
+            if item.has_key("command") and item.has_key("text") and item["command"] and item["text"]:
+                entries.append(item)
+            else:
+                InsertTextHistory.remove_history(key)
+
+            #sublime.message_dialog(str(type(entry)))
+
+            # for key, value in entry.iteritems():
+            #     if key == "text": text = value.decode('unicode-escape')
+            #     elif key == "separator": separator = value
+            #     elif key == "command": command = value
+            
+            # if text and command:
+            #     entries.append([command, text, separator])
+
+        return entries
+
+    @staticmethod
+    def remove_history(id):
+        removed = False
+        name = "InsertTextHistory.sublime-settings"
+        hs = sublime.load_settings(name);
+        history = hs.get("history", {})
+
+        sublime.status_message("Deleting item from history: " + str(id))
+
+        if history.has_key(id):
+            del history[id]
+            hs.set("history", history)
+            sublime.save_settings(name)
+            removed = True
+
+
+        return removed
+
+    @staticmethod
+    def last_command():
+        name = "InsertTextHistory.sublime-settings"
+        hs = sublime.load_settings(name);
+        history = hs.get("last_command", {})
+        if "command" in last_command and "text" in last_command:
+            for key in last_command:
+                command = None
+                text = None
+                separator = None
+                if key == "text": text = h[key].decode('unicode-escape')
+                elif key == "separator": separator = h[key]
+                elif key == "command": command = h[key]
+
