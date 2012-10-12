@@ -35,14 +35,15 @@ class PromptInsertTextCommand(sublime_plugin.WindowCommand):
                     self.window.active_view().run_command("insert_nums", {"current" : current, "step" : step, "padding" : "1"})
                 
                 elif text == "\\p":
+                    InsertTextHistory.save_history("insert_text", text=sublime.get_clipboard(), label=text)
                     sublime.status_message("Inserting from clipboard")
                     self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
                 
                 elif m4:
                     separator = m4.group(1)
-                    if separator is None or separator == '':
-                        separator = None
+                    if not separator: separator = None
 
+                    InsertTextHistory.save_history("insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                     sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                     self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard(), "separator": separator})
                 
@@ -69,13 +70,16 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
                     command = entry.get("command", None)
                     text = entry.get("text", None).decode("unicode-escape").decode("string-escape")
                     separator = entry.get("separator", None)
+                    label = entry.get("label", None)
+                    if not label: label = ""
 
                     if text and command:
                         self.items.append(["history", command, text, separator])
 
-                        label = ('hist' + str(history_index)).ljust(9)
-                        label += ' '.join(text[0:50].split())
-                        history_items.append(label)
+                        s = ('hist' + str(history_index)).ljust(9)
+                        if len(text) > 50: text = text[0:50] + "..."
+                        s += ' '.join((label + " " + text).split())
+                        history_items.append(s)
 
                         history_index += 1
 
@@ -85,9 +89,10 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
                     ["\\i(N,M)", "From N to X by M"],
                     ["\\p(\\n)", "Paste Line from Clipboard"],
                     ["\\p", "Paste Words from Clipboard"],
-                    ["1 1 1", "From 1 to " + str(x)],
-                    ["0 1 1", "From 0 to " + str(x-1)],
-                    ["a b c", "Text separated by one space"]
+                    #["1 1 1", "From 1 to " + str(x)],
+                    #["0 1 1", "From 0 to " + str(x-1)],
+                    #["a b c", "Text separated by one space"],
+                    ["clear", "Clear history"]
                 ]
 
                 self.items.extend(default_items)
@@ -119,32 +124,42 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
                 command = item[1]
                 text = item[2]
                 separator = item[3]
-                
+
                 if command == "insert_nums":
                     (current, step, padding) = map(str, text.split(" "))
                     self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
 
                 elif command == "insert_text":
                     self.window.active_view().run_command(command, {"text": text, "separator": separator})
-                
+
                 else:
                     self.window.run_command("prompt_insert_text", { "text": text })
 
+            elif s == "clear":
+                InsertTextHistory.clear_history()
+
             elif s == "\\p":
-                InsertTextHistory.save_history("insert_text", sublime.get_clipboard())
                 self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
-            
+
+            elif s == "\\p":
+                InsertTextHistory.save_history("insert_text", text=sublime.get_clipboard(), label=s)
+                self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
+
+            elif s == "\\p(\\n)":
+                InsertTextHistory.save_history("insert_text", text=sublime.get_clipboard(), label=s)
+                self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard(), "separator": "\\n"})
+
             elif s == "\\i":
-                InsertTextHistory.save_history("insert_nums", "1 1 1")
+                InsertTextHistory.save_history("insert_nums", text="1 1 1", label=s)
                 self.window.active_view().run_command("insert_nums", {"current": "1", "step": "1", "padding": "1"})
-            
+
             elif s == "\\i0":
-                InsertTextHistory.save_history("insert_nums", "0 1 1")
+                InsertTextHistory.save_history("insert_nums", text="0 1 1", label=s)
                 self.window.active_view().run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
-            
+
             elif len(s):
                 self.window.run_command("prompt_insert_text", { "text": s })
-            
+
             else:
                 sublime.status_message("Unknown command: " + s)
 
@@ -198,12 +213,13 @@ class InsertTextHistory:
         text = text.encode('unicode-escape')
 
         key = str(hash(text+str(separator)))
-        if not key in history: history[key] = dict(command=command, text=text, separator=separator, index=len(history))
+        if not key in history:
+            history[key] = dict(command=command, text=text, separator=separator, index=len(history), label=label)
 
         hs.set("history", history)
 
         # last command
-        hs.set("last_command", dict(command=command, text=text, separator=separator));
+        hs.set("last_command", dict(key=key, command=command, text=text, separator=separator, index=len(history), label=label));
 
         sublime.save_settings(name)
         #sublime.message_dialog("saved: " + str(key))
@@ -258,16 +274,42 @@ class InsertTextHistory:
         return removed
 
     @staticmethod
+    def clear_history():
+        name = "InsertTextHistory.sublime-settings"
+        hs = sublime.load_settings(name);
+        history = hs.set("history", {})
+        sublime.save_settings(name)
+        sublime.status_message("History deleted")
+
+    @staticmethod
     def last_command():
         name = "InsertTextHistory.sublime-settings"
         hs = sublime.load_settings(name);
-        history = hs.get("last_command", {})
-        if "command" in last_command and "text" in last_command:
-            for key in last_command:
-                command = None
-                text = None
-                separator = None
-                if key == "text": text = h[key].decode('unicode-escape')
-                elif key == "separator": separator = h[key]
-                elif key == "command": command = h[key]
+        last_command = hs.get("last_command", {})
+        return last_command
 
+class InsertTextRepeatLastCommandCommand(sublime_plugin.WindowCommand):
+    def run(self):
+        try:
+            item = InsertTextHistory.last_command()
+
+            if item.has_key("command") and item.has_key("text") and item["command"] and item["text"]:
+                text = item.get("text").decode("unicode-escape").decode("string-escape")
+                separator = item.get("separator", None)
+                command = item.get("command", None)
+
+                if text and command:
+                    sublime.status_message("Running last command")
+
+                    if command == "insert_nums":
+                        (current, step, padding) = map(str, text.split(" "))
+                        self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
+
+                    elif command == "insert_text":
+                        self.window.active_view().run_command(command, {"text": text, "separator": separator})
+
+                    else:
+                        #self.window.run_command("prompt_insert_text", { "text": text })
+                        pass
+        except:
+            sublime.status_message("Error while calling last command")
