@@ -360,8 +360,8 @@ You can also use negative numbers to create a negative sequence
 
 ## Todo ##
 
-- Command List Overlay
-- Command History
+- ~~Command List Overlay~~
+- ~~Command History~~
 - Flags for word manipulation
 - Sequence Placeholder
 
