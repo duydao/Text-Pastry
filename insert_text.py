@@ -92,7 +92,8 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
                     #["1 1 1", "From 1 to " + str(x)],
                     #["0 1 1", "From 0 to " + str(x-1)],
                     #["a b c", "Text separated by one space"],
-                    ["clear", "Clear history"]
+                    ["clear", "Clear history"],
+                    ["cancel", "Cancel"]
                 ]
 
                 self.items.extend(default_items)
@@ -137,6 +138,9 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
 
             elif s == "clear":
                 InsertTextHistory.clear_history()
+            
+            elif s == "cancel":
+                pass
 
             elif s == "\\p":
                 self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
