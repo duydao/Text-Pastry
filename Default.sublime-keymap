@@ -1,10 +1,10 @@
 [
     { "keys": ["super+alt+t"], "command": "prompt_insert_text", "args": { "text": "" } },
-    { "keys": ["super+alt+t"], "command": "overlay_select_insert_text", "context":
+    { "keys": ["super+alt+t"], "command": "show_text_pastry_overlay", "context":
         [
             { "key": "panel_visible", "operator": "equal", "operand": true, "match_all": true }
         ]
     },
     { "keys": ["super+alt+v"], "command": "insert_text", "args": { "clipboard": true, "separator": "\\n" } },
-    { "keys": ["super+alt+b"], "command": "insert_text_repeat_last_command" }
+    { "keys": ["super+alt+b"], "command": "text_pastry_redo" }
 ]
