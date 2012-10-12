@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, re
+import sublime, sublime_plugin, re, operator
 
 class PromptInsertTextCommand(sublime_plugin.WindowCommand):
 
@@ -64,6 +64,7 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
 
                 entries = InsertTextHistory.load_history()
                 history_items = []
+                history_index = 1
                 for entry in entries:
                     command = entry.get("command", None)
                     text = entry.get("text", None).decode("unicode-escape").decode("string-escape")
@@ -71,7 +72,12 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
 
                     if text and command:
                         self.items.append(["history", command, text, separator])
-                        history_items.append(' '.join(text[0:80].split()))
+
+                        label = ('hist' + str(history_index)).ljust(9)
+                        label += ' '.join(text[0:50].split())
+                        history_items.append(label)
+
+                        history_index += 1
 
                 default_items = [
                     ["\\i", "From 1 to " + str(x)],
@@ -125,12 +131,15 @@ class OverlaySelectInsertTextCommand(sublime_plugin.WindowCommand):
                     self.window.run_command("prompt_insert_text", { "text": text })
 
             elif s == "\\p":
+                InsertTextHistory.save_history("insert_text", sublime.get_clipboard())
                 self.window.active_view().run_command("insert_text", {"text": sublime.get_clipboard()})
             
             elif s == "\\i":
+                InsertTextHistory.save_history("insert_nums", "1 1 1")
                 self.window.active_view().run_command("insert_nums", {"current": "1", "step": "1", "padding": "1"})
             
             elif s == "\\i0":
+                InsertTextHistory.save_history("insert_nums", "0 1 1")
                 self.window.active_view().run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
             
             elif len(s):
@@ -181,7 +190,7 @@ class InsertTextCommand(sublime_plugin.TextCommand):
 class InsertTextHistory:
 
     @staticmethod
-    def save_history(command, text, separator=None):
+    def save_history(command, text, separator=None, label=None):
         name = "InsertTextHistory.sublime-settings"
         hs = sublime.load_settings(name);
         history = hs.get("history", {})
@@ -189,7 +198,7 @@ class InsertTextHistory:
         text = text.encode('unicode-escape')
 
         key = str(hash(text+str(separator)))
-        if not key in history: history[key] = dict(command=command, text=text, separator=separator)
+        if not key in history: history[key] = dict(command=command, text=text, separator=separator, index=len(history))
 
         hs.set("history", history)
 
@@ -226,7 +235,10 @@ class InsertTextHistory:
             # if text and command:
             #     entries.append([command, text, separator])
 
-        return entries
+        sorted_x = sorted(entries, key=operator.itemgetter("index"), reverse=True)
+
+
+        return sorted_x
 
     @staticmethod
     def remove_history(id):
@@ -242,7 +254,6 @@ class InsertTextHistory:
             hs.set("history", history)
             sublime.save_settings(name)
             removed = True
-
 
         return removed
 
