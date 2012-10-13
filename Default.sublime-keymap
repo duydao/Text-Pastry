@@ -1,5 +1,5 @@
 [
-    { "keys": ["super+alt+t"], "command": "prompt_insert_text", "args": { "text": "" } },
+    { "keys": ["super+alt+t"], "command": "prompt_text_pastry", "args": { "text": "" } },
     { "keys": ["super+alt+t"], "command": "show_text_pastry_overlay", "context":
         [
             { "key": "panel_visible", "operator": "equal", "operand": true, "match_all": true }

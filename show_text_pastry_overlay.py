@@ -1,4 +1,5 @@
 import sublime, sublime_plugin, re
+#from text_pastry_history import * as TextPastryHistory
 from text_pastry_history import TextPastryHistory
 
 class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):

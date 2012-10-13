@@ -1,10 +1,12 @@
 import sublime, sublime_plugin, re
-from text_pastry_history import TextPastryHistory
+from text_pastry_history import *
+from command_line_parser import CommandLineParser
 
-class PromptInsertTextCommand(sublime_plugin.WindowCommand):
+class PromptTextPastryCommand(sublime_plugin.WindowCommand):
 
     def run(self, text):
         v = self.window.show_input_panel('Enter a list of items, separated by spaces', text, self.on_done, None, None)
+        self.clp = CommandLineParser()
 
     def on_done(self, text):
         try:
