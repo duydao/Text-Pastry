@@ -3,18 +3,19 @@ import sublime, sublime_plugin, re
 from text_pastry_history import TextPastryHistory
 
 class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
-    def run(self):
+    def run(self, show_history_only=False):
+        sublime.status_message("ShowTextPastryOverlayCommand")
         try:
             selection_count = len(self.window.active_view().sel())
 
             if selection_count > 1 or True:
-                x = selection_count
                 self.items = []
 
                 entries = TextPastryHistory.load_history()
+                if not show_history_only: entries = entries[0:5]
+                
                 history_items = []
-                history_index = 1
-                for entry in entries:
+                for i, entry in enumerate(entries):
                     command = entry.get("command", None)
                     text = entry.get("text", None).decode("unicode-escape").decode("string-escape")
                     separator = entry.get("separator", None)
@@ -22,28 +23,32 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
                     if not label: label = ""
 
                     if text and command:
-                        self.items.append(["history", command, text, separator])
+                        self.items.append(["redo_hist", command, text, separator])
 
-                        s = ('hist' + str(history_index)).ljust(9)
+                        s = ('hist' + str(i + 1)).ljust(9)
                         if len(text) > 50: text = text[0:50] + "..."
                         s += ' '.join((label + " " + text).split())
                         history_items.append(s)
 
-                        history_index += 1
 
-                default_items = [
-                    ["\\i", "From 1 to " + str(x)],
-                    ["\\i0", "From 0 to " + str(x-1)],
-                    ["\\i(N,M)", "From N to X by M"],
-                    ["\\p(\\n)", "Paste Line from Clipboard"],
-                    ["\\p", "Paste Words from Clipboard"],
-                    #["1 1 1", "From 1 to " + str(x)],
-                    #["0 1 1", "From 0 to " + str(x-1)],
-                    #["a b c", "Text separated by one space"],
-                    ["clear", "Clear history"],
-                    ["cancel", "Cancel"]
-                ]
-
+                if show_history_only:
+                    default_items = [
+                        ["back", "Back"]
+                    ]
+                else:
+                    x = selection_count
+                    default_items = [
+                        ["show_hist", "Show history entries"],
+                        ["\\i", "From 1 to " + str(x)],
+                        ["\\i0", "From 0 to " + str(x-1)],
+                        ["\\i(N,M)", "From N to X by M"],
+                        ["\\p(\\n)", "Paste Line from Clipboard"],
+                        ["\\p", "Paste Words from Clipboard"],
+                        ["words", "Word list separated by one space"],
+                        ["clear_hist", "Clear history"],
+                        ["cancel", "Cancel"]
+                    ]
+                
                 self.items.extend(default_items)
                 overlay_items = history_items + self.toListItem(default_items, 9);
                 self.window.show_quick_panel(overlay_items, self.on_done, sublime.MONOSPACE_FONT)
@@ -68,8 +73,8 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
             s = item[0]
 
             sublime.status_message(s)
-            if (s == "history"):
-                sublime.status_message("history")
+            if s == "redo_hist":
+                sublime.status_message("redo history")
                 command = item[1]
                 text = item[2]
                 separator = item[3]
@@ -84,9 +89,18 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
                 else:
                     self.window.run_command("prompt_insert_text", { "text": text })
 
-            elif s == "clear":
+            elif s == "show_hist":
+                self.window.run_command("hide_overlay")
+                self.window.run_command("show_text_pastry_overlay", {"show_history_only": True})
+                return
+
+            elif s == "clear_hist":
                 TextPastryHistory.clear_history()
-            
+
+            elif s == "back":
+                self.window.run_command("hide_overlay")
+                self.window.run_command("show_text_pastry_overlay")
+
             elif s == "cancel":
                 pass
 

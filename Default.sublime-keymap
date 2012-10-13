@@ -1,10 +1,6 @@
 [
-    { "keys": ["super+alt+t"], "command": "prompt_text_pastry", "args": { "text": "" } },
-    { "keys": ["super+alt+t"], "command": "show_text_pastry_overlay", "context":
-        [
-            { "key": "panel_visible", "operator": "equal", "operand": true, "match_all": true }
-        ]
-    },
+    { "keys": ["super+alt+n"], "command": "show_text_pastry", "args": { "text": "" } },
+    { "keys": ["super+alt+t"], "command": "show_text_pastry_overlay" },
     { "keys": ["super+alt+v"], "command": "insert_text", "args": { "clipboard": true, "separator": "\\n" } },
     { "keys": ["super+alt+b"], "command": "text_pastry_redo" }
 ]

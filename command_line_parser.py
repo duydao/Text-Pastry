@@ -10,6 +10,7 @@ class CommandLineParser:
 
 		# start pasing the command string
         if text:
+
             m1 = re.compile('(-?\d+) (-?\d+) (\d+)').match(text)
             m2 = re.compile('\\\\i(\d*)(,(-?\d+))?').match(text)
             m3 = re.compile('\\\\i\((\d*)(,(-?\d+))?\)').match(text)
