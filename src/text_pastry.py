@@ -1,6 +1,5 @@
 import sublime, sublime_plugin, re
-from text_pastry_history import *
-from command_line_parser import CommandLineParser
+from command_line_parser import Parser
 
 class ShowTextPastryCommand(sublime_plugin.WindowCommand):
 
@@ -8,7 +7,7 @@ class ShowTextPastryCommand(sublime_plugin.WindowCommand):
         v = self.window.show_input_panel('Enter a list of items, separated by spaces', text, self.on_done, None, None)
 
     def on_done(self, text):
-        parser = CommandLineParser()
+        parser = Parser()
         r = parser.parse(text)
         if r: self.window.active_view().run_command(r["command"], r["args"])
 
@@ -22,7 +21,7 @@ class InsertTextCommand(sublime_plugin.TextCommand):
                 if separator: separator = separator.encode('utf8').decode("string-escape")
                 if clipboard: text = sublime.get_clipboard()
 
-                #TextPastryHistory.save_history("insert_text", text, separator)
+                #History.save_history("insert_text", text, separator)
                 items = text.split(separator)
 
                 strip = False

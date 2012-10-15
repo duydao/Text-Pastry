@@ -1,12 +1,12 @@
 import sublime, sublime_plugin, re
 from text_pastry_overlay import *
-from text_pastry_history import TextPastryHistory
+from text_pastry_history import History
 
 class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
 
     def show(self):
         self.overlay = Overlay()
-        history = TextPastryHistory.load_history()
+        history = History.load_history()
         self.fill_with_history( history[0:5], self.overlay )
 
         x = selection_count = len( self.window.active_view().sel() )
@@ -26,7 +26,7 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
 
     def show_history_only(self):
         self.overlay = Overlay()
-        history = TextPastryHistory.load_history()
+        history = History.load_history()
         self.fill_with_history( history, self.overlay )
 
         self.overlay.addMenuItem( "back", "Back" )
@@ -91,7 +91,7 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
                 return
 
             elif s == "clear_hist":
-                TextPastryHistory.clear_history()
+                History.clear_history()
 
             elif s == "back":
                 self.window.run_command("hide_overlay")
@@ -103,7 +103,7 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
             elif s == "\\p":
                 cb = sublime.get_clipboard()
                 if cb:
-                    TextPastryHistory.save_history("insert_text", text=cb, label=s)
+                    History.save_history("insert_text", text=cb, label=s)
                     self.window.active_view().run_command("insert_text", {"text": cb})
                 else:
                     sublime.message_dialog("No Clipboard Data available")
@@ -111,17 +111,17 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
             elif s == "\\p(\\n)":
                 cb = sublime.get_clipboard()
                 if cb:
-                    TextPastryHistory.save_history("insert_text", text=cb, label=s, separator="\\n")
+                    History.save_history("insert_text", text=cb, label=s, separator="\\n")
                     self.window.active_view().run_command("insert_text", {"text": cb, "separator": "\\n"})
                 else:
                     sublime.message_dialog("No Clipboard Data available")
 
             elif s == "\\i":
-                TextPastryHistory.save_history("insert_nums", text="1 1 1", label=s)
+                History.save_history("insert_nums", text="1 1 1", label=s)
                 self.window.active_view().run_command("insert_nums", {"current": "1", "step": "1", "padding": "1"})
 
             elif s == "\\i0":
-                TextPastryHistory.save_history("insert_nums", text="0 1 1", label=s)
+                History.save_history("insert_nums", text="0 1 1", label=s)
                 self.window.active_view().run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
 
             elif s == "words":

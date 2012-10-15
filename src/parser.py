@@ -1,7 +1,7 @@
 import sublime, sublime_plugin, re
 
-class CommandLineParser:
-    def CommandLineParser():
+class Parser:
+    def Parser():
         sublime.status_message("Creating CommandLineParser")
 
     def parse(text):
@@ -20,7 +20,7 @@ class CommandLineParser:
             if m1:
                 (current, step, padding) = map(str, text.split(" "))
 
-                TextPastryHistory.save_history("insert_nums", text)
+                History.save_history("insert_nums", text)
                 sublime.status_message("Inserting Nums: " + text)
                 result = dict(Command="insert_nums", args={"current" : current, "step" : step, "padding" : padding})
 
@@ -34,12 +34,12 @@ class CommandLineParser:
                 if not current: current = "1"
                 if not step: step = "1"
 
-                TextPastryHistory.save_history("insert_nums", text)
+                History.save_history("insert_nums", text)
                 sublime.status_message("Inserting #" + text)
                 result = dict(Command="insert_nums", args={"current" : current, "step" : step, "padding" : "1"})
 
             elif text == "\\p":
-                TextPastryHistory.save_history("insert_text", text=sublime.get_clipboard(), label=text)
+                History.save_history("insert_text", text=sublime.get_clipboard(), label=text)
                 sublime.status_message("Inserting from clipboard")
                 result = dict(Command="insert_text", args={"text": sublime.get_clipboard()})
 
@@ -47,7 +47,7 @@ class CommandLineParser:
                 separator = m4.group(1)
                 if not separator: separator = None
 
-                TextPastryHistory.save_history("insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
+                History.save_history("insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                 result = dict(Command="insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
             
@@ -56,9 +56,5 @@ class CommandLineParser:
                 result = dict(Command="insert_text", args={"text": text})
         else:
             pass
+        
         return None
-    
-    def valid():
-        pass
-
-

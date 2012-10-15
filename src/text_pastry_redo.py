@@ -1,5 +1,5 @@
 import sublime, sublime_plugin
-from text_pastry_history import TextPastryHistory
+from text_pastry_history import History
 
 class TextPastryRedoCommand(sublime_plugin.WindowCommand):
 

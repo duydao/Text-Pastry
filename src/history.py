@@ -1,12 +1,12 @@
 import sublime, sublime_plugin, operator
 from datetime import datetime
 
-class TextPastryHistory:
+class History:
     FILENAME = "TextPastryHistory.sublime-settings"
     
     @staticmethod
     def save_history(command, text, separator=None, label=None):
-        hs = sublime.load_settings(TextPastryHistory.FILENAME)
+        hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
         text = text.encode('unicode-escape')
 
@@ -19,12 +19,12 @@ class TextPastryHistory:
         # last command
         hs.set("last_command", dict(key=key, command=command, text=text, separator=separator, index=len(history), label=label))
 
-        sublime.save_settings(TextPastryHistory.FILENAME)
+        sublime.save_settings(History.FILENAME)
 
     @staticmethod
     def load_history():
         sublime.status_message("history loaded")
-        hs = sublime.load_settings(TextPastryHistory.FILENAME)
+        hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
 
         entries = []
@@ -50,7 +50,7 @@ class TextPastryHistory:
     @staticmethod
     def remove_history(id):
         removed = False
-        hs = sublime.load_settings(TextPastryHistory.FILENAME)
+        hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
 
         sublime.status_message("Deleting item from history: " + str(id))
@@ -65,7 +65,7 @@ class TextPastryHistory:
 
     @staticmethod
     def clear_history():
-        hs = sublime.load_settings(TextPastryHistory.FILENAME)
+        hs = sublime.load_settings(History.FILENAME)
         history = hs.set("history", {})
         sublime.save_settings(name)
         sublime.status_message("History deleted")
