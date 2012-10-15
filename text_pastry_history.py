@@ -8,12 +8,11 @@ class TextPastryHistory:
     def save_history(command, text, separator=None, label=None):
         hs = sublime.load_settings(TextPastryHistory.FILENAME)
         history = hs.get("history", {})
-
         text = text.encode('unicode-escape')
 
         key = str(hash(text+str(separator)))
-        if not key in history:
-            history[key] = dict(command=command, text=text, separator=separator, date=datetime.now, label=label)
+        if key in history: del history[key]
+        history[key] = dict(command=command, text=text, separator=separator, date=str(datetime.now()), label=label)
 
         hs.set("history", history)
 
