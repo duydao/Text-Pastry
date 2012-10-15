@@ -2,5 +2,5 @@ history.py
 overlay.py
 parser.py
 redo.py
-show_text_pastry_overlay.py
-text_pastry.py
+show_command_line.py
+show_overlay.py
