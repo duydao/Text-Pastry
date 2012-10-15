@@ -22,7 +22,7 @@ class InsertTextCommand(sublime_plugin.TextCommand):
                 if separator: separator = separator.encode('utf8').decode("string-escape")
                 if clipboard: text = sublime.get_clipboard()
 
-                TextPastryHistory.save_history("insert_text", text, separator)
+                #TextPastryHistory.save_history("insert_text", text, separator)
                 items = text.split(separator)
 
                 strip = False

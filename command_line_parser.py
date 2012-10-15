@@ -1,14 +1,15 @@
 import sublime, sublime_plugin, re
 
 class CommandLineParser:
-	def CommandLineParser():
-		sublime.status_message("Creating CommandLineParser")
+    def CommandLineParser():
+        sublime.status_message("Creating CommandLineParser")
 
-	def parse(text):
-		if not text: return None
-		result = None
+    def parse(text):
+        if not text:
+            return None
+        result = None
 
-		# start pasing the command string
+        # start pasing the command string
         if text:
 
             m1 = re.compile('(-?\d+) (-?\d+) (\d+)').match(text)
@@ -53,10 +54,11 @@ class CommandLineParser:
             else:
                 sublime.status_message("Inserting " + text)
                 result = dict(Command="insert_text", args={"text": text})
-
-		return result
-
-	def valid():
-		pass
+        else:
+            pass
+        return None
+    
+    def valid():
+        pass
 
 
