@@ -1,6 +1,6 @@
 import sublime, sublime_plugin, parser
 
-class TextPastryCommandLine(sublime_plugin.WindowCommand):
+class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
 
     def run(self, text):
         if not self.window.active_view(): return

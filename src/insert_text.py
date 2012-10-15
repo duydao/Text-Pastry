@@ -1,6 +1,6 @@
 import sublime, sublime_plugin
 
-class InsertTextCommand(sublime_plugin.TextCommand):
+class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, text=None, separator=None, clipboard=False):
         try:
             if True or text is not None and len(text) > 0:
