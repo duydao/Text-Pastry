@@ -1,21 +1,21 @@
-# Insert Text #
+# Text Pastry #
 
-A Sublime Text 2-package to insert a sequence of text or numbers on multiple locations.
+Text Pastry is a plugin for Sublime Text 2 and gives you the tools to insert a sequence of text or numbers on multiple locations.
 
 Based on [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) by [Mark Stahler](http://blog.markstahler.ca/)
 
 ## Usage ##
 
-To use _Insert Text_, we need to open a Document in [ST2](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
+To use _Text Pastry_, we need to open a Document in [ST2](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
 insert locations _(in this document also refered to as selections)_.
 
-Please keep in mind that the selected text could be replaced when we run the _Insert Text_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
+Please keep in mind that the selected text could be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
 
-All we need to do now is to press **CMD + ALT + T** to open the _Insert Text_ command line. The input panel will show up at the bottom of [ST2](http://www.sublimetext.com/).
+All we need to do now is to press **CMD + ALT + T** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [ST2](http://www.sublimetext.com/).
 
-Now its time to run our first command. Let's enter `first second third` and hit enter to run the command. _Insert Text_ will add `first` to our first selection, `second` to the next selection and so on.
+Now its time to run our first command. Let's enter `first second third` and hit enter to run the command. _Text Pastry_ will add `first` to our first selection, `second` to the next selection and so on.
 
-_Insert Text_ will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
+_Text Pastry_ will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
 
 
 ## Command Reference ##
@@ -65,7 +65,7 @@ Same as above with a specified [string separator](http://docs.python.org/library
 
 ### Insert Nums ###
 
-_Insert Text_ has a build in support for the [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) syntax by providing three numbers separated by one space:
+_Text Pastry_ has a build in support for the [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) syntax by providing three numbers separated by one space:
 
 	N M P
 
@@ -76,7 +76,7 @@ _Insert Text_ has a build in support for the [Insert Nums](https://bitbucket.org
 
 ## Examples ##
 
-Here are some examples, assuming we have selected every ocurence of `null` and _Insert Text_ was called by pressing **CMD + ALT + T**:
+Here are some examples, assuming we have selected every ocurence of `null` and _Text Pastry_ was called by pressing **CMD + ALT + T**:
 
 ### Using a text list ###
 
@@ -168,7 +168,7 @@ Lets assume we want to paste some test data into our code:
 	
 #### Command ####
 
-This command will tell _Insert Text_ to split up our clipboard data by using the newline character as separator:
+This command will tell _Text Pastry_ to split up our clipboard data by using the newline character as separator:
 
 	\p(\n)
 
@@ -214,7 +214,7 @@ Data with leading whitespace:
 		P
 	A
 
-We can change this behaviour in the **&lt;Packages&gt;/_Insert Text_/InsertText.sublime-settings** file:
+We can change this behaviour in the **&lt;Packages&gt;/_Text Pastry_/InsertText.sublime-settings** file:
 
 	"clipboard_strip_newline": false
 
