@@ -1,7 +1,4 @@
-import sublime, sublime_plugin, re
-from text_pastry_overlay import *
-from text_pastry_history import History
-
+import sublime, sublime_plugin, re, history, overlay
 class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
 
     def show(self):
@@ -45,7 +42,9 @@ class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
 
 
     def run(self, history_only=False):
+        if not self.window.active_view(): return
         sublime.status_message("ShowTextPastryOverlayCommand")
+
         try:
             selection_count = len(self.window.active_view().sel())
 

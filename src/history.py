@@ -58,7 +58,7 @@ class History:
         if history.has_key(id):
             del history[id]
             hs.set("history", history)
-            sublime.save_settings(name)
+            sublime.save_settings(History.FILENAME)
             removed = True
 
         return removed
@@ -67,5 +67,5 @@ class History:
     def clear_history():
         hs = sublime.load_settings(History.FILENAME)
         history = hs.set("history", {})
-        sublime.save_settings(name)
+        sublime.save_settings(History.FILENAME)
         sublime.status_message("History deleted")
