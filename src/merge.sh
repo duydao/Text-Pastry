@@ -1,7 +1,7 @@
 #/bin/sh
 
 echo -e "import sublime, sublime_plugin, re, operator\n"
-for file in `ls *.py`
+for file in `cat FILES`
 do
 	echo "# ========================================"
 	echo "# $file"

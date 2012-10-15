@@ -61,7 +61,7 @@ class History:
 # ========================================
 # insert_text.py
 # ========================================
-class InsertTextCommand(sublime_plugin.TextCommand):
+class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, text=None, separator=None, clipboard=False):
         try:
             if True or text is not None and len(text) > 0:
@@ -229,7 +229,7 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
 # ========================================
 # show_command_line.py
 # ========================================
-class TextPastryCommandLine(sublime_plugin.WindowCommand):
+class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
     def run(self, text):
         if not self.window.active_view(): return
         v = self.window.show_input_panel('Enter a command or a list of words, separated by spaces', text, self.on_done, None, None)
@@ -239,9 +239,9 @@ class TextPastryCommandLine(sublime_plugin.WindowCommand):
         if r: self.window.active_view().run_command(r["command"], r["args"])
 
 # ========================================
-# show_overlay.py
+# show_menu.py
 # ========================================
-class ShowTextPastryOverlay(sublime_plugin.WindowCommand):
+class TextPastryShowMenu(sublime_plugin.WindowCommand):
     def show(self):
         self.overlay = Overlay()
         history = History.load_history()
