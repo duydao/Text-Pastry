@@ -231,7 +231,7 @@ Data with leading whitespace:
 		P
 	A
 
-We can change this behaviour in the **&lt;Packages&gt;/_Text Pastry_/InsertText.sublime-settings** file:
+We can change this behaviour in the **&lt;Packages&gt;/Text Pastry/TextPastry.sublime-settings** file:
 
 	"clipboard_strip_newline": false
 
