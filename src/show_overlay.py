@@ -1,5 +1,5 @@
 import sublime, sublime_plugin, re, history, overlay
-class ShowTextPastryOverlayCommand(sublime_plugin.WindowCommand):
+class ShowTextPastryOverlay(sublime_plugin.WindowCommand):
 
     def show(self):
         self.overlay = Overlay()

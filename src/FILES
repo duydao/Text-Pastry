@@ -1,4 +1,5 @@
 history.py
+insert_text.py
 overlay.py
 parser.py
 redo.py
