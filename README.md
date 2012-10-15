@@ -11,12 +11,29 @@ insert locations _(in this document also refered to as selections)_.
 
 Please keep in mind that the selected text could be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
 
-All we need to do now is to press **CMD + ALT + T** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [ST2](http://www.sublimetext.com/).
+All we need to do now is to press **CMD + ALT + N** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [ST2](http://www.sublimetext.com/).
 
 Now its time to run our first command. Let's enter `first second third` and hit enter to run the command. _Text Pastry_ will add `first` to our first selection, `second` to the next selection and so on.
 
 _Text Pastry_ will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
 
+## Key Bindings ##
+The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-keymap_. As always, you can use your [user keymap file](http://www.sublimetext.com/docs/key-bindings) to overrule the default key bindings.
+
+<table>
+<tr>
+	<th>Shortcut</th>
+	<th>Action</th>
+</tr>
+<tr>
+	<td><strong>CMD + ALT + T</strong></td>
+	<td>Show Text Pastry Menu</td>
+</tr>
+<tr>
+	<td><strong>CMD + ALT + N</strong></td>
+	<td>Open Command Line</td>
+</tr>
+</table>
 
 ## Command Reference ##
 
@@ -76,7 +93,7 @@ _Text Pastry_ has a build in support for the [Insert Nums](https://bitbucket.org
 
 ## Examples ##
 
-Here are some examples, assuming we have selected every ocurence of `null` and _Text Pastry_ was called by pressing **CMD + ALT + T**:
+Here are some examples, assuming we have selected every ocurence of `null` and _Text Pastry_ was called by pressing **CMD + ALT + N**:
 
 ### Using a text list ###
 
@@ -364,6 +381,7 @@ You can also use negative numbers to create a negative sequence
 - ~~Command History~~
 - Flags for word manipulation
 - Sequence Placeholder
+- Add documentation for menu and history
 
 ## See Also ##
 
