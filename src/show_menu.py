@@ -68,13 +68,14 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
             s = item.command
 
             sublime.status_message("command: " + s)
-            if s == "redo_hist":
+            if item.type == 2:
                 sublime.status_message("redo history")
                 command = item.command
                 text = item.text
                 separator = item.separator
 
                 if command == "insert_nums":
+                    sublime.status_message("insert_nums: " + text)
                     (current, step, padding) = map(str, text.split(" "))
                     self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
 
@@ -86,7 +87,7 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
 
             elif s == "history":
                 self.window.run_command("hide_overlay")
-                self.window.run_command("show_text_pastry_overlay", {"history_only": True})
+                self.window.run_command("text_pastry_show_menu", {"history_only": True})
                 return
 
             elif s == "clear_hist":
@@ -94,7 +95,7 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
 
             elif s == "back":
                 self.window.run_command("hide_overlay")
-                self.window.run_command("show_text_pastry_overlay")
+                self.window.run_command("text_pastry_show_menu")
 
             elif s == "cancel":
                 pass
@@ -125,10 +126,10 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
 
             elif s == "words":
                 sublime.status_message("words")
-                self.window.run_command("show_text_pastry", { "text": "" })
+                self.window.run_command("text_pastry_show_command_line", { "text": "" })
 
             elif len(s):
-                self.window.run_command("show_text_pastry", { "text": s })
+                self.window.run_command("text_pastry_show_command_line", { "text": s })
 
             else:
                 sublime.status_message("Unknown command: " + s)

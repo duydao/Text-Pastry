@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, re, operator
+import sublime, sublime_plugin, re, operator, time
 
 # ========================================
 # history.py
@@ -13,7 +13,8 @@ class History:
         text = text.encode('unicode-escape')
         key = str(hash(text+str(separator)))
         if key in history: del history[key]
-        history[key] = dict(command=command, text=text, separator=separator, date=str(datetime.now()), label=label)
+        timestamp = time.time()
+        history[key] = dict(command=command, text=text, separator=separator, date=timestamp, label=label)
         hs.set("history", history)
         # last command
         hs.set("last_command", dict(key=key, command=command, text=text, separator=separator, index=len(history), label=label))
@@ -33,10 +34,9 @@ class History:
             else:
                 InsertTextHistory.remove_history(key)
         try:
-            sorted_x = sorted(entries, key=operator.itemgetter("date"), reverse=True)
+            sorted_x = sorted(entries, key=lambda h: h["date"], reverse=True)
         except:
             sorted_x = entries
-            pass
         sublime.status_message("history loaded")
         return sorted_x
     @staticmethod
@@ -128,18 +128,22 @@ class Overlay:
         return self.items and len(self.items) > 0
     def length(self):
         return len(self.items)
-class Item:
+class MenuItem:
     def __init__(self, command=None, label=None, text=None, separator=None):
         self.command = command
         self.label = label
         self.text = text
         self.separator = separator
-    def format(self, width, index):
-        pass
-class MenuItem(Item):
+        self.type = 1
     def format(self, width, index):
         return self.command.ljust(width).rjust(width + 1) + self.label
-class HistoryItem(Item):
+class HistoryItem:
+    def __init__(self, command=None, label=None, text=None, separator=None):
+        self.command = command
+        self.label = label
+        self.text = text
+        self.separator = separator
+        self.type = 2
     def format(self, width, index):
         i = str(index + 1)
         s = ('hist' + i).ljust(width).rjust(width + 1)
@@ -151,7 +155,9 @@ class HistoryItem(Item):
         text = self.text
         if text and len(text) > 50: text = text[0:50] + "..."
         return ' '.ljust(width + 1).rjust(width + 2) + ' '.join((text).split())
-class SpacerItem(Item):
+class SpacerItem:
+    def __init__(self):
+        self.type = 3
     def format(self, width, index):
         return ""
 
@@ -293,12 +299,13 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
         if not item == None and item.command:
             s = item.command
             sublime.status_message("command: " + s)
-            if s == "redo_hist":
+            if item.type == 2:
                 sublime.status_message("redo history")
                 command = item.command
                 text = item.text
                 separator = item.separator
                 if command == "insert_nums":
+                    sublime.status_message("insert_nums: " + text)
                     (current, step, padding) = map(str, text.split(" "))
                     self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
                 elif command == "text_pastry_insert_text":
@@ -307,13 +314,13 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                     self.window.run_command("text_pastry_show_command_line", { "text": text })
             elif s == "history":
                 self.window.run_command("hide_overlay")
-                self.window.run_command("show_text_pastry_overlay", {"history_only": True})
+                self.window.run_command("text_pastry_show_menu", {"history_only": True})
                 return
             elif s == "clear_hist":
                 History.clear_history()
             elif s == "back":
                 self.window.run_command("hide_overlay")
-                self.window.run_command("show_text_pastry_overlay")
+                self.window.run_command("text_pastry_show_menu")
             elif s == "cancel":
                 pass
             elif s == "\\p":
@@ -338,9 +345,9 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 self.window.active_view().run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
             elif s == "words":
                 sublime.status_message("words")
-                self.window.run_command("show_text_pastry", { "text": "" })
+                self.window.run_command("text_pastry_show_command_line", { "text": "" })
             elif len(s):
-                self.window.run_command("show_text_pastry", { "text": s })
+                self.window.run_command("text_pastry_show_command_line", { "text": s })
             else:
                 sublime.status_message("Unknown command: " + s)
         else:
