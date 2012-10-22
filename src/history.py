@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, operator
+import sublime, sublime_plugin, operator, time
 from datetime import datetime
 
 class History:
@@ -12,7 +12,8 @@ class History:
 
         key = str(hash(text+str(separator)))
         if key in history: del history[key]
-        history[key] = dict(command=command, text=text, separator=separator, date=str(datetime.now()), label=label)
+        timestamp = time.time()
+        history[key] = dict(command=command, text=text, separator=separator, date=timestamp, label=label)
 
         hs.set("history", history)
 
@@ -39,10 +40,9 @@ class History:
                 InsertTextHistory.remove_history(key)
 
         try:
-            sorted_x = sorted(entries, key=operator.itemgetter("date"), reverse=True)
+            sorted_x = sorted(entries, key=lambda h: h["date"], reverse=True)
         except:
             sorted_x = entries
-            pass
 
         sublime.status_message("history loaded")
         return sorted_x

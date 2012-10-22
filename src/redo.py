@@ -18,9 +18,9 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
                     (current, step, padding) = map(str, text.split(" "))
                     self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
 
-                elif command == "insert_text":
+                elif command == "text_pastry_insert_text":
                     self.window.active_view().run_command(command, {"text": text, "separator": separator})
 
                 else:
-                    #self.window.run_command("prompt_insert_text", { "text": text })
+                    #self.window.run_command("text_pastry_show_command_line", { "text": text })
                     pass

@@ -1,6 +1,6 @@
 #/bin/sh
 
-echo -e "import sublime, sublime_plugin, re, operator\n"
+echo -e "import sublime, sublime_plugin, re, operator, time\n"
 for file in `cat FILES`
 do
 	echo "# ========================================"
