@@ -17,6 +17,7 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
                 settings = sublime.load_settings("TextPastry.sublime-settings")
                 if separator == "\n" and settings.has("clipboard_strip_newline"): strip = settings.get("clipboard_strip_newline")
 
+                last_region = None
                 for idx, region in enumerate(sel):
                     if idx < len(items):
                         current = items[idx]
@@ -24,11 +25,15 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
                         self.view.replace(edit, region, current)
                     else:
                         regions.append(region)
+                    last_region = region
 
                 sel.clear()
-
+                
                 for region in regions:
                     sel.add(sublime.Region(region.begin(), region.end()))
+
+                if not sel:
+                    sel.add(sublime.Region(last_region.end(), last_region.end()))
             else:
                 sublime.status_message("No text found for Insert Text, canceled")
 
