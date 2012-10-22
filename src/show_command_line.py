@@ -9,4 +9,4 @@ class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
     def on_done(self, text):
         parser = Parser()
         r = parser.parse(text)
-        if r: self.window.active_view().run_command(r["command"], r["args"])
+        if r: self.window.active_view().run_command(r["Command"], r["args"])

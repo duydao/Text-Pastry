@@ -4,10 +4,9 @@ class Parser:
     def Parser():
         sublime.status_message("Creating CommandLineParser")
 
-    def parse(text):
-        if not text:
-            return None
+    def parse(self, text):
         result = None
+        if not text: return None
 
         # start pasing the command string
         if text:
@@ -57,4 +56,4 @@ class Parser:
         else:
             pass
         
-        return None
+        return result

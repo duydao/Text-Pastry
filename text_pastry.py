@@ -161,10 +161,9 @@ class SpacerItem(Item):
 class Parser:
     def Parser():
         sublime.status_message("Creating CommandLineParser")
-    def parse(text):
-        if not text:
-            return None
+    def parse(self, text):
         result = None
+        if not text: return None
         # start pasing the command string
         if text:
             m1 = re.compile('(-?\d+) (-?\d+) (\d+)').match(text)
@@ -202,7 +201,7 @@ class Parser:
                 result = dict(Command="insert_text", args={"text": text})
         else:
             pass
-        return None
+        return result
 
 # ========================================
 # redo.py
@@ -236,7 +235,7 @@ class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
     def on_done(self, text):
         parser = Parser()
         r = parser.parse(text)
-        if r: self.window.active_view().run_command(r["command"], r["args"])
+        if r: self.window.active_view().run_command(r["Command"], r["args"])
 
 # ========================================
 # show_menu.py
