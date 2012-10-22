@@ -47,21 +47,25 @@ class Overlay:
     def length(self):
         return len(self.items)
 
-class Item:
+class MenuItem:
     def __init__(self, command=None, label=None, text=None, separator=None):
         self.command = command
         self.label = label
         self.text = text
         self.separator = separator
-    
-    def format(self, width, index):
-        pass
-
-class MenuItem(Item):
+        self.type = 1
+        
     def format(self, width, index):
         return self.command.ljust(width).rjust(width + 1) + self.label
 
-class HistoryItem(Item):
+class HistoryItem:
+    def __init__(self, command=None, label=None, text=None, separator=None):
+        self.command = command
+        self.label = label
+        self.text = text
+        self.separator = separator
+        self.type = 2
+
     def format(self, width, index):
         i = str(index + 1)
         s = ('hist' + i).ljust(width).rjust(width + 1)
@@ -76,6 +80,9 @@ class HistoryItem(Item):
         if text and len(text) > 50: text = text[0:50] + "..."
         return ' '.ljust(width + 1).rjust(width + 2) + ' '.join((text).split())
 
-class SpacerItem(Item):
+class SpacerItem:
+    def __init__(self):
+        self.type = 3
+
     def format(self, width, index):
         return ""

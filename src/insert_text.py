@@ -10,7 +10,7 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
                 if separator: separator = separator.encode('utf8').decode("string-escape")
                 if clipboard: text = sublime.get_clipboard()
 
-                #History.save_history("insert_text", text, separator)
+                #History.save_history("text_pastry_insert_text", text, separator)
                 items = text.split(separator)
 
                 strip = False
