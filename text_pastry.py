@@ -69,7 +69,7 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
                 sel = self.view.sel()
                 if separator: separator = separator.encode('utf8').decode("string-escape")
                 if clipboard: text = sublime.get_clipboard()
-                #History.save_history("insert_text", text, separator)
+                #History.save_history("text_pastry_insert_text", text, separator)
                 items = text.split(separator)
                 strip = False
                 settings = sublime.load_settings("TextPastry.sublime-settings")
@@ -187,18 +187,18 @@ class Parser:
                 sublime.status_message("Inserting #" + text)
                 result = dict(Command="insert_nums", args={"current" : current, "step" : step, "padding" : "1"})
             elif text == "\\p":
-                History.save_history("insert_text", text=sublime.get_clipboard(), label=text)
+                History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text)
                 sublime.status_message("Inserting from clipboard")
-                result = dict(Command="insert_text", args={"text": sublime.get_clipboard()})
+                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard()})
             elif m4:
                 separator = m4.group(1)
                 if not separator: separator = None
-                History.save_history("insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
+                History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
-                result = dict(Command="insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
+                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
             else:
                 sublime.status_message("Inserting " + text)
-                result = dict(Command="insert_text", args={"text": text})
+                result = dict(Command="text_pastry_insert_text", args={"text": text})
         else:
             pass
         return result
@@ -219,10 +219,10 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
                 if command == "insert_nums":
                     (current, step, padding) = map(str, text.split(" "))
                     self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
-                elif command == "insert_text":
+                elif command == "text_pastry_insert_text":
                     self.window.active_view().run_command(command, {"text": text, "separator": separator})
                 else:
-                    #self.window.run_command("prompt_insert_text", { "text": text })
+                    #self.window.run_command("text_pastry_show_command_line", { "text": text })
                     pass
 
 # ========================================
@@ -301,10 +301,10 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 if command == "insert_nums":
                     (current, step, padding) = map(str, text.split(" "))
                     self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
-                elif command == "insert_text":
+                elif command == "text_pastry_insert_text":
                     self.window.active_view().run_command(command, {"text": text, "separator": separator})
                 else:
-                    self.window.run_command("prompt_insert_text", { "text": text })
+                    self.window.run_command("text_pastry_show_command_line", { "text": text })
             elif s == "history":
                 self.window.run_command("hide_overlay")
                 self.window.run_command("show_text_pastry_overlay", {"history_only": True})
@@ -319,15 +319,15 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
             elif s == "\\p":
                 cb = sublime.get_clipboard()
                 if cb:
-                    History.save_history("insert_text", text=cb, label=s)
-                    self.window.active_view().run_command("insert_text", {"text": cb})
+                    History.save_history("text_pastry_insert_text", text=cb, label=s)
+                    self.window.active_view().run_command("text_pastry_insert_text", {"text": cb})
                 else:
                     sublime.message_dialog("No Clipboard Data available")
             elif s == "\\p(\\n)":
                 cb = sublime.get_clipboard()
                 if cb:
-                    History.save_history("insert_text", text=cb, label=s, separator="\\n")
-                    self.window.active_view().run_command("insert_text", {"text": cb, "separator": "\\n"})
+                    History.save_history("text_pastry_insert_text", text=cb, label=s, separator="\\n")
+                    self.window.active_view().run_command("text_pastry_insert_text", {"text": cb, "separator": "\\n"})
                 else:
                     sublime.message_dialog("No Clipboard Data available")
             elif s == "\\i":

@@ -38,21 +38,21 @@ class Parser:
                 result = dict(Command="insert_nums", args={"current" : current, "step" : step, "padding" : "1"})
 
             elif text == "\\p":
-                History.save_history("insert_text", text=sublime.get_clipboard(), label=text)
+                History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text)
                 sublime.status_message("Inserting from clipboard")
-                result = dict(Command="insert_text", args={"text": sublime.get_clipboard()})
+                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard()})
 
             elif m4:
                 separator = m4.group(1)
                 if not separator: separator = None
 
-                History.save_history("insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
+                History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
-                result = dict(Command="insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
+                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
             
             else:
                 sublime.status_message("Inserting " + text)
-                result = dict(Command="insert_text", args={"text": text})
+                result = dict(Command="text_pastry_insert_text", args={"text": text})
         else:
             pass
         
