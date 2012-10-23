@@ -11,11 +11,11 @@ class Parser:
         # start pasing the command string
         if text:
 
-            m1 = re.compile('(-?\d+) (-?\d+) (\d+)').match(text)
+            m1 = re.compile('(-?\d+) (-?\d+) (\d+)$').match(text)
             m2 = re.compile('\\\\i(\d+)(,(-?\d+))?').match(text)
             m3 = re.compile('\\\\i\((\d+)(,(-?\d+))?').match(text)
-
             m4 = re.compile('\\\\p\((.*?)\)?').match(text)
+            
             if m1:
                 # Insert Nums Syntax
                 (current, step, padding) = map(str, text.split(" "))
