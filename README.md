@@ -64,6 +64,11 @@ Inserts a sequence by defining start index and step size:
 * `M` the step size
 
 **Note:** The Number Sequence command uses the syntax from [TextPad](http://www.textpad.com/).
+
+Additionally, we can leave the brackets away if we want to:
+
+	\i1000,100
+
 	
 ### Clipboard ###
 
@@ -90,6 +95,7 @@ _Text Pastry_ has a build in support for the [Insert Nums](https://bitbucket.org
 * `M` represents the step size which will be added to the index for each selection.
 * `P` must be > 0 and will be used to pad the index with leading zeroes.
 
+Note: 
 
 ## Examples ##
 
@@ -382,6 +388,7 @@ You can also use negative numbers to create a negative sequence
 - Flags for word manipulation
 - Sequence Placeholder
 - Add documentation for menu and history
+- Templates
 
 ## See Also ##
 
