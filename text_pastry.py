@@ -1,9 +1,7 @@
-import sublime, sublime_plugin, re, operator, time
-
+import sublime, sublime_plugin, re, operator, time, uuid
 # ========================================
 # history.py
 # ========================================
-from datetime import datetime
 class History:
     FILENAME = "TextPastryHistory.sublime-settings"
     @staticmethod
@@ -16,7 +14,6 @@ class History:
         timestamp = time.time()
         history[key] = dict(command=command, text=text, separator=separator, date=timestamp, label=label)
         hs.set("history", history)
-        # last command
         hs.set("last_command", dict(key=key, command=command, text=text, separator=separator, index=len(history), label=label))
         sublime.save_settings(History.FILENAME)
     @staticmethod
@@ -59,42 +56,6 @@ class History:
         sublime.status_message("History deleted")
 
 # ========================================
-# insert_text.py
-# ========================================
-class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
-    def run(self, edit, text=None, separator=None, clipboard=False):
-        try:
-            if True or text is not None and len(text) > 0:
-                regions = []
-                sel = self.view.sel()
-                if separator: separator = separator.encode('utf8').decode("string-escape")
-                if clipboard: text = sublime.get_clipboard()
-                #History.save_history("text_pastry_insert_text", text, separator)
-                items = text.split(separator)
-                strip = False
-                settings = sublime.load_settings("TextPastry.sublime-settings")
-                if separator == "\n" and settings.has("clipboard_strip_newline"): strip = settings.get("clipboard_strip_newline")
-                last_region = None
-                for idx, region in enumerate(sel):
-                    if idx < len(items):
-                        current = items[idx]
-                        if (strip): current = current.strip()
-                        self.view.replace(edit, region, current)
-                    else:
-                        regions.append(region)
-                    last_region = region
-                sel.clear()
-                for region in regions:
-                    sel.add(sublime.Region(region.begin(), region.end()))
-                if not sel:
-                    sel.add(sublime.Region(last_region.end(), last_region.end()))
-            else:
-                sublime.status_message("No text found for Insert Text, canceled")
-        except ValueError:
-            sublime.status_message("Error while executing Insert Text, canceled")
-            pass
-
-# ========================================
 # overlay.py
 # ========================================
 class Overlay:
@@ -124,8 +85,6 @@ class Overlay:
         entries = []
         width = 12
         for idx, item in enumerate(self.items):
-            #if item.text: entries.append( [item.format(width, idx), item.formatText(width)] )
-            #else: entries.append( [item.format(width, idx)] )
             entries.append( [item.format(width, idx)] )
         return entries
     def is_valid(self):
@@ -152,7 +111,6 @@ class HistoryItem:
         i = str(index + 1)
         s = ('hist' + i).ljust(width).rjust(width + 1)
         text = self.text
-        #s += ' '.join((self.label + " " + text).split())
         s += self.label
         return s
     def formatText(self, width):
@@ -166,22 +124,49 @@ class SpacerItem:
         return ""
 
 # ========================================
+# commands.py
+# ========================================
+class Command:
+    def __init__(self, items=None):
+        self.counter = 0
+        if items: self.stack = items
+        else: self.stack = []
+        pass
+    def previous(self):
+        return self.stack[self.counter-1]
+    def current(self):
+        return text[self.counter]
+    def next(self):
+        self.counter += 1
+        return self.stack[self.counter]
+    def has_next(self):
+        return (self.counter + 1) < len(self.stack)
+    @staticmethod
+    def create(cmd, items=None):
+        command_list = {
+            "uuid": UUIDCommand
+        }
+        return command_list.get(cmd)(items)
+class UUIDCommand(Command):
+    def next(self):
+        text = str(uuid.uuid4())
+        self.stack.append(text)
+        return text
+    def has_next(self): return True
+
+# ========================================
 # parser.py
 # ========================================
 class Parser:
-    def Parser():
-        sublime.status_message("Creating CommandLineParser")
     def parse(self, text):
         result = None
         if not text: return None
-        # start pasing the command string
         if text:
             m1 = re.compile('(-?\d+) (-?\d+) (\d+)$').match(text)
             m2 = re.compile('\\\\i(\d+)(,(-?\d+))?').match(text)
             m3 = re.compile('\\\\i\((\d+)(,(-?\d+))?').match(text)
             m4 = re.compile('\\\\p\((.*?)\)?').match(text)
             if m1:
-                # Insert Nums Syntax
                 (current, step, padding) = map(str, text.split(" "))
                 History.save_history("insert_nums", text)
                 sublime.status_message("Inserting Nums: " + text)
@@ -191,7 +176,6 @@ class Parser:
                 sublime.status_message("Inserting #: " + text)
                 result = dict(Command="insert_nums", args={"current" : "1", "step" : "1", "padding" : "1"})
             elif m2 or m3:
-                # \iN,M \i(N,M)
                 m = None
                 if m2: m = m2
                 else: m = m3
@@ -203,24 +187,63 @@ class Parser:
                 sublime.status_message("Inserting #" + text)
                 result = dict(Command="insert_nums", args={"current" : current, "step" : step, "padding" : "1"})
             elif text == "\\p":
-                # clipboard
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text)
                 sublime.status_message("Inserting from clipboard")
                 result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard()})
             elif m4:
-                # clipboard with separator
                 separator = m4.group(1)
                 if not separator: separator = None
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                 result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
+            elif text == "\\uuid":
+                sublime.status_message("Inserting UUID")
+                History.save_history("text_pastry_insert", text="\\uuid", label="Generate UUID")
+                result = dict(Command="text_pastry_insert", args={"command": "uuid"})
             else:
-                # words
                 sublime.status_message("Inserting " + text)
                 result = dict(Command="text_pastry_insert_text", args={"text": text})
         else:
             pass
         return result
+
+# ========================================
+# paste.py
+# ========================================
+class TextPastryPasteCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        try:
+            text = sublime.get_clipboard()
+            if text is not None and len(text) > 0:
+                regions = []
+                sel = self.view.sel()
+                items = text.split("\n")
+                if len(items) == 1: items = [text];
+                strip = True
+                settings = sublime.load_settings("TextPastry.sublime-settings")
+                for idx, region in enumerate(sel):
+                    if idx < len(items):
+                        row = items[idx].strip()
+                        if region.empty():
+                            sublime.status_message("empty")
+                            row = self.view.substr(self.view.line(self.view.line(region).begin()-1)) + "\n"
+                            i = 0
+                            if len(row.strip()): i = self.view.insert(edit, region.end(), row)
+                            regions.append( sublime.Region(region.end() + i, region.end() + i) )
+                        else:
+                            sublime.status_message("selection")
+                            self.view.replace(edit, region, row)
+                            i = len(row)
+                            regions.append( sublime.Region(region.begin() + i, region.begin() + i) )
+                sel.clear()
+                for region in regions:
+                    sel.add(region)
+                    pass
+            else:
+                sublime.status_message("No text found for Insert Text, canceled")
+        except ValueError:
+            sublime.status_message("Error while executing Insert Text, canceled")
+            pass
 
 # ========================================
 # redo.py
@@ -241,8 +264,71 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
                 elif command == "text_pastry_insert_text":
                     self.window.active_view().run_command(command, {"text": text, "separator": separator})
                 else:
-                    #self.window.run_command("text_pastry_show_command_line", { "text": text })
                     pass
+
+# ========================================
+# insert_text.py
+# ========================================
+class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text=None, separator=None, clipboard=False):
+        try:
+            if True or text is not None and len(text) > 0:
+                regions = []
+                sel = self.view.sel()
+                if separator: separator = separator.encode('utf8').decode("string-escape")
+                if clipboard: text = sublime.get_clipboard()
+                items = text.split(separator)
+                strip = False
+                settings = sublime.load_settings("TextPastry.sublime-settings")
+                if separator == "\n" and settings.has("clipboard_strip_newline"): strip = settings.get("clipboard_strip_newline")
+                last_region = None
+                for idx, region in enumerate(sel):
+                    if idx < len(items):
+                        current = items[idx]
+                        if (strip): current = current.strip()
+                        self.view.replace(edit, region, current)
+                    else:
+                        regions.append(region)
+                    last_region = region
+                sel.clear()
+                for region in regions:
+                    sel.add(sublime.Region(region.begin(), region.end()))
+                if not sel:
+                    sel.add(sublime.Region(last_region.end(), last_region.end()))
+            else:
+                sublime.status_message("No text found for Insert Text, canceled")
+        except ValueError:
+            sublime.status_message("Error while executing Insert Text, canceled")
+            pass
+
+# ========================================
+# insert_command.py
+# ========================================
+class TextPastryInsertCommand(sublime_plugin.TextCommand):
+    def run(self, edit, command):
+        try:
+            cmd = Command.create(command)
+            if cmd:
+                regions = []
+                sel = self.view.sel()
+                last_region = None
+                for region in sel:
+                    if cmd.has_next():
+                        value = cmd.next()
+                        self.view.replace(edit, region, value)
+                    else:
+                        regions.append(region)
+                    last_region = region
+                sel.clear()
+                for region in regions:
+                    sel.add(sublime.Region(region.begin(), region.end()))
+                if not sel:
+                    sel.add(sublime.Region(last_region.end(), last_region.end()))
+            else:
+                sublime.status_message("Command not found: " + cmd)
+        except ValueError:
+            sublime.status_message("Error while executing Text Pastry, canceled")
+            pass
 
 # ========================================
 # show_command_line.py
