@@ -177,11 +177,11 @@ class Parser:
             m4 = re.compile('\\\\p\((.*?)\)?').match(text)
             if m1:
                 (current, step, padding) = map(str, text.split(" "))
-                History.save_history("insert_nums", text)
+                History.save_history("insert_nums", text, label=text)
                 sublime.status_message("Inserting Nums: " + text)
                 result = dict(Command="insert_nums", args={"current" : current, "step" : step, "padding" : padding})
             elif text == "\i":
-                History.save_history("insert_nums", "1 1 1", )
+                History.save_history("insert_nums", "1 1 1", label="\i")
                 sublime.status_message("Inserting #: " + text)
                 result = dict(Command="insert_nums", args={"current" : "1", "step" : "1", "padding" : "1"})
             elif m2 or m3:
@@ -192,7 +192,7 @@ class Parser:
                 step = m.group(3)
                 if not current: current = "1"
                 if not step: step = "1"
-                History.save_history("insert_nums", current + " " + step + " 1")
+                History.save_history("insert_nums", text=current + " " + step + " 1", label=text)
                 sublime.status_message("Inserting #" + text)
                 result = dict(Command="insert_nums", args={"current" : current, "step" : step, "padding" : "1"})
             elif text == "\\p":
@@ -388,7 +388,7 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
             text = entry.get("text", None).decode("unicode-escape").decode("string-escape")
             separator = entry.get("separator", None)
             label = entry.get("label", None)
-            if not label: label = command
+            if not label: label = text
             if text and command:
                 self.overlay.addHistoryItem(command, label, text, separator)
     def run(self, history_only=False):
