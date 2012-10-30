@@ -4,6 +4,14 @@ Text Pastry is a plugin for Sublime Text 2 and gives you the tools to insert a s
 
 Based on [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) by [Mark Stahler](http://blog.markstahler.ca/)
 
+## Installation ##
+
+Thanks for using the excelent [Package Control](http://wbond.net/sublime_packages/package_control), created by [@wbond](https://twitter.com/wbond), to install _Text Pastry_:
+
+<http://wbond.net/sublime_packages/package_control>
+
+
+
 ## Usage ##
 
 To use _Text Pastry_, we need to open a Document in [ST2](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
@@ -84,6 +92,20 @@ Same as above with a specified [string separator](http://docs.python.org/library
 
 
 **Note:** The Clipboard command uses syntax from [TextPad](http://www.textpad.com/).
+
+### UUID ###
+
+**NEW** _Text Pastry_ will generate a [UUID](http://en.wikipedia.org/wiki/Universally_unique_identifier) for each selection we have made:
+
+	\uuid
+
+This command will generate a _random UUID_ by using pythons [uuid.uuid4() method](http://docs.python.org/2/library/uuid.html#uuid.uuid4):
+	
+	dbf8326e-5243-406e-abd9-bd0425d3e842
+
+We can use the following command to generate a _random UUID_ in UPPERCASE:
+
+	\UUID
 
 ### Insert Nums ###
 
@@ -385,6 +407,7 @@ You can also use negative numbers to create a negative sequence
 
 - ~~Command List Overlay~~
 - ~~Command History~~
+- ~~UUID generation~~
 - Flags for word manipulation
 - Sequence Placeholder
 - Add documentation for menu and history

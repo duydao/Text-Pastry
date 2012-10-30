@@ -127,11 +127,13 @@ class SpacerItem:
 # commands.py
 # ========================================
 class Command:
-    def __init__(self, items=None):
+    def __init__(self, options=None):
         self.counter = 0
-        if items: self.stack = items
-        else: self.stack = []
+        self.options = options
+        self.stack = []
         pass
+    def set_items(self, items):
+        if items: self.stack = items
     def previous(self):
         return self.stack[self.counter-1]
     def current(self):
@@ -142,7 +144,7 @@ class Command:
     def has_next(self):
         return (self.counter + 1) < len(self.stack)
     @staticmethod
-    def create(cmd, items=None):
+    def create(cmd, items=None, options=None):
         command_list = {
             "uuid": UUIDCommand
         }
@@ -150,8 +152,15 @@ class Command:
 class UUIDCommand(Command):
     def next(self):
         text = str(uuid.uuid4())
+        if self.is_upper_case():
+            text = text.upper()
         self.stack.append(text)
         return text
+    def is_upper_case(self):
+        upper_case = False
+        if self.options:
+            upper_case = self.options.get("uppercase", False)
+        return upper_case
     def has_next(self): return True
 
 # ========================================
@@ -196,9 +205,13 @@ class Parser:
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                 result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
+            elif text == "\\UUID":
+                sublime.status_message("Inserting UUID")
+                History.save_history("text_pastry_insert", text=text, label="Generate UUID")
+                result = dict(Command="text_pastry_insert", args={"command": "uuid", "options": {"uppercase": True} })
             elif text == "\\uuid":
                 sublime.status_message("Inserting UUID")
-                History.save_history("text_pastry_insert", text="\\uuid", label="Generate UUID")
+                History.save_history("text_pastry_insert", text=text, label="Generate uuid")
                 result = dict(Command="text_pastry_insert", args={"command": "uuid"})
             else:
                 sublime.status_message("Inserting " + text)
@@ -305,9 +318,10 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
 # insert_command.py
 # ========================================
 class TextPastryInsertCommand(sublime_plugin.TextCommand):
-    def run(self, edit, command):
+    def run(self, edit, command, options=None, items=None):
         try:
-            cmd = Command.create(command)
+            cmd = Command.create(command, options)
+            if items: cmd.set_items(items)
             if cmd:
                 regions = []
                 sel = self.view.sel()
