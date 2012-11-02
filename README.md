@@ -331,32 +331,6 @@ You can also use negative numbers to create a negative sequence:
 
 ***
 
-### From 100 to 50 ###
-
-You can also use negative numbers to create a negative sequence
-
-	\i(100,-10)
-
-#### Text ####
-
-	var a = null;
-	var b = null;
-	var c = null;
-	var d = null;
-	var e = null;
-	var f = null;
-	
-#### Result ####
-
-	var a = 100;
-	var b = 90;
-	var c = 80;
-	var d = 70;
-	var e = 60;
-	var f = 50;
-
-***
-
 ### Insert Nums Syntax ###
 
 	1 100 1
