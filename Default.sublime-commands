@@ -1,0 +1,23 @@
+[
+  {
+    "caption": "Text Pastry: From 0 To X",
+    "command": "insert_nums", 
+    "args": {"current": "0", "step": "1", "padding": "1"}
+  },{
+    "caption": "Text Pastry: From 1 To X",
+    "command": "insert_nums", 
+    "args": {"current": "1", "step": "1", "padding": "1"}
+  },{
+    "caption": "Text Pastry: From N to X by M",
+    "command": "text_pastry_show_command_line", 
+    "args": {"text": "\\i(N,M)"}
+  },{
+    "caption": "Text Pastry: Lines from clipboard",
+    "command": "text_pastry_insert_text", 
+    "args": {"text": "", "clipboard": true, "separator": "\\n"}
+  },{
+    "caption": "Text Pastry: Words from clipboard",
+    "command": "text_pastry_insert_text", 
+    "args": {"text": "", "clipboard": true}
+  }
+]
