@@ -2,15 +2,9 @@
 
 Text Pastry is a plugin for Sublime Text 2 and gives you the tools to insert a sequence of text or numbers on multiple locations.
 
-Based on [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) by [Mark Stahler](http://blog.markstahler.ca/)
-
 ## Installation ##
 
-Thanks for using the excelent [Package Control](http://wbond.net/sublime_packages/package_control), created by [@wbond](https://twitter.com/wbond), to install _Text Pastry_:
-
-<http://wbond.net/sublime_packages/package_control>
-
-
+Thanks for using the excelent [Package Control](http://wbond.net/sublime_packages/package_control) to install _Text Pastry_.
 
 ## Usage ##
 
@@ -382,10 +376,10 @@ You can also use negative numbers to create a negative sequence:
 - ~~Command List Overlay~~
 - ~~Command History~~
 - ~~UUID generation~~
-- Flags for word manipulation
-- Sequence Placeholder
+- ~~Settings for word manipulation~~
 - Add documentation for menu and history
-- Templates
+- Alphabetical sequence (upper/lower case)
+- Random numbers
 
 ## See Also ##
 
