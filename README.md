@@ -379,6 +379,7 @@ You can also use negative numbers to create a negative sequence:
 - ~~Command History~~
 - ~~UUID generation~~
 - ~~Settings for word manipulation~~
+- Paste as Block
 - Add documentation for menu and history
 - Alphabetical sequence (upper/lower case)
 - Random numbers
