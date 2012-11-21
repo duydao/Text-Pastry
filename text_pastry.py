@@ -6,6 +6,9 @@ class History:
     FILENAME = "TextPastryHistory.sublime-settings"
     @staticmethod
     def save_history(command, text, separator=None, label=None):
+        global_settings = sublime.load_settings("TextPastry.sublime-settings")
+        enabled = global_settings.get("history_enabled", False)
+        if not enabled: return []
         hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
         text = text.encode('unicode-escape')
@@ -18,7 +21,9 @@ class History:
         sublime.save_settings(History.FILENAME)
     @staticmethod
     def load_history():
-        sublime.status_message("history loaded")
+        global_settings = sublime.load_settings("TextPastry.sublime-settings")
+        enabled = global_settings.get("history_enabled", False)
+        if not enabled: return []
         hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
         entries = []
@@ -83,7 +88,11 @@ class Overlay:
         return item
     def all(self):
         entries = []
+        min_spacing = 2
         width = 12
+        for item in self.items:
+            if item.type != 3 and len(item.command) > (width - min_spacing):
+                width = len(item.command) + min_spacing
         for idx, item in enumerate(self.items):
             entries.append( [item.format(width, idx)] )
         return entries
@@ -131,22 +140,23 @@ class Command:
         self.counter = 0
         self.options = options
         self.stack = []
-        pass
-    def set_items(self, items):
+    def init(self, view, items=None):
         if items: self.stack = items
     def previous(self):
         return self.stack[self.counter-1]
     def current(self):
         return text[self.counter]
     def next(self):
+        val = self.stack[self.counter]
         self.counter += 1
-        return self.stack[self.counter]
+        return val
     def has_next(self):
-        return (self.counter + 1) < len(self.stack)
+        return (self.counter) < len(self.stack)
     @staticmethod
     def create(cmd, items=None, options=None):
         command_list = {
-            "uuid": UUIDCommand
+            "uuid": UUIDCommand,
+            "backreference": BackreferenceCommand
         }
         return command_list.get(cmd)(items)
 class UUIDCommand(Command):
@@ -162,6 +172,25 @@ class UUIDCommand(Command):
             upper_case = self.options.get("uppercase", False)
         return upper_case
     def has_next(self): return True
+class BackreferenceCommand(Command):
+    def init(self, view, items=None):
+        selections = []
+        if view.sel(): 
+            for region in view.sel():
+                selections.append( view.substr(region) )
+        values = []
+        for idx, index in enumerate(map(int, items)):
+            if idx >= len(selections): break;
+            i = index - 1
+            if i >= 0 and i < len(selections):
+                values.append( selections[i] )
+            else:
+                values.append( None )
+        for idx, value in enumerate(selections):
+            print str(idx) + "-" + value
+            if len(values) + 1 < idx:
+                values.append(value)
+        self.stack = values
 
 # ========================================
 # parser.py
@@ -175,6 +204,7 @@ class Parser:
             m2 = re.compile('\\\\i(\d+)(,(-?\d+))?').match(text)
             m3 = re.compile('\\\\i\((\d+)(,(-?\d+))?').match(text)
             m4 = re.compile('\\\\p\((.*?)\)?').match(text)
+            m5 = re.compile('^(\$\d+\s?)+$').match(text)
             if m1:
                 (current, step, padding) = map(str, text.split(" "))
                 History.save_history("insert_nums", text, label=text)
@@ -198,13 +228,13 @@ class Parser:
             elif text == "\\p":
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text)
                 sublime.status_message("Inserting from clipboard")
-                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard()})
+                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "clipboard": True})
             elif m4:
                 separator = m4.group(1)
                 if not separator: separator = None
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
-                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator})
+                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator, "clipboard": True})
             elif text == "\\UUID":
                 sublime.status_message("Inserting UUID")
                 History.save_history("text_pastry_insert", text=text, label="Generate UUID")
@@ -213,6 +243,9 @@ class Parser:
                 sublime.status_message("Inserting UUID")
                 History.save_history("text_pastry_insert", text=text, label="Generate uuid")
                 result = dict(Command="text_pastry_insert", args={"command": "uuid"})
+            elif m5:
+                items = ','.join(filter(None, map(lambda x: x.strip(), text.split("$"))))
+                result = dict(Command="text_pastry_insert", args={"command": "backreference", "text": items, "separator": ","})
             else:
                 sublime.status_message("Inserting " + text)
                 result = dict(Command="text_pastry_insert_text", args={"text": text})
@@ -283,17 +316,25 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
 # insert_text.py
 # ========================================
 class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
-    def run(self, edit, text=None, separator=None, clipboard=False):
+    def run(self, edit, text=None, separator=None, clipboard=False, items=None):
         try:
-            if True or text is not None and len(text) > 0:
-                regions = []
-                sel = self.view.sel()
-                if separator: separator = separator.encode('utf8').decode("string-escape")
-                if clipboard: text = sublime.get_clipboard()
-                items = text.split(separator)
+            regions = []
+            sel = self.view.sel()
+            if separator: separator = separator.encode('utf8').decode("string-escape")
+            if clipboard: text = sublime.get_clipboard()
+            if text: items = text.split(separator)
+            if items:
                 strip = False
                 settings = sublime.load_settings("TextPastry.sublime-settings")
                 if separator == "\n" and settings.has("clipboard_strip_newline"): strip = settings.get("clipboard_strip_newline")
+                repeat = True
+                if clipboard and settings.has("repeat_clipboard"):
+                    repeat = settings.get("repeat_clipboard")
+                elif settings.has("repeat_words"):
+                    repeat = settings.get("repeat_words")
+                if repeat and items:
+                    while (len(items) < len(sel)): 
+                        items.extend(items)
                 last_region = None
                 for idx, region in enumerate(sel):
                     if idx < len(items):
@@ -318,26 +359,27 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
 # insert_command.py
 # ========================================
 class TextPastryInsertCommand(sublime_plugin.TextCommand):
-    def run(self, edit, command, options=None, items=None):
+    def run(self, edit, command, options=None, text=None, separator=None):
         try:
             cmd = Command.create(command, options)
-            if items: cmd.set_items(items)
             if cmd:
+                items = None
+                if text: items = text.split(separator)
+                cmd.init(self.view, items)
+                print cmd.stack
                 regions = []
                 sel = self.view.sel()
                 last_region = None
                 for region in sel:
                     if cmd.has_next():
                         value = cmd.next()
-                        self.view.replace(edit, region, value)
+                        if value is not None:
+                            self.view.replace(edit, region, value)
+                            regions.append(region)
                     else:
-                        regions.append(region)
-                    last_region = region
-                sel.clear()
+                        break
                 for region in regions:
-                    sel.add(sublime.Region(region.begin(), region.end()))
-                if not sel:
-                    sel.add(sublime.Region(last_region.end(), last_region.end()))
+                    sel.subtract(region)
             else:
                 sublime.status_message("Command not found: " + cmd)
         except ValueError:
@@ -363,24 +405,43 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
     def show(self):
         self.overlay = Overlay()
         history = History.load_history()
-        self.fill_with_history( history[0:5], self.overlay )
+        self.fill_with_history( history[:3], self.overlay )
+        if len(history) > 0: self.overlay.addSpacer( )
         x = selection_count = len( self.window.active_view().sel() )
-        cb = sublime.get_clipboard()
-        if len(history) > 5: self.overlay.addMenuItem( "history", "Show history" )
         self.overlay.addMenuItem( "\\i", "From 1 to {0}".format(x) )
         self.overlay.addMenuItem( "\\i0", "From 0 to " + str(x-1) )
         self.overlay.addMenuItem( "\\i(N,M)", "From N to X by M" )
-        if cb: self.overlay.addMenuItem( "\\p(\\n)", "Paste Line from Clipboard" )
-        if cb: self.overlay.addMenuItem( "\\p", "Paste Words from Clipboard" )
-        self.overlay.addMenuItem( "words", "Word list separated by one space" )
         self.overlay.addSpacer( )
-        self.overlay.addMenuItem( "clear_hist", "Clear history" )
+        cb = sublime.get_clipboard()
+        if cb: self.overlay.addMenuItem( "\\p(\\n)", "Lines from clipboard" )
+        if cb: self.overlay.addMenuItem( "\\p", "Words from clipboard" )
+        self.overlay.addMenuItem( "words", "Enter word list" )
+        self.overlay.addSpacer( )
+        if len(history) > 0: self.overlay.addMenuItem( "history", "Show history" )
+        self.overlay.addMenuItem( "settings", "Show settings" )
         self.overlay.addMenuItem( "cancel", "Cancel" )
-    def show_history_only(self):
+    def show_history(self):
         self.overlay = Overlay()
         history = History.load_history()
         self.fill_with_history( history, self.overlay )
-        self.overlay.addMenuItem( "back", "Back" )
+        self.overlay.addSpacer( )
+        self.overlay.addMenuItem( "clear_hist", "Clear history" )
+        self.overlay.addMenuItem( "back", "Back to menu" )
+    def show_settings(self):
+        self.overlay = Overlay()
+        settings = sublime.load_settings("TextPastry.sublime-settings")
+        repeat_words = settings.get("repeat_words", False)
+        repeat_clipboard = settings.get("repeat_clipboard", False)
+        strip_newline = settings.get("clipboard_strip_newline", False)
+        self.overlay.addMenuItem( "repeat_words", "Repeat words" + self.enabled_string(repeat_words) )
+        self.overlay.addMenuItem( "repeat_clipboard", "Repeat clipboard" + self.enabled_string(repeat_clipboard) )
+        self.overlay.addMenuItem( "strip_newline", "Remove newline" + self.enabled_string(strip_newline) )
+        self.overlay.addSpacer( )
+        self.overlay.addMenuItem( "back", "Back to menu" )
+    def enabled_string(self, enabled):
+        s = " (disabled)"
+        if enabled: s = " (enabled)"
+        return s
     def fill_with_history(self, history, overlay):
         for i, entry in enumerate(history):
             if not entry: continue
@@ -391,22 +452,24 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
             if not label: label = text
             if text and command:
                 self.overlay.addHistoryItem(command, label, text, separator)
-    def run(self, history_only=False):
+    def run(self, show_history=False, show_settings=False):
         if not self.window.active_view(): return
         sublime.status_message("ShowTextPastryOverlayCommand")
         try:
             selection_count = len(self.window.active_view().sel())
             if selection_count > 1 or True:
-                if history_only:
-                    self.show_history_only()
+                if show_history:
+                    self.show_history()
+                elif show_settings:
+                    self.show_settings()
                 else:
                     self.show()
                 if self.overlay and self.overlay.is_valid():
                     self.window.show_quick_panel(self.overlay.all(), self.on_done, sublime.MONOSPACE_FONT)
             else:
-                sublime.status_message("You need to make multiple selections to use Insert Text");
+                sublime.status_message("You need to make multiple selections to use Text Pastry");
         except ValueError:
-            sublime.status_message("Error while showing Insert Text overlay");
+            sublime.status_message("Error while showing Text Pastry overlay");
     def on_done(self, index):
         item = self.overlay.get(index)
         if not item == None and item.command:
@@ -427,7 +490,32 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                     self.window.run_command("text_pastry_show_command_line", { "text": text })
             elif s == "history":
                 self.window.run_command("hide_overlay")
-                self.window.run_command("text_pastry_show_menu", {"history_only": True})
+                self.window.run_command("text_pastry_show_menu", {"show_history": True})
+                return
+            elif s == "settings":
+                self.window.run_command("hide_overlay")
+                self.window.run_command("text_pastry_show_menu", {"show_settings": True})
+                return
+            elif s == "repeat_words":
+                self.window.run_command("hide_overlay")
+                settings = sublime.load_settings("TextPastry.sublime-settings")
+                enabled = not settings.get("repeat_words", False)
+                settings.set("repeat_words", enabled)
+                sublime.save_settings("TextPastry.sublime-settings")
+                return
+            elif s == "repeat_clipboard":
+                self.window.run_command("hide_overlay")
+                settings = sublime.load_settings("TextPastry.sublime-settings")
+                enabled = not settings.get("repeat_clipboard", False)
+                settings.set("repeat_clipboard", enabled)
+                sublime.save_settings("TextPastry.sublime-settings")
+                return
+            elif s == "strip_newline":
+                self.window.run_command("hide_overlay")
+                settings = sublime.load_settings("TextPastry.sublime-settings")
+                enabled = not settings.get("clipboard_strip_newline", False)
+                settings.set("clipboard_strip_newline", enabled)
+                sublime.save_settings("TextPastry.sublime-settings")
                 return
             elif s == "clear_hist":
                 History.clear_history()
@@ -440,14 +528,14 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 cb = sublime.get_clipboard()
                 if cb:
                     History.save_history("text_pastry_insert_text", text=cb, label=s)
-                    self.window.active_view().run_command("text_pastry_insert_text", {"text": cb})
+                    self.window.active_view().run_command("text_pastry_insert_text", {"text": cb, "clipboard": True})
                 else:
                     sublime.message_dialog("No Clipboard Data available")
             elif s == "\\p(\\n)":
                 cb = sublime.get_clipboard()
                 if cb:
                     History.save_history("text_pastry_insert_text", text=cb, label=s, separator="\\n")
-                    self.window.active_view().run_command("text_pastry_insert_text", {"text": cb, "separator": "\\n"})
+                    self.window.active_view().run_command("text_pastry_insert_text", {"text": cb, "separator": "\\n", "clipboard": True})
                 else:
                     sublime.message_dialog("No Clipboard Data available")
             elif s == "\\i":
