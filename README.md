@@ -37,6 +37,8 @@ The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-k
 </tr>
 </table>
 
+**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palete (**CMD + SHIFT + P**)
+
 ## Command Reference ##
 
 ### Text ###
