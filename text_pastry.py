@@ -187,7 +187,6 @@ class BackreferenceCommand(Command):
             else:
                 values.append( None )
         for idx, value in enumerate(selections):
-            print str(idx) + "-" + value
             if len(values) + 1 < idx:
                 values.append(value)
         self.stack = values
@@ -344,11 +343,12 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
                     else:
                         regions.append(region)
                     last_region = region
-                sel.clear()
-                for region in regions:
-                    sel.add(sublime.Region(region.begin(), region.end()))
-                if not sel:
-                    sel.add(sublime.Region(last_region.end(), last_region.end()))
+                if not settings.get("keep_selection", False):
+                    sel.clear()
+                    for region in regions:
+                        sel.add(sublime.Region(region.begin(), region.end()))
+                    if not sel:
+                        sel.add(sublime.Region(last_region.end(), last_region.end()))
             else:
                 sublime.status_message("No text found for Insert Text, canceled")
         except ValueError:
@@ -366,7 +366,6 @@ class TextPastryInsertCommand(sublime_plugin.TextCommand):
                 items = None
                 if text: items = text.split(separator)
                 cmd.init(self.view, items)
-                print cmd.stack
                 regions = []
                 sel = self.view.sel()
                 last_region = None
@@ -433,9 +432,11 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
         repeat_words = settings.get("repeat_words", False)
         repeat_clipboard = settings.get("repeat_clipboard", False)
         strip_newline = settings.get("clipboard_strip_newline", False)
+        keep_selection = settings.get("keep_selection", False)
         self.overlay.addMenuItem( "repeat_words", "Repeat words" + self.enabled_string(repeat_words) )
         self.overlay.addMenuItem( "repeat_clipboard", "Repeat clipboard" + self.enabled_string(repeat_clipboard) )
         self.overlay.addMenuItem( "strip_newline", "Remove newline" + self.enabled_string(strip_newline) )
+        self.overlay.addMenuItem( "keep_selection", "Keep selection" + self.enabled_string(keep_selection) )
         self.overlay.addSpacer( )
         self.overlay.addMenuItem( "back", "Back to menu" )
     def enabled_string(self, enabled):
@@ -515,6 +516,13 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 settings = sublime.load_settings("TextPastry.sublime-settings")
                 enabled = not settings.get("clipboard_strip_newline", False)
                 settings.set("clipboard_strip_newline", enabled)
+                sublime.save_settings("TextPastry.sublime-settings")
+                return
+            elif s == "keep_selection":
+                self.window.run_command("hide_overlay")
+                settings = sublime.load_settings("TextPastry.sublime-settings")
+                enabled = not settings.get("keep_selection", False)
+                settings.set("keep_selection", enabled)
                 sublime.save_settings("TextPastry.sublime-settings")
                 return
             elif s == "clear_hist":

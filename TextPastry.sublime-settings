@@ -2,5 +2,6 @@
 	"clipboard_strip_newline": true,
 	"repeat_words": false,
 	"repeat_clipboard": false,
-	"history_enabled": true
+	"history_enabled": true,
+	"keep_selection": false
 }
