@@ -11,7 +11,7 @@ class History:
         if not enabled: return []
         hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
-        text = text.encode('unicode-escape')
+        text = str(text.encode('unicode-escape'))
         key = str(hash(text+str(separator)))
         if key in history: del history[key]
         timestamp = time.time()
@@ -27,11 +27,11 @@ class History:
         hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
         entries = []
-        for key, item in history.iteritems():
+        for key, item in history.items():
             command = None
             text = None
             separator = None
-            if item.has_key("command") and item.has_key("text") and item["command"] and item["text"]:
+            if "command" in item and "text" in item and item["command"] and item["text"]:
                 entries.append(item)
             else:
                 InsertTextHistory.remove_history(key)
@@ -47,7 +47,7 @@ class History:
         hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
         sublime.status_message("Deleting item from history: " + str(id))
-        if history.has_key(id):
+        if id in history:
             del history[id]
             hs.set("history", history)
             sublime.save_settings(History.FILENAME)
@@ -297,7 +297,7 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
     def run(self):
         hs = sublime.load_settings(TextPastryHistory.file_name)
         item = hs.get("last_command", {})
-        if item and item.has_key("command") and item.has_key("text") and item["command"] and item["text"]:
+        if item and "command" in item and "text" in item and item["command"] and item["text"]:
             text = item.get("text").decode("unicode-escape").decode("string-escape")
             separator = item.get("separator", None)
             command = item.get("command", None)
