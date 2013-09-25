@@ -105,7 +105,7 @@ We can use the following command to generate a _random UUID_ in UPPERCASE:
 
 ### Insert Nums ###
 
-_Text Pastry_ has a build in support for the [Insert Nums](https://bitbucket.org/markstahler/insert-nums/) syntax by providing three numbers separated by one space:
+_Text Pastry_ has a build in support for the [Insert Nums](https://github.com/jbrooksuk/InsertNums/) syntax by providing three numbers separated by one space:
 
 	N M P
 
