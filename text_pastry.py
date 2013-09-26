@@ -202,7 +202,7 @@ class Parser:
             m1 = re.compile('(-?\d+) (-?\d+) (\d+)$').match(text)
             m2 = re.compile('\\\\i(-?\d+)(,(-?\d+))?').match(text)
             m3 = re.compile('\\\\i\((-?\d+)(,(-?\d+))?').match(text)
-            m4 = re.compile('\\\\p\((.*?)\)?').match(text)
+            m4 = re.compile('\\\\p\((.*?)\)$').match(text)
             m5 = re.compile('^(\$\d+\s?)+$').match(text)
             if m1:
                 (current, step, padding) = map(str, text.split(" "))
