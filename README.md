@@ -5,7 +5,7 @@ _Text Pastry_ is a plugin for [Sublime Text 2 &amp; 3](http://www.sublimetext.co
 Ever wanted to paste five lines into five other locations at once? _Text Pastry_ can help you out!
 
 ## What's new ##
-- v1.3.3: Added \r([regexp]) and \r [regexp]
+- v1.3.3: New commands: \r(regexp) and \r regex
 - v1.3.2: Bugfix release
 
 
