@@ -204,6 +204,7 @@ class Parser:
             m3 = re.compile('\\\\i\((-?\d+)(,(-?\d+))?').match(text)
             m4 = re.compile('\\\\p\((.*?)\)$').match(text)
             m5 = re.compile('^(\$\d+\s?)+$').match(text)
+            m6 = re.compile('\\\\r\((.*?)\)$').match(text)
             if m1:
                 (current, step, padding) = map(str, text.split(" "))
                 History.save_history("insert_nums", text, label=text)
@@ -234,6 +235,12 @@ class Parser:
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                 result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator, "clipboard": True})
+            elif m6:
+                separator = m6.group(1)
+                if not separator: separator = None
+                History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
+                sublime.status_message("Inserting from clipboard with separator: " + str(separator))
+                result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator, "clipboard": True, "regex": True})
             elif text == "\\UUID":
                 sublime.status_message("Inserting UUID")
                 History.save_history("text_pastry_insert", text=text, label="Generate UUID")
@@ -315,13 +322,15 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
 # insert_text.py
 # ========================================
 class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
-    def run(self, edit, text=None, separator=None, clipboard=False, items=None):
+    def run(self, edit, text=None, separator=None, clipboard=False, items=None, regex=False):
         try:
             regions = []
             sel = self.view.sel()
             if separator: separator = separator.encode('utf8').decode("string-escape")
             if clipboard: text = sublime.get_clipboard()
-            if text: items = text.split(separator)
+            if text:
+                if regex: items = re.split(separator, text)
+                else: items = text.split(separator)
             if items:
                 strip = False
                 settings = sublime.load_settings("TextPastry.sublime-settings")
