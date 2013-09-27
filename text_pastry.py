@@ -205,6 +205,7 @@ class Parser:
             m4 = re.compile('\\\\p\((.*?)\)$').match(text)
             m5 = re.compile('^(\$\d+\s?)+$').match(text)
             m6 = re.compile('\\\\r\((.*?)\)$').match(text)
+            m7 = re.compile('\\\\r (.*)').match(text)
             if m1:
                 (current, step, padding) = map(str, text.split(" "))
                 History.save_history("insert_nums", text, label=text)
@@ -235,8 +236,9 @@ class Parser:
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
                 result = dict(Command="text_pastry_insert_text", args={"text": sublime.get_clipboard(), "separator": separator, "clipboard": True})
-            elif m6:
-                separator = m6.group(1)
+            elif m6 or m7:
+                if (m6): separator = m6.group(1)
+                else: separator = m7.group(1)
                 if not separator: separator = None
                 History.save_history("text_pastry_insert_text", text=sublime.get_clipboard(), label=text, separator=separator)
                 sublime.status_message("Inserting from clipboard with separator: " + str(separator))
