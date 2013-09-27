@@ -1,6 +1,8 @@
 # Text Pastry #
 
-_Text Pastry_ is a plugin for Sublime Text 2 and gives you the tools to insert or paste a sequence of text, numbers or UUIDs on multiple locations.
+_Text Pastry_ is a plugin for [Sublime Text 2 &amp; 3](http://www.sublimetext.com/) that will give you the necessary tools to insert a bunch of text, a list of numbers or generated UUIDs into your selected locations.
+
+Ever wanted to paste five lines into five other locations at once? _Text Pastry_ can help you out!
 
 ## What's new ##
 - v1.3.3: Added \r([regexp]) and \r [regexp]
