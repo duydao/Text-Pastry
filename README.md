@@ -111,7 +111,7 @@ We can use the following command to generate a _random UUID_ in UPPERCASE:
 	\UUID
 
 ### REGEX separators ###
-**NEW** We're abe to define regex separators for the data that we're pasting, which should give us some new possibilities:
+**NEW** We're abe to define regex separators for the data that we are pasting, which should give us some new possibilities. All it does is splitting the clipboard data with the regex, and paste the resulting items into the selected locations:
 
 	\r(regex)
 
@@ -395,14 +395,13 @@ You can also use negative numbers to create a negative sequence:
 
 ## Todo ##
 
+- Alphabetical sequence (upper/lower case)
+- Random numbers, strings and sequences
 - ~~Command List Overlay~~
 - ~~Command History~~
 - ~~UUID generation~~
 - ~~Settings for word manipulation~~
-- Paste as Block
-- Add documentation for menu and history
-- Alphabetical sequence (upper/lower case)
-- Random numbers
+- ~~Paste as Block~~
 
 ## License ##
 
