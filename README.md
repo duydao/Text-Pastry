@@ -1,6 +1,11 @@
 # Text Pastry #
 
-Text Pastry is a plugin for Sublime Text 2 and gives you the tools to insert a sequence of text or numbers on multiple locations.
+_Text Pastry_ is a plugin for Sublime Text 2 and gives you the tools to insert or paste a sequence of text, numbers or UUIDs on multiple locations.
+
+## What's new ##
+- v1.3.3: Added \r([regexp]) and \r [regexp]
+- v1.3.2: Bugfix release
+
 
 ## Installation ##
 
@@ -91,7 +96,7 @@ Same as above with a specified [string separator](http://docs.python.org/library
 
 ### UUID ###
 
-**NEW** _Text Pastry_ will generate a [UUID](http://en.wikipedia.org/wiki/Universally_unique_identifier) for each selection we have made:
+_Text Pastry_ will generate a [UUID](http://en.wikipedia.org/wiki/Universally_unique_identifier) for each selection we have made:
 
 	\uuid
 
@@ -102,6 +107,19 @@ This command will generate a _random UUID_ by using pythons [uuid.uuid4() method
 We can use the following command to generate a _random UUID_ in UPPERCASE:
 
 	\UUID
+
+### REGEX separators ###
+**NEW** We're abe to define regex separators for the data that we're pasting, which should give us some new possibilities:
+
+	\r(regex)
+
+or
+	
+	\r regex
+
+* `regex` the regexp used to split the clipboad data.
+
+**Note:** If you managed to get [python-pcre](https://github.com/awahlig/python-pcre) up and running, the library will be prefered over the default python [re](http://docs.python.org/2/library/re.html) library.
 
 ### Insert Nums ###
 
@@ -383,7 +401,6 @@ You can also use negative numbers to create a negative sequence:
 - Add documentation for menu and history
 - Alphabetical sequence (upper/lower case)
 - Random numbers
-
 
 ## License ##
 
