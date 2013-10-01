@@ -11,7 +11,6 @@ class History:
         if not enabled: return []
         hs = sublime.load_settings(History.FILENAME)
         history = hs.get("history", {})
-        text = str(text.encode('unicode-escape'))
         key = str(hash(text+str(separator)))
         if key in history: del history[key]
         timestamp = time.time()
@@ -34,7 +33,7 @@ class History:
             if "command" in item and "text" in item and item["command"] and item["text"]:
                 entries.append(item)
             else:
-                InsertTextHistory.remove_history(key)
+                History.remove_history(key)
         try:
             sorted_x = sorted(entries, key=lambda h: h["date"], reverse=True)
         except:
@@ -307,7 +306,7 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
         hs = sublime.load_settings(TextPastryHistory.file_name)
         item = hs.get("last_command", {})
         if item and "command" in item and "text" in item and item["command"] and item["text"]:
-            text = item.get("text").decode("unicode-escape").decode("string-escape")
+            text = item.get("text")
             separator = item.get("separator", None)
             command = item.get("command", None)
             if text and command:
@@ -328,7 +327,7 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         try:
             regions = []
             sel = self.view.sel()
-            if separator: separator = separator.encode('utf8').decode("string-escape")
+            if separator: separator = separator.encode('utf8').decode("unicode-escape")
             if clipboard: text = sublime.get_clipboard()
             if text:
                 if regex: items = re.split(separator, text)
@@ -458,7 +457,7 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
         for i, entry in enumerate(history):
             if not entry: continue
             command = entry.get("command", None)
-            text = entry.get("text", None).decode("unicode-escape").decode("string-escape")
+            text = entry.get("text", None)
             separator = entry.get("separator", None)
             label = entry.get("label", None)
             if not label: label = text
@@ -477,7 +476,7 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 else:
                     self.show()
                 if self.overlay and self.overlay.is_valid():
-                    self.window.show_quick_panel(self.overlay.all(), self.on_done, sublime.MONOSPACE_FONT)
+                    self.show_quick_panel(self.overlay.all(), self.on_done, sublime.MONOSPACE_FONT)
             else:
                 sublime.status_message("You need to make multiple selections to use Text Pastry");
         except ValueError:
@@ -572,4 +571,6 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 sublime.status_message("Unknown command: " + s)
         else:
             sublime.status_message("No item selected")
-
+    def show_quick_panel(self, items, on_done, flags):
+        # Sublime 3 does not allow calling show_quick_panel from on_done, so we need to set a timeout here.
+        sublime.set_timeout(lambda: self.window.show_quick_panel(items, on_done, flags), 10)
