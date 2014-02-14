@@ -1,10 +1,11 @@
 # Text Pastry #
 
-_Text Pastry_ is a plugin for [Sublime Text 2 &amp; 3](http://www.sublimetext.com/) that will give you the necessary tools to insert a bunch of text, a list of numbers or generated UUIDs into your selected locations.
+_Text Pastry_ is a plugin for [Sublime Text](http://www.sublimetext.com/) that will give you the necessary tools to insert or paste a bunch of text, a range of numbers or generated UUIDs into your selected locations.
 
-Ever wanted to paste five lines into five other locations at once? _Text Pastry_ can help you out!
+Ever wanted to paste incrementing numbers or five lines from your clipboard into five different locations at once? _Text Pastry_ can help you out!
 
 ## What's new ##
+- v1.3.4: Fixed for Sublime Text 3 - Thanks [@forcey](https://github.com/forcey)
 - v1.3.3: New commands: \r(regexp) and \r regex
 - v1.3.2: Bugfix release
 
@@ -13,14 +14,18 @@ Ever wanted to paste five lines into five other locations at once? _Text Pastry_
 
 Thanks for using the excelent [Package Control](http://wbond.net/sublime_packages/package_control) to install _Text Pastry_.
 
+We can do a manuall installation by cloning this repository into our Packages folder. Sublime Text -> Preferences -> Browse Packages...
+
+```git clone git@github.com:duydao/Text-Pastry.git```
+
 ## Usage ##
 
-To use _Text Pastry_, we need to open a Document in [ST2](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
+To use _Text Pastry_, we need to open a Document in [Sublime Text](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
 insert locations _(in this document also refered to as selections)_.
 
 Please keep in mind that the selected text could be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
 
-All we need to do now is to press **CMD + ALT + N** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [ST2](http://www.sublimetext.com/).
+All we need to do now is to press **CMD + ALT + N** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [Sublime Text](http://www.sublimetext.com/).
 
 Now its time to run our first command. Let's enter `first second third` and hit enter to run the command. _Text Pastry_ will add `first` to our first selection, `second` to the next selection and so on.
 
@@ -111,7 +116,9 @@ We can use the following command to generate a _random UUID_ in UPPERCASE:
 	\UUID
 
 ### REGEX separators ###
-**NEW** We're abe to define regex separators for the data that we are pasting, which should give us some new possibilities. All it does is splitting the clipboard data with the regex, and paste the resulting items into the selected locations:
+**NEW** We're now able to define regex separators for the data that we are pasting, which should give us some new possibilities.
+
+We can split the clipboard data by regex, and paste the resulting items into the selected locations:
 
 	\r(regex)
 
@@ -432,7 +439,7 @@ THE SOFTWARE.
 
 For further information, please take the time to look at following links:
 
-* Sublime Text 2: http://www.sublimetext.com/
+* Sublime Text: http://www.sublimetext.com/
 * Sublime Package Control: http://wbond.net/sublime_packages/package_control
 * Insert Nums: https://github.com/jbrooksuk/InsertNums
 * TextPad: http://www.textpad.com

@@ -572,5 +572,5 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
         else:
             sublime.status_message("No item selected")
     def show_quick_panel(self, items, on_done, flags):
-        # Sublime 3 does not allow calling show_quick_panel from on_done, so we need to set a timeout here.
         sublime.set_timeout(lambda: self.window.show_quick_panel(items, on_done, flags), 10)
+
