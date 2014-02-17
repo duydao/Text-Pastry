@@ -21,7 +21,7 @@ We can do a manuall installation by cloning this repository into our Packages fo
 ## Usage ##
 
 To use _Text Pastry_, we need to open a Document in [Sublime Text](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
-insert locations _(in this document also refered to as selections)_.
+insert locations _(in this document also referred to as selections)_.
 
 Please keep in mind that the selected text could be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
 
@@ -49,7 +49,7 @@ The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-k
 </tr>
 </table>
 
-**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palete (**CMD + SHIFT + P**)
+**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palette (**CMD + SHIFT + P**)
 
 ## Command Reference ##
 
@@ -115,7 +115,7 @@ We can use the following command to generate a _random UUID_ in UPPERCASE:
 
 	\UUID
 
-### REGEX separators ###
+### Regular Expression as separators ###
 **NEW** We're now able to define regex separators for the data that we are pasting, which should give us some new possibilities.
 
 We can split the clipboard data by regex, and paste the resulting items into the selected locations:
@@ -126,9 +126,9 @@ or
 	
 	\r regex
 
-* `regex` the regexp used to split the clipboad data.
+* `regex` the [regular expression](http://docs.python.org/3/library/re.html#regular-expression-syntax) used to split the clipboard data.
 
-**Note:** If you managed to get [python-pcre](https://github.com/awahlig/python-pcre) up and running, the library will be prefered over the default python [re](http://docs.python.org/2/library/re.html) library.
+**Note:** If you managed to get [python-pcre](https://github.com/awahlig/python-pcre) up and running, the library will be preferred over the default python [re](http://docs.python.org/3/library/re.html) library.
 
 ### Insert Nums ###
 
@@ -144,11 +144,9 @@ Note:
 
 ## Examples ##
 
-Here are some examples, assuming we have selected every ocurence of `null` and _Text Pastry_ was called by pressing **CMD + ALT + N**:
+Here are some examples, assuming we have selected every occurrence of `null` and _Text Pastry_ was called by pressing **CMD + ALT + N**:
 
 ### Using a text list ###
-
-
 
 Enter a list of words, separated by one space, into the command line:
 
@@ -282,9 +280,11 @@ Data with leading whitespace:
 		P
 	A
 
-We can change this behaviour in the **&lt;Packages&gt;/Text Pastry/TextPastry.sublime-settings** file:
+We can change this behavior by setting **clipboard_strip_newline** under Preferences -> Package Settings -> Text Pastry -> Settings - User:
 
-	"clipboard_strip_newline": false
+	{
+        "clipboard_strip_newline": false
+    }
 
 ***
 
