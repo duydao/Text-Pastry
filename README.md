@@ -32,7 +32,7 @@ Now its time to run our first command. Let's enter `first second third` and hit 
 _Text Pastry_ will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
 
 ## Key Bindings ##
-The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-keymap_. As always, you can use your [user keymap file](http://www.sublimetext.com/docs/key-bindings) to overrule the default key bindings.
+The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-keymap_. As always, you can use your [user keymap file](http://docs.sublimetext.info/en/latest/customization/key_bindings.html) to overrule the default key bindings.
 
 <table>
 <tr>
@@ -116,7 +116,8 @@ We can use the following command to generate a _random UUID_ in UPPERCASE:
 	\UUID
 
 ### Regular Expression as separators ###
-**NEW** We're now able to define regex separators for the data that we are pasting, which should give us some new possibilities.
+
+We're able to define regex separators for the data that we are pasting, which should give us some new possibilities.
 
 We can split the clipboard data by regex, and paste the resulting items into the selected locations:
 
