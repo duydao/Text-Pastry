@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>fileTypes</key>
+    <array>
+        <string>text_pastry</string>
+    </array>
+    <key>name</key>
+    <string>Text Pastry</string>
+    <key>scopeName</key>
+    <string>source.text_pastry</string>
+    <key>uuid</key>
+    <string>e8694b5b-0553-463a-a834-335d8187e516</string>
+</dict>
+</plist>

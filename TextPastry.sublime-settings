@@ -1,7 +1,94 @@
 {
-	"clipboard_strip_newline": true,
-	"repeat_words": false,
-	"repeat_clipboard": false,
-	"history_enabled": true,
-	"keep_selection": false
+    "clipboard_strip_newline": true,
+    "repeat_words": true,
+    "repeat_clipboard": false,
+    "history_enabled": false,
+    "keep_selection": true,
+    "history_max_entries": 100,
+
+    "selection_use_regex": true,
+    "selection_ignore_case": true,
+    "selection_threshold": "[\\W]",
+
+    "presets": {
+        "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        "months": ["January", "February", "March", "April", "May", "June", "Juli", "August", "September", "October", "November", "December"]
+    },
+    "cmd_shortcuts": [
+        // number range from 1 to X
+        {"match": "^\\\\i$", "command": "insert_nums", "args": {"current": "1", "step": "1", "padding": "1"}},
+        {"match": "^i$", "command": "insert_nums", "args": {"current": "1", "step": "1", "padding": "1"}},
+
+        // number range from 0 to X
+        {"match": "^\\\\i0$", "command": "insert_nums", "args": {"current": "0", "step": "1", "padding": "1"}},
+        {"match": "^i0$", "command": "insert_nums", "args": {"current": "0", "step": "1", "padding": "1"}},
+
+        // \iN
+        {"match": "^\\\\i(-?\\d+)$", "command": "insert_nums", "args": {"current": "$1", "step": "1", "padding": "1"}},
+        {"match": "^i(-?\\d+)$", "command": "insert_nums", "args": {"current": "$1", "step": "1", "padding": "1"}},
+
+        // \iN,P
+        {"match": "^\\\\i(-?\\d+),(-?\\d+)$", "command": "insert_nums", "args": {"current": "$1", "step": "$2", "padding": "1"}},
+        {"match": "^i(-?\\d+),(-?\\d+)$", "command": "insert_nums", "args": {"current": "$1", "step": "$2", "padding": "1"}},
+
+        // \i(N,P)
+        {"match": "^\\\\i\\((-?\\d+),(-?\\d+)\\)?$", "command": "insert_nums", "args": {"current": "$1", "step": "$2", "padding": "1"}},
+        {"match": "^i\\((-?\\d+),(-?\\d+)\\)?$", "command": "insert_nums", "args": {"current": "$1", "step": "$2", "padding": "1"}},
+
+        // \i(N)
+        {"match": "^\\\\i\\((-?\\d+)\\)?$", "command": "insert_nums", "args": {"current": "$1", "step": "1", "padding": "1"}},
+        {"match": "^i\\((-?\\d+)\\)?$", "command": "insert_nums", "args": {"current": "$1", "step": "1", "padding": "1"}},
+
+        // insert nums syntax: CURRENT STEP PADDING (e.g. 100 50 3)
+        {"match": "^(-?\\d+) (-?\\d+) (\\d+)$", "command": "insert_nums", "args": {"current": "$1", "step": "$2", "padding": "$3"}},
+
+        // insert nums shortcut: CURRENT STEP (e.g. 100 50)
+        {"match": "^(-?\\d+) (-?\\d+)$", "command": "insert_nums", "args": {"current": "$1", "step": "$2", "padding": "1"}},
+
+        // use regex to split the clipboard data
+        {"match": "^\\\\r\\((.*?)\\)$", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true, "regex": true}},
+        {"match": "^r\\((.*?)\\)$", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true, "regex": true}},
+        {"match": "^\\\\r (.*)", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true, "regex": true}},
+        {"match": "^r (.*)", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true, "regex": true}},
+        {"match": "^regex (.*)", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true, "regex": true}},
+
+        // generate UUID
+        {"match": "^\\\\UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
+        {"match": "^UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
+        {"match": "^\\\\uuid$", "command": "text_pastry_uuid" },
+        {"match": "^uuid$", "command": "text_pastry_uuid" },
+
+        // paste clipboard with custom separator
+        {"match": "^\\\\p\\((.*?)\\)?$", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true} },
+        {"match": "^p\\((.*?)\\)?$", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true} },
+        {"match": "^p (.*)", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true} },
+
+        // paste clipboard with newline separator
+        {"match": "^\\\\p\\\\n", "command": "text_pastry_insert_text", "args": {"separator": "\\n", "clipboard": true} },
+        {"match": "^pn$", "command": "text_pastry_insert_text", "args": {"separator": "\\n", "clipboard": true} },
+
+        // paste clipboard with whitespace separator
+        {"match": "^\\\\p", "command": "text_pastry_insert_text", "args": {"clipboard": true} },
+        {"match": "^p$", "command": "text_pastry_insert_text", "args": {"clipboard": true} },
+
+        // regular text, using whitespace separator
+        {"match": "^words no-repeat (.*)", "command": "text_pastry_insert_text", "args": {"text": "$1", "repeat": false} },
+        {"match": "^words (.*)", "command": "text_pastry_insert_text", "args": {"text": "$1"} },
+
+        // build-in commands
+        {"match": "^uc$", "command": "upper_case"},
+        {"match": "^upper$", "command": "upper_case"},
+        {"match": "^lc$", "command": "lower_case"},
+        {"match": "^lower$", "command": "lower_case"},
+
+        // shortcut case conversion plugin
+        {"match": "^snake", "command": "convert_to_snake"},
+        {"match": "^camel", "command": "convert_to_camel"},
+        {"match": "^pascal", "command": "convert_to_pascal"},
+        {"match": "^dot", "command": "convert_to_dot"},
+        {"match": "^dash", "command": "convert_to_dash"},
+ 
+        {"match": "^node ", "command": "text_pastry_nodejs", "args": {"file": "test.js"} },
+        {"match": "^js (.*)", "command": "text_pastry_nodejs", "args": {"script": "$1"} }
+   ]
 }
