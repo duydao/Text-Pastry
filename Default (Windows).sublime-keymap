@@ -2,5 +2,11 @@
     { "keys": ["ctrl+alt+n"], "command": "text_pastry_show_command_line", "args": { "text": "" } },
     { "keys": ["ctrl+alt+t"], "command": "text_pastry_show_menu" },
     { "keys": ["ctrl+alt+v"], "command": "text_pastry_insert_text", "args": { "clipboard": true, "separator": "\\n" } },
-    { "keys": ["ctrl+alt+b"], "command": "text_pastry_redo" }
+    { "keys": ["ctrl+alt+b"], "command": "text_pastry_redo" },
+
+    { "keys": ["up"], "command": "text_pastry_history_navigator", "args": { "reverse": true },
+      "context": [{ "key": "selector", "operator": "equal", "operand": "source.text_pastry" }, {"key": "panel_has_focus"}] },
+
+    { "keys": ["down"], "command": "text_pastry_history_navigator", "args": { "reverse": false },
+      "context": [{ "key": "selector", "operator": "equal", "operand": "source.text_pastry" }, {"key": "panel_has_focus"}] }
 ]
