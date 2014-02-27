@@ -5,6 +5,7 @@ _Text Pastry_ is a plugin for [Sublime Text](http://www.sublimetext.com/) that w
 Ever wanted to paste incrementing numbers or five lines from your clipboard into five different locations at once? _Text Pastry_ can help you out!
 
 ## What's new ##
+- v1.3.5: History navigation, command shortcuts - Thanks [@JAStanton](https://github.com/JAStanton)
 - v1.3.4: Fixed for Sublime Text 3 - Thanks [@forcey](https://github.com/forcey)
 - v1.3.3: New commands: \r(regexp) and \r regex
 - v1.3.2: Bugfix release
@@ -12,11 +13,10 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 
 ## Release Notes v1.3.5 ##
 
-- history can be accessed by up/down arrows in the _Text Pastry_ command line. Thanks [@JAStanton](https://github.com/JAStanton) (#13)
+- history can be accessed by up/down arrows in the _Text Pastry_ command line. (#13)
 - text insert will only be executed if we have a list of three or more words in it. we can use the ``words`` command to lift this restriction
 - commands don't require a leading backslash anymore (but it will still work for backwards compatibility)
 - commands are now defined in TextPastry.sublime-settings. Don't like our syntax? Setup your own!
-
 
 
 ## Changes in v1.3.5 ##
