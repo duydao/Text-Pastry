@@ -91,7 +91,10 @@ class HistoryManager(object):
         return hashlib.md5(json.dumps(data).encode('UTF-8')).hexdigest()
 
     def history(self):
-        return self.settings.get("history", [])
+        history = self.settings.get("history", [])
+        if isinstance(history, dict):
+            history = []
+        return history
 
     def items(self):
         entries = [item['data'] for item in self.history() if 'data' in item]
