@@ -11,7 +11,7 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 - 1.3.2: Bugfix release
 
 
-## Release Notes v1.3.5 ##
+## Release Notes 1.3.5 ##
 
 - history can be accessed by up/down arrows in the _Text Pastry_ command line. [#13](https://github.com/duydao/Text-Pastry/issues/13)
 - text insert will only be executed if we have a list of three or more words in it. we can use the ``words`` command to lift this restriction
@@ -19,7 +19,7 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 - commands are now defined in TextPastry.sublime-settings. Don't like our syntax? Setup your own!
 
 
-## Changes in v1.3.5 ##
+## Changes in 1.3.5 ##
 
 I always found it quiet annoying to use the backslash. with the change on text inserts, it's easier to differentiate between those cases. Examples:
 
