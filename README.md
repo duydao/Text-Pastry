@@ -10,6 +10,43 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 - v1.3.2: Bugfix release
 
 
+## Release Notes v1.3.5 ##
+
+- history can be accessed by up/down arrows in the _Text Pastry_ command line. Thanks [@JAStanton](https://github.com/JAStanton) (#13)
+- text insert will only be executed if we have a list of three or more words in it. we can use the ``words`` command to lift this restriction
+- commands don't require a leading backslash anymore (but it will still work for backwards compatibility)
+- commands are now defined in TextPastry.sublime-settings. Don't like our syntax? Setup your own!
+
+
+
+## Changes in v1.3.5 ##
+
+I always found it quiet annoying to use the backslash. with the change on text inserts, it's easier to differentiate between those cases. Examples:
+
+<table>
+<tr>
+    <th>Old Syntax (still works)</th>
+    <th>New Syntax (will do the same)</th>
+</tr>
+<tr>
+    <td>\p</td>
+    <td>p</td>
+</tr>
+<tr>
+    <td>\p\n</td>
+    <td>pn</td>
+</tr>
+<tr>
+    <td>\i(100,50)</td>
+    <td>100 50</td>
+</tr>
+<tr>
+    <td>\uuid</td>
+    <td>uuid</td>
+</tr>
+</table>
+
+
 ## Installation ##
 
 Thanks for using the excelent [Package Control](http://wbond.net/sublime_packages/package_control) to install _Text Pastry_.
@@ -32,32 +69,47 @@ Now its time to run our first command. Let's enter `first second third` and hit 
 _Text Pastry_ will only replace as many words as we type into the command line. So if we have more selections then words, the rest of our selection will remain intact.
 
 ## Key Bindings ##
-The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-keymap_. As always, you can use your [user keymap file](http://docs.sublimetext.info/en/latest/customization/key_bindings.html) to overrule the default key bindings.
+The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-keymap_. As always, you can use your [user keymap file](http://docs.sublimetext.info/en/latest/customization/key_bindings.html) to setup your own key bindings.
 
 <table>
 <tr>
-	<th>Shortcut</th>
+    <th>Linux / Windows</th>
+	<th>Mac</th>
 	<th>Action</th>
 </tr>
 <tr>
-	<td><strong>CMD + ALT + T</strong></td>
-	<td>Show Text Pastry Menu</td>
+    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>T</kbd></td>
+	<td><kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>T</kbd></td>
+	<td>Show _Text Pastry_ Menu</td>
 </tr>
 <tr>
-	<td><strong>CMD + ALT + N</strong></td>
-	<td>Open Command Line</td>
+    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd></td>
+    <td><kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd></td>
+	<td>Open _Text Pastry_ Command Line</td>
+</tr>
+<tr>
+    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>F</kbd></td>
+    <td><kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>F</kbd></td>
+    <td>Open _Text Pastry_ Command Line</td>
 </tr>
 </table>
 
-**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palette (**CMD + SHIFT + P**)
+**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palette (<kbd>CTRL</kbd>/<kbd>CMD</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>)
 
 ## Command Reference ##
 
-### Text ###
+### Regular Text ###
 
 Replaces the first selection with **Lorem**, the second selection with **Ipsum**, etc.:
 	
 	Lorem Ipsum Dolor
+
+**Note:** Since version 1.3.5, there must be at least three words before this command will be executed. This change will make it possible to define commands without escape character.
+
+We can still use a list of any size by prepeinding the words command:
+
+    words Lorem Ipsum
+
 
 ### Number Sequence ###
 
@@ -79,13 +131,19 @@ Inserts a sequence by defining start index and step size:
 * `N` the start index
 * `M` the step size
 
+Start index and step size may be negative.
+
 **Note:** The Number Sequence command uses the syntax from [TextPad](http://www.textpad.com/).
 
 Additionally, we can leave the brackets away if we want to:
 
 	\i1000,100
 
-	
+even this will work:
+
+    1000 100
+
+
 ### Clipboard ###
 
 Inserts the content of the clipboard into our selections by [splitting the words](http://docs.python.org/library/stdtypes.html#str.split):
@@ -119,7 +177,7 @@ We can use the following command to generate a _random UUID_ in UPPERCASE:
 
 We're able to define regex separators for the data that we are pasting, which should give us some new possibilities.
 
-We can split the clipboard data by regex, and paste the resulting items into the selected locations:
+We can [split the clipboard data by regex](http://docs.python.org/2/library/re.html#re.split), and paste the resulting items into the selected locations:
 
 	\r(regex)
 
