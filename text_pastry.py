@@ -488,7 +488,7 @@ class Parser:
                 result = dict(command='text_pastry_insert_text', args={'text': text, 'threshold': 3})
         # Parser is done
         if result:
-            print('parsing done, result:', result)
+            #print('parsing done, result:', result)
             sublime.status_message('Running ' + result['command'])
         else:
             print('Text Pastry: no match found, doing nothing')
