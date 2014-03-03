@@ -488,7 +488,7 @@ class Parser:
             if not result:
                 # default is words
                 sublime.status_message('Inserting text: ' + text)
-                result = dict(command='text_pastry_insert_text', args={'text': text, 'threshold': 3})
+                result = dict(command='text_pastry_insert_text', args={'text': text, 'threshold': settings.get('insert_text_threshold', 3)})
         # Parser is done
         if result:
             #print('parsing done, result:', result)
@@ -729,7 +729,8 @@ class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
         HistoryHandler.index = 0
         view = self.window.show_input_panel(label, text, self.on_done, None, None)
         settings = view.settings()
-        settings.set('color_scheme', 'Packages/Color Scheme - Default/Mac Classic.tmTheme')
+        # this will be a setting in 1.4.0
+        #settings.set('color_scheme', 'Packages/Color Scheme - Default/Mac Classic.tmTheme')
         settings.set('is_widget', False)
         settings.set('gutter', False)
         settings.set('rulers', [])

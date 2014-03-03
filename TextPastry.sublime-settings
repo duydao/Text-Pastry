@@ -9,6 +9,7 @@
     "selection_use_regex": true,
     "selection_ignore_case": true,
     "selection_threshold": "[\\W]",
+    "insert_text_threshold": 3,
 
     "presets": {
         "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
