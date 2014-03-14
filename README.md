@@ -74,9 +74,9 @@ The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-k
 
 <table>
 <tr>
+    <th>Mac</th>
     <th>Linux / Windows</th>
-	<th>Mac</th>
-	<th>Action</th>
+    <th>Action</th>
 </tr>
 <tr>
     <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>T</kbd></td>
