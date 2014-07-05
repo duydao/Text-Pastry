@@ -13,7 +13,7 @@
 
     "presets": {
         "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        "months": ["January", "February", "March", "April", "May", "June", "Juli", "August", "September", "October", "November", "December"]
+        "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     },
     "cmd_shortcuts": [
         // number range from 1 to X
