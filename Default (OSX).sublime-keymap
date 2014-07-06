@@ -1,7 +1,6 @@
 [
     { "keys": ["super+alt+n"], "command": "text_pastry_show_command_line", "args": { "text": "" } },
     { "keys": ["super+alt+t"], "command": "text_pastry_show_menu" },
-    { "keys": ["super+alt+v"], "command": "text_pastry_insert_text", "args": { "clipboard": true, "separator": "\\n" } },
     { "keys": ["super+alt+b"], "command": "text_pastry_redo" },
 
     { "keys": ["up"], "command": "text_pastry_history_navigator", "args": { "reverse": true },
