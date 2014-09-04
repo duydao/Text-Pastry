@@ -1,0 +1,6 @@
+{
+    "test1" : {
+        "sys.path.append": [ "/Users/duydao/tmp/py3" ],
+        "script": [ "dda" ]
+    }
+}
