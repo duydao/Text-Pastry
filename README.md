@@ -286,7 +286,7 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 - date ranges
 - more presets
 - formatters
-- wrappers
+- wrappers [#20](https://github.com/duydao/Text-Pastry/issues/20)
 
 ## Done ##
 - ~~Alphabetical sequence (upper/lower case)~~(1.4.0)
