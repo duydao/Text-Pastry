@@ -12,6 +12,80 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 - 1.3.3: New commands: \r(regexp) and \r regex
 - 1.3.2: Bugfix release
 
+## Upcoming features (1.4.0) ##
+- selection modifiers: add, find, remove, filter selection (done)
+- selection live preview: show search terms while typing (done)
+- presets: pre-defined and user-defined value lists (done)
+- shell commands: use your favourite lang as inline code or script to modify your selections. (work-in-progress)
+
+## worth mentioning
+- command line: text pastry is now shell-like and supports various commands
+- focus mode: hide sidebar, tabs, statusbar with one shortcut (done)
+- add option for [autoselect](https://github.com/duydao/AutoSelect-3) (done)
+
+## inspired by [emacs](https://www.gnu.org/software/emacs/)
+- incremental search: add search terms to selection by shortcut (work-in-progress)
+- smart case: determine case-sensitivity by search term
+
+## New Features in 1.4.0 ##
+
+### command line ###
+
+text pastry is now shell-like and supports various commands, pre-defined in TextPastryCommands.json. We can add commands-setting in [Packages/User/TextPastry.sublime-Settings](https://github.com/duydao/Text-Pastry/wiki/Settings#Commands)
+
+- focus mode
+- shell commands
+- selection modifiers
+- add option for
+
+### presets ###
+
+Presets are a bunch of pre-/user-defined values. The range operator is supported, as well as reverse, case modifiers.
+
+
+[Packages/User/TextPastry.sublime-Settings](https://github.com/duydao/Text-Pastry/wiki/Settings#Presets)
+
+### selection modifiers ###
+
+I've added four commands to create, add and modify the current selection:
+
+#### find ####
+
+finds the search term and marks the words as selection. The special thing about this command is how regex groups are handled: if the search term contains a regex-group, the group will be used for selection. As a nice side effect, this will give us the option to **place the cursor anywhere we want to**.
+
+
+This Example will select all values inside of the attribute ``name``, the cursor will be placed at the end of the selection. We can place the cursor at the start of the selection by using the ``reverse`` option:
+
+``find name="(.*?)"`` -> name="<span>this will be selected</span><b>|</b>"
+
+
+In this example, we will place the cursor at the beginning of the value, without a text selection:
+
+``find name="().*?"`` -> name="<b>|</b>this will not be selected"
+
+As we can see, we are now able to place the cursor anywhere we want aswell as creating multiple selections with one regex.
+
+
+#### add ####
+
+add to the current selection
+
+#### remove (or subtract, reduce) ####
+
+removes parts of the selection.
+
+#### filter ####
+
+The filter command acts as "find in selection". only matched terms in the curren selection will be selected afterwards.
+
+#### options ####
+
+We can add the following options to modify the behaviour of the selection modifier:
+
+**regex/no-regex**
+**case-sensitive/case-insensitive**
+**in file/selection/both/all**
+**by lines/words/bounds/view**
 
 ## Release Notes 1.3.5 ##
 
@@ -209,13 +283,28 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 
 ## Todo ##
 
-- Alphabetical sequence (upper/lower case)
-- Random numbers, strings and sequences
+- date ranges
+- more presets
+- formatters
+- wrappers
+
+## Done ##
+- ~~Alphabetical sequence (upper/lower case)~~(1.4.0)
+- ~~Random numbers, strings and sequences~~ (use [Random Everything](https://sublime.wbond.net/packages/Random%20Everything) in combination with commands~~
 - ~~Command List Overlay~~
 - ~~Command History~~
 - ~~UUID generation~~
 - ~~Settings for word manipulation~~
 - ~~Paste as Block~~
+
+## Great plugins that I love to use with Text Pastry ##
+
+__in alphabetical order__
+
+- Case Conversion - https://github.com/jdc0589/CaseConversion
+- Hasher - https://github.com/dangelov/hasher/
+- Insert Date - https://github.com/FichteFoll/sublimetext-insertdate
+
 
 ## License ##
 
@@ -250,3 +339,4 @@ For further information, please take the time to look at following links:
 * Sublime Package Control: https://sublime.wbond.net/installation
 * Insert Nums: https://github.com/jbrooksuk/InsertNums
 * TextPad: http://www.textpad.com
+* autoselect: https://github.com/SublimeText/AutoSelect
