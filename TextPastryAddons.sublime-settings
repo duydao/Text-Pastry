@@ -1,0 +1,20 @@
+{
+    "style": "font_face",
+    "style_index": 0,
+    "styles": {
+        "font_face": [{
+            "font_face": "SourceCodePro-ExtraLight"
+        }, {
+            "font_face": "SourceCodePro-Regular"
+        }],
+        "color_scheme": [{
+            "color_scheme": "Packages/User/Tomorrow-Night-Eighties (SL).tmTheme",
+            "font_face": "SourceCodePro-Regular"
+        }, {
+            "color_scheme": "Packages/User/Tomorrow-Night-Eighties (SL).tmTheme",
+            "font_face": "SourceCodePro-ExtraLight"
+        }]
+    },
+    "focus": ["toggle_side_bar", "toggle_status_bar", "toggle_tabs"],
+    "hide_tab_delay": 2.5
+}
