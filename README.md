@@ -20,65 +20,84 @@ As alwys, please feel free to report any bugs and/or feature request [here](http
 
 ## New Features ##
 
-### command line ###
+### Command-line ###
 
-The _Text Pastry_ input field (**<kbd>CTRL/CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd>**) supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
+The _Text Pastry_ text field ( <kbd>CTRL/CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd> ) supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
 
 Text Pastry Commands work like keybindings; you can map a keyword to any command available to [Sublime Text](http://www.sublimetext.com/). We can add new commands by modifying the _Text Pastry_ User-Settings file _(Preferences -> Package Settings -> Text Pastry -> Settings - Default)_.
 
 For more information, please visit the [wiki](https://github.com/duydao/Text-Pastry/wiki/Adding-Commands)
 
-### presets ###
+### Presets ###
 
 Presets are a [list of pre-defined values](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference#default-presets). The range operator is supported, as well as reverse and case modifiers.
 
 We can extend this list as we like by modifying the text pastry user settings file _(Preferences -> Package Settings -> Text Pastry -> Settings - Default)_
 
-### selection modifiers ###
+### Selection Modifiers ###
 
 I've added four commands to create, add and modify the current selection:
 
-#### find ####
+<table>
+<tr><th>Command</th><th>Alias</th><th>Action</th></tr>
+<tr><td>find</td><td>search</td><td>Create new selections</td></tr>
+<tr><td>add</td><td>&nbsp;</td><td>Add to the current selection</td></tr>
+<tr><td>remove</td><td>reduce, subtract</td><td>Remove from the current selections</td></tr>
+<tr><td>filter</td><td>&nbsp;</td><td>search in selection</td></tr>
+</table>
 
-finds the search term and marks the words as selection. The special thing about this command is how regex groups are handled: if the search term contains a regex-group, the group will be used for selection. As a nice side effect, this will give us the option to **place the cursor anywhere we want to**.
+#### find (search) ####
 
+Clears the current selection, looks for the search term and marks them as new selections. The special thing about this command is how regex groups are handled: if the search term contains a regex-group, the group will be used for selection. As a nice side effect, this will give us the option to **place the cursor anywhere we want to**.
 
 This Example will select all values inside of the attribute ``name``, the cursor will be placed at the end of the selection. We can place the cursor at the start of the selection by using the ``reverse`` option:
 
-``find name="(.*?)"`` -> name="<span>this will be selected</span><b>|</b>"
+``find name="(.*?)"`` -> name="<mark>lorem-ipsum-dolor</mark><b>|</b>"
 
 
 In this example, we will place the cursor at the beginning of the value, without a text selection:
 
-``find name="().*?"`` -> name="<b>|</b>this will not be selected"
+``find name="().*?"`` -> name="<b>|</b>lorem-ipsum-dolor"
 
 As we can see, we are now able to place the cursor anywhere we want aswell as creating multiple selections with one regex.
 
-
 #### add ####
 
-add to the current selection
+Search by regular expression and add the result to the current selections.
 
-#### remove (or subtract, reduce) ####
+#### remove (reduce / subtract) ####
 
-removes parts of the selection.
+Search by a regular expression and remove the matching part from the selections.
 
 #### filter ####
 
 The filter command acts as "find in selection". only matched terms in the curren selection will be selected afterwards.
 
-#### options ####
+#### selection modifier - options (experimental) ####
 
 We can add the following options to modify the behaviour of the selection modifier:
 
-**regex/no-regex**
-**case-sensitive/case-insensitive**
-**in file/selection/both/all**
-**by lines/words/bounds/view**
+<table>
+<tr><td>regex/no-regex</td><td>search term is a regex</td></tr>
+<tr><td>case-sensitive/case-insensitive</td><td>search should be case (in-)sensitive</td></tr>
+<tr><td>in file/selection/both/all/view</td><td>search scope (experimental)</td></tr>
+<tr><td>by lines/words/bounds</td><td>expands the match (experimental)</td></tr>
+</table>
 
-### yet another focus mode ###
+**Note:** This options aren't fully tested yet and there may be some some caveats.
 
-This mode lets you hide the sidebar, tabs and/or statusbar, all by one shortcut.
+### Yet Another Focus Mode ###
+
+This mode lets us hide the sidebar, tabs and/or statusbar, all by one shortcut.
+
+### Shell (experimental) ###
+
+We can pass our selections to a CLI (node, python or ruby) and process them by inline code or a script. _Text Pastry_ will paste the result into the selection.
+
+The script/code will get some basic information like selected text, index, etc. We probably need some context information for additional processing (like whats my scope, surrounding text, etc.)
+
+**Note:** This is highly experimental. The code is prepped for additional CLI's.
+
 
 ## Releases ##
 - 1.4.0: New Features: command-line, presets and selection modifiers, focus mode
@@ -102,9 +121,9 @@ We can do a manuall installation by cloning this repository into our Packages fo
 To use _Text Pastry_, we need to open a Document in [Sublime Text](http://www.sublimetext.com/) and use [Multiple Selection](https://www.sublimetext.com/docs/selection) to mark the 
 insert locations _(in this document also referred to as selections)_.
 
-Let's keep in mind that the selected text will be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **<kbd>CTRL/CMD</kbd> + Click** or even select a whole column by using **<kbd>ALT</kbd> + Click**
+Let's keep in mind that the selected text will be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using <kbd>CTRL/CMD</kbd> + **Click** or even select a whole column by using <kbd>ALT</kbd> + **Click**
 
-All we need to do now is to press **<kbd>CTRL/CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd>** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [Sublime Text](http://www.sublimetext.com/).
+All we need to do now is to press <kbd>CTRL/CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd> to open the _Text Pastry_ command line. The input panel will show up at the bottom of [Sublime Text](http://www.sublimetext.com/).
 
 Now its time to run our first command. Let's enter `first second third` and hit enter to run the command. _Text Pastry_ will add `first` to our first selection, `second` to the next selection and so on.
 
@@ -131,7 +150,7 @@ The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-k
 </tr>
 </table>
 
-**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palette (**<kbd>CTRL/CMD</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>**)
+**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palette (<kbd>CTRL/CMD</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>)
 
 ## Command Reference ##
 
@@ -248,6 +267,10 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 - incremental search: add search terms to selection by shortcut (work-in-progress)
 - smart case: determine case-sensitivity by search term
 
+## Wishlist ##
+- Webservice "Shell": use a custom (web-)service to process our selections
+- yankring
+
 ## Done ##
 - ~~Alphabetical sequence (upper/lower case)~~(1.4.0)
 - ~~Random numbers, strings and sequences~~ (use [Random Everything](https://sublime.wbond.net/packages/Random%20Everything) in combination with commands~~
@@ -261,6 +284,7 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 
 __in alphabetical order__
 
+- autoselect - https://github.com/SublimeText/AutoSelect
 - Case Conversion - https://github.com/jdc0589/CaseConversion
 - Hasher - https://github.com/dangelov/hasher/
 - Insert Date - https://github.com/FichteFoll/sublimetext-insertdate
@@ -297,5 +321,3 @@ For further information, please take the time to look at following links:
 
 * Sublime Text 3: http://www.sublimetext.com/3/
 * Sublime Package Control: https://sublime.wbond.net/installation
-* TextPad: http://www.textpad.com
-* autoselect: https://github.com/SublimeText/AutoSelect
