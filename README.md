@@ -1,8 +1,16 @@
 # Text Pastry #
 
-_Text Pastry_ is a plugin for [Sublime Text](http://www.sublimetext.com/) that will give you the necessary tools to insert or paste a bunch of text, a range of numbers or generated UUIDs into your selected locations.
+_Text Pastry_ is a free plugin [Sublime Text](http://www.sublimetext.com/), designed to reduce repetetive work by using [multiple selections](https://www.sublimetext.com/docs/selection).
 
-Ever wanted to paste incrementing numbers or five lines from your clipboard into five different locations at once? _Text Pastry_ can help you out!
+##Features include:##
+
+- Incremental numbers/sequences (1, 2, 3 or 100, 80, 60)
+- Repeatable number ranges (1, 2, 3, 4, 1, 2, 3, 4 or 2, 1, 2, 1, 2, 1)
+- Generate UUIDS (ba18f7fc-c387-46da-9544-ed32e49ce6f8 or D306E86C-918F-4551-95A9-CB9865A4DD2F)
+- Extendable list of presets (Monday, Tuesday, Wednesday or alpha, beta, gamma)
+- Extendable list of commands
+- Create and modify selections
+- Improved paste (paste the first three lines of the clipboard data to the three selected locations)
 
 ## Release Notes 1.4.0 ##
 
@@ -18,15 +26,17 @@ This mode includes: hide sidebar, tabs and/or statusbar, all by one shortcut
 
 ### command line ###
 
-The _Text Pastry_ input field supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
+The _Text Pastry_ input field (**CMD/CTRL + ALT + N**) supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
 
-New comamnds may be added by modifying the text pastry user settings file (Preferences -> Package Settings -> Text Pastry -> Settings - Default).
+Text Pastry Commands work like keybindings; you can map a keyword to any command available to [Sublime Text](http://www.sublimetext.com/). We can add new commands by modifying the _Text Pastry_ User-Settings file _(Preferences -> Package Settings -> Text Pastry -> Settings - Default)_.
+
+For more information, please visit the [wiki](https://github.com/duydao/Text-Pastry/wiki/Adding-Commands)
 
 ### presets ###
 
 Presets are a [list of pre-defined values](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference#default-presets). The range operator is supported, as well as reverse and case modifiers.
 
-We can extend this list as we like by modifying the text pastry user settings file (Preferences -> Package Settings -> Text Pastry -> Settings - Default)
+We can extend this list as we like by modifying the text pastry user settings file _(Preferences -> Package Settings -> Text Pastry -> Settings - Default)_
 
 ### selection modifiers ###
 
