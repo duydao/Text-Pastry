@@ -2,7 +2,7 @@
 
 _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), designed to reduce repetetive work by extending the [multiple selections](https://www.sublimetext.com/docs/selection) feature of [Sublime Text](http://www.sublimetext.com/).
 
-##Features include:##
+## Features include: ##
 
 - Incremental numbers/sequences _(1, 2, 3 or 100, 80, 60)_
 - Repeatable number ranges _(1, 2, 3, 4, 1, 2, 3, 4 or 2, 1, 2, 1, 2, 1)_
@@ -22,7 +22,7 @@ As alwys, please feel free to report any bugs and/or feature request [here](http
 
 ### command line ###
 
-The _Text Pastry_ input field (**CMD/CTRL + ALT + N**) supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
+The _Text Pastry_ input field (**<kbd>CMD</kbd>/<kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd>**) supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
 
 Text Pastry Commands work like keybindings; you can map a keyword to any command available to [Sublime Text](http://www.sublimetext.com/). We can add new commands by modifying the _Text Pastry_ User-Settings file _(Preferences -> Package Settings -> Text Pastry -> Settings - Default)_.
 
@@ -99,10 +99,10 @@ We can do a manuall installation by cloning this repository into our Packages fo
 
 ## How-To ##
 
-To use _Text Pastry_, we need to open a Document in [Sublime Text](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
+To use _Text Pastry_, we need to open a Document in [Sublime Text](http://www.sublimetext.com/) and use [Multiple Selection](https://www.sublimetext.com/docs/selection) to mark the 
 insert locations _(in this document also referred to as selections)_.
 
-Please keep in mind that the selected text could be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
+Let's keep in mind that the selected text will be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
 
 All we need to do now is to press **CMD + ALT + N** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [Sublime Text](http://www.sublimetext.com/).
 
@@ -115,23 +115,23 @@ The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-k
 
 <table>
 <tr>
-    <th>Mac</th>
     <th>Linux / Windows</th>
+    <th>Mac</th>
     <th>Action</th>
 </tr>
 <tr>
-    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>T</kbd></td>
 	<td><kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>T</kbd></td>
+    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>T</kbd></td>
 	<td>Show _Text Pastry_ Menu</td>
 </tr>
 <tr>
-    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd></td>
     <td><kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd></td>
+    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd></td>
 	<td>Open _Text Pastry_ Command Line</td>
 </tr>
 <tr>
-    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>F</kbd></td>
     <td><kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>F</kbd></td>
+    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>F</kbd></td>
     <td>Open _Text Pastry_ Command Line</td>
 </tr>
 </table>
@@ -158,7 +158,6 @@ We can still use a list of any size by prepeinding the words command:
 Inserts a sequence, starting at 1:
 
 	i
-
 
 
 Inserts a sequence, starting at 0:
