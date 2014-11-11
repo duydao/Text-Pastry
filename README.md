@@ -99,7 +99,7 @@ We can do a manuall installation by cloning this repository into our Packages fo
 
 ```git clone git@github.com:duydao/Text-Pastry.git```
 
-## Usage ##
+## How-To ##
 
 To use _Text Pastry_, we need to open a Document in [Sublime Text](http://www.sublimetext.com/) and use [Multiple Selection](http://www.sublimetext.com/docs/2/multiple_selection_with_the_keyboard.html) to mark the 
 insert locations _(in this document also referred to as selections)_.
@@ -155,7 +155,7 @@ We can still use a list of any size by prepeinding the words command:
     words Lorem Ipsum
 
 
-### Number Sequence ###
+### Incremental Numbers, Numeric Sequence ###
 
 
 Inserts a sequence, starting at 1:
@@ -207,15 +207,15 @@ Same as above with a specified [string separator](http://docs.python.org/library
 
 _Text Pastry_ will generate a [UUID](http://en.wikipedia.org/wiki/Universally_unique_identifier) for each selection we have made:
 
-	\uuid
+	uuid
 
 This command will generate a _random UUID_ by using pythons [uuid.uuid4() method](http://docs.python.org/2/library/uuid.html#uuid.uuid4):
 	
 	dbf8326e-5243-406e-abd9-bd0425d3e842
 
-We can use the following command to generate a _random UUID_ in UPPERCASE:
+We can this command to generate a _random UUID_ in UPPERCASE:
 
-	\UUID
+	UUID
 
 ### Regular Expression as separators ###
 
@@ -223,13 +223,9 @@ We're able to define regex separators for the data that we are pasting, which sh
 
 We can [split the clipboard data by regex](http://docs.python.org/2/library/re.html#re.split), and paste the resulting items into the selected locations:
 
-	\r(regex)
+	```regex``` _expression_
 
-or
-	
-	\r regex
-
-* `regex` the [regular expression](http://docs.python.org/3/library/re.html#regular-expression-syntax) used to split the clipboard data.
+* `expression` the [regular expression](http://docs.python.org/3/library/re.html#regular-expression-syntax) used to split the clipboard data.
 
 **Note:** If you managed to get [python-pcre](https://github.com/awahlig/python-pcre) up and running, the library will be preferred over the default python [re](http://docs.python.org/3/library/re.html) library.
 
