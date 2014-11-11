@@ -73,41 +73,6 @@ We can add the following options to modify the behaviour of the selection modifi
 **in file/selection/both/all**
 **by lines/words/bounds/view**
 
-## Release Notes 1.3.5 ##
-
-- history can be accessed by up/down arrows in the _Text Pastry_ command line. [#13](https://github.com/duydao/Text-Pastry/issues/13)
-- text insert will only be executed if we have a list of three or more words in it. we can use the ``words`` command to lift this restriction
-- commands don't require a leading backslash anymore (but it will still work for backwards compatibility)
-- commands are now defined in TextPastry.sublime-settings. Don't like our syntax? Setup your own!
-
-
-## Changes in 1.3.5 ##
-
-I always found it quiet annoying to use the backslash. with the change on text inserts, it's easier to differentiate between those cases. Examples:
-
-<table>
-<tr>
-    <th>Old Syntax (still works)</th>
-    <th>New Syntax (will do the same)</th>
-</tr>
-<tr>
-    <td>\p</td>
-    <td>p</td>
-</tr>
-<tr>
-    <td>\p\n</td>
-    <td>pn</td>
-</tr>
-<tr>
-    <td>\i(100,50)</td>
-    <td>100 50</td>
-</tr>
-<tr>
-    <td>\uuid</td>
-    <td>uuid</td>
-</tr>
-</table>
-
 
 ## Installation ##
 
