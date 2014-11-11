@@ -5,6 +5,7 @@ _Text Pastry_ is a plugin for [Sublime Text](http://www.sublimetext.com/) that w
 Ever wanted to paste incrementing numbers or five lines from your clipboard into five different locations at once? _Text Pastry_ can help you out!
 
 ## What's new ##
+- 1.4.0: New Features: command-line, presets and selection modifiers, focus mode
 - 1.3.7: Bugfix release [#17](https://github.com/duydao/Text-Pastry/issues/17)
 - 1.3.6: Bugfix release [#14](https://github.com/duydao/Text-Pastry/issues/14)
 - 1.3.5: History navigation, command shortcuts - Thanks [@JAStanton](https://github.com/JAStanton)
@@ -12,27 +13,11 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 - 1.3.3: New commands: \r(regexp) and \r regex
 - 1.3.2: Bugfix release
 
-## Upcoming features (1.4.0) ##
-- selection modifiers: add, find, remove, filter selection (done)
-- selection live preview: show search terms while typing (done)
-- presets: pre-defined and user-defined value lists (done)
-- shell commands: use your favourite lang as inline code or script to modify your selections. (work-in-progress)
-
-## worth mentioning
-- command line: text pastry is now shell-like and supports various commands
-- focus mode: hide sidebar, tabs, statusbar with one shortcut (done)
-- add option for [autoselect](https://github.com/duydao/AutoSelect-3) (done)
-
-## inspired by [emacs](https://www.gnu.org/software/emacs/)
-- incremental search: add search terms to selection by shortcut (work-in-progress)
-- smart case: determine case-sensitivity by search term
-
 ## New Features in 1.4.0 ##
 
-- focus mode
-- command-line
-- presets
-- selection modifiers
+### focus mode ###
+
+This mode includes: hide sidebar, tabs and/or statusbar, all by one shortcut
 
 ### command line ###
 
@@ -45,8 +30,6 @@ New comamnds may be added by modifying the text pastry user settings file (Prefe
 Presets are a [list of pre-defined values](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference#default-presets). The range operator is supported, as well as reverse and case modifiers.
 
 We can extend this list as we like by modifying the text pastry user settings file (Preferences -> Package Settings -> Text Pastry -> Settings - Default)
-
-
 
 ### selection modifiers ###
 
@@ -285,11 +268,11 @@ Note:
 Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for examples!
 
 ## Todo ##
-
 - date ranges
-- more presets
 - formatters
 - wrappers [#20](https://github.com/duydao/Text-Pastry/issues/20)
+- incremental search: add search terms to selection by shortcut (work-in-progress)
+- smart case: determine case-sensitivity by search term
 
 ## Done ##
 - ~~Alphabetical sequence (upper/lower case)~~(1.4.0)
@@ -340,6 +323,5 @@ For further information, please take the time to look at following links:
 
 * Sublime Text 3: http://www.sublimetext.com/3/
 * Sublime Package Control: https://sublime.wbond.net/installation
-* Insert Nums: https://github.com/jbrooksuk/InsertNums
 * TextPad: http://www.textpad.com
 * autoselect: https://github.com/SublimeText/AutoSelect
