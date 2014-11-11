@@ -1,6 +1,6 @@
 # Text Pastry #
 
-_Text Pastry_ is a free plugin [Sublime Text](http://www.sublimetext.com/), designed to reduce repetetive work by using [multiple selections](https://www.sublimetext.com/docs/selection).
+_Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), designed to reduce repetetive work by extending the [multiple selections](https://www.sublimetext.com/docs/selection) feature of [Sublime Text](http://www.sublimetext.com/).
 
 ##Features include:##
 
@@ -19,10 +19,6 @@ I'm very excited to announce v1.4.0! The Code was actually released a few months
 As alwys, please feel free to report any bugs and/or feature request [here](https://github.com/duydao/Text-Pastry/issues).
 
 ## New Features ##
-
-### focus mode ###
-
-This mode includes: hide sidebar, tabs and/or statusbar, all by one shortcut
 
 ### command line ###
 
@@ -80,6 +76,10 @@ We can add the following options to modify the behaviour of the selection modifi
 **in file/selection/both/all**
 **by lines/words/bounds/view**
 
+### yet another focus mode ###
+
+This mode lets you hide the sidebar, tabs and/or statusbar, all by one shortcut.
+
 ## Releases ##
 - 1.4.0: New Features: command-line, presets and selection modifiers, focus mode
 - 1.3.7: Bugfix release [#17](https://github.com/duydao/Text-Pastry/issues/17)
@@ -88,8 +88,6 @@ We can add the following options to modify the behaviour of the selection modifi
 - 1.3.4: Fixed for Sublime Text 3 - Thanks [@forcey](https://github.com/forcey)
 - 1.3.3: New commands: \r(regexp) and \r regex
 - 1.3.2: Bugfix release
-
-
 
 ## Installation ##
 
@@ -157,46 +155,50 @@ We can still use a list of any size by prepeinding the words command:
 
 ### Incremental Numbers, Numeric Sequence ###
 
-
 Inserts a sequence, starting at 1:
 
-	\i
+	i
+
 
 
 Inserts a sequence, starting at 0:
 	
-	\i0
+	i0
 
 
 Inserts a sequence by defining start index and step size:
 	
-	\i(N,M)
+	i(N,M)
 
 * `N` the start index
 * `M` the step size
 
-Start index and step size may be negative.
+The step size defines the value to add to the index each time a value was inserted. Start index and step size may be negative.
 
 **Note:** The Number Sequence command uses the syntax from [TextPad](http://www.textpad.com/).
 
-Additionally, we can leave the brackets away if we want to:
+To make it even easier, we can use this style if we want to:
 
-	\i1000,100
+<pre>
+<i>start number</i> <i>increment by</i>
+</pre>
 
-even this will work:
+With this example, the first number will be 1000 and it will be incremented by 250 for each selction:
 
-    1000 100
-
+    1000 250
 
 ### Clipboard ###
 
 Inserts the content of the clipboard into our selections by [splitting the words](http://docs.python.org/library/stdtypes.html#str.split):
 
-	\p
+	p
 	
 Same as above with a specified [string separator](http://docs.python.org/library/stdtypes.html#str.split):
 
-	\p(sep)
+<pre>
+p <i>sep</i>
+</pre>
+
 * `sep` the string separator used to split the clipboad data.
 
 
@@ -240,8 +242,6 @@ _Text Pastry_ has a build in support for the [Insert Nums](https://github.com/jb
 * `N`: the start index.
 * `M` represents the step size which will be added to the index for each selection.
 * `P` must be > 0 and will be used to pad the index with leading zeroes.
-
-Note: 
 
 ## Examples ##
 
