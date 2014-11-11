@@ -6,6 +6,12 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 
 ## Release Notes 1.4.0 ##
 
+I'm very excited to announce v1.4.0! The Code was actually released a few months ago, but I need the extra time to check the new features and update the [wiki](https://github.com/duydao/Text-Pastry/wiki).
+
+As alwys, please feel free to report any bugs and/or feature request [here](https://github.com/duydao/Text-Pastry/issues).
+
+## New Features ##
+
 ### focus mode ###
 
 This mode includes: hide sidebar, tabs and/or statusbar, all by one shortcut
@@ -72,6 +78,8 @@ We can add the following options to modify the behaviour of the selection modifi
 - 1.3.4: Fixed for Sublime Text 3 - Thanks [@forcey](https://github.com/forcey)
 - 1.3.3: New commands: \r(regexp) and \r regex
 - 1.3.2: Bugfix release
+
+
 
 ## Installation ##
 
