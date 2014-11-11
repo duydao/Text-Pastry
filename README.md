@@ -4,13 +4,13 @@ _Text Pastry_ is a free plugin [Sublime Text](http://www.sublimetext.com/), desi
 
 ##Features include:##
 
-- Incremental numbers/sequences (1, 2, 3 or 100, 80, 60)
-- Repeatable number ranges (1, 2, 3, 4, 1, 2, 3, 4 or 2, 1, 2, 1, 2, 1)
-- Generate UUIDS (ba18f7fc-c387-46da-9544-ed32e49ce6f8 or D306E86C-918F-4551-95A9-CB9865A4DD2F)
-- Extendable list of presets (Monday, Tuesday, Wednesday or alpha, beta, gamma)
+- Incremental numbers/sequences _(1, 2, 3 or 100, 80, 60)_
+- Repeatable number ranges _(1, 2, 3, 4, 1, 2, 3, 4 or 2, 1, 2, 1, 2, 1)_
+- Generate UUIDS _(ba18f7fc-c387-46da-9544-ed32e49ce6f8 or D306E86C-918F-4551-95A9-CB9865A4DD2F)_
+- Extendable list of presets _(Monday, Tuesday, Wednesday or alpha, beta, gamma)_
 - Extendable list of commands
 - Create and modify selections
-- Improved paste (paste the first three lines of the clipboard data to the three selected locations)
+- Improved paste _(paste the first three lines of the clipboard data to the three selected locations)_
 
 ## Release Notes 1.4.0 ##
 
