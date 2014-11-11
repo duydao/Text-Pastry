@@ -22,7 +22,7 @@ As alwys, please feel free to report any bugs and/or feature request [here](http
 
 ### command line ###
 
-The _Text Pastry_ input field (**<kbd>CMD</kbd>/<kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd>**) supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
+The _Text Pastry_ input field (**<kbd>CTRL/CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd>**) supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
 
 Text Pastry Commands work like keybindings; you can map a keyword to any command available to [Sublime Text](http://www.sublimetext.com/). We can add new commands by modifying the _Text Pastry_ User-Settings file _(Preferences -> Package Settings -> Text Pastry -> Settings - Default)_.
 
@@ -102,9 +102,9 @@ We can do a manuall installation by cloning this repository into our Packages fo
 To use _Text Pastry_, we need to open a Document in [Sublime Text](http://www.sublimetext.com/) and use [Multiple Selection](https://www.sublimetext.com/docs/selection) to mark the 
 insert locations _(in this document also referred to as selections)_.
 
-Let's keep in mind that the selected text will be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **CMD + Click** or even select a whole column by using **ALT + Click**
+Let's keep in mind that the selected text will be replaced when we run the _Text Pastry_ command. To avoid that, we can alway place the cursor between letters by using **<kbd>CTRL/CMD</kbd> + Click** or even select a whole column by using **<kbd>ALT</kbd> + Click**
 
-All we need to do now is to press **CMD + ALT + N** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [Sublime Text](http://www.sublimetext.com/).
+All we need to do now is to press **<kbd>CTRL/CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd>** to open the _Text Pastry_ command line. The input panel will show up at the bottom of [Sublime Text](http://www.sublimetext.com/).
 
 Now its time to run our first command. Let's enter `first second third` and hit enter to run the command. _Text Pastry_ will add `first` to our first selection, `second` to the next selection and so on.
 
@@ -129,14 +129,9 @@ The default key bindings are stored at _<packages>/Text Pastry/Default.sublime-k
     <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>N</kbd></td>
 	<td>Open _Text Pastry_ Command Line</td>
 </tr>
-<tr>
-    <td><kbd>CTRL</kbd> + <kbd>ALT</kbd> + <kbd>F</kbd></td>
-    <td><kbd>CMD</kbd> + <kbd>ALT</kbd> + <kbd>F</kbd></td>
-    <td>Open _Text Pastry_ Command Line</td>
-</tr>
 </table>
 
-**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palette (<kbd>CTRL</kbd>/<kbd>CMD</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>)
+**Note:** The commands from the _Text Pastry_ menu are also available through the Command Palette (**<kbd>CTRL/CMD</kbd> + <kbd>SHIFT</kbd> + <kbd>P</kbd>**)
 
 ## Command Reference ##
 
