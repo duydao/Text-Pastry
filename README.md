@@ -4,7 +4,7 @@ _Text Pastry_ is a plugin for [Sublime Text](http://www.sublimetext.com/) that w
 
 Ever wanted to paste incrementing numbers or five lines from your clipboard into five different locations at once? _Text Pastry_ can help you out!
 
-## What's new ##
+## Releases ##
 - 1.4.0: New Features: command-line, presets and selection modifiers, focus mode
 - 1.3.7: Bugfix release [#17](https://github.com/duydao/Text-Pastry/issues/17)
 - 1.3.6: Bugfix release [#14](https://github.com/duydao/Text-Pastry/issues/14)
@@ -13,7 +13,7 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 - 1.3.3: New commands: \r(regexp) and \r regex
 - 1.3.2: Bugfix release
 
-## New Features in 1.4.0 ##
+## Release Notes 1.4.0 ##
 
 ### focus mode ###
 
