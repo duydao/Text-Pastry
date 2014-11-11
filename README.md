@@ -223,7 +223,9 @@ We're able to define regex separators for the data that we are pasting, which sh
 
 We can [split the clipboard data by regex](http://docs.python.org/2/library/re.html#re.split), and paste the resulting items into the selected locations:
 
-	```regex``` _expression_
+<pre>
+regex <a href="http://docs.python.org/3/library/re.html#regular-expression-syntax" target="_blank"><i>expression</i></a>
+</pre>
 
 * `expression` the [regular expression](http://docs.python.org/3/library/re.html#regular-expression-syntax) used to split the clipboard data.
 
