@@ -29,21 +29,24 @@ Ever wanted to paste incrementing numbers or five lines from your clipboard into
 
 ## New Features in 1.4.0 ##
 
+- focus mode
+- command-line
+- presets
+- selection modifiers
+
 ### command line ###
 
-text pastry is now shell-like and supports various commands, pre-defined in TextPastryCommands.json. We can add commands-setting in [Packages/User/TextPastry.sublime-Settings](https://github.com/duydao/Text-Pastry/wiki/Settings#Commands)
+The _Text Pastry_ input field supports an extendable list of [commands](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference).
 
-- focus mode
-- shell commands
-- selection modifiers
-- add option for
+New comamnds may be added by modifying the text pastry user settings file (Preferences -> Package Settings -> Text Pastry -> Settings - Default).
 
 ### presets ###
 
-Presets are a bunch of pre-/user-defined values. The range operator is supported, as well as reverse, case modifiers.
+Presets are a [list of pre-defined values](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference#default-presets). The range operator is supported, as well as reverse and case modifiers.
+
+We can extend this list as we like by modifying the text pastry user settings file (Preferences -> Package Settings -> Text Pastry -> Settings - Default)
 
 
-[Packages/User/TextPastry.sublime-Settings](https://github.com/duydao/Text-Pastry/wiki/Settings#Presets)
 
 ### selection modifiers ###
 
