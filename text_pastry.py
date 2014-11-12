@@ -875,6 +875,12 @@ class Parser(object):
         if start is not None and end is not None and start > end:
             end += len(items)
             items.extend(items)
+        if end is not None and end > len(items):
+            while len(items) < end:
+                items.extend(items)
+        if start is not None and end is None:
+            # we have a start index, but no end index
+            items.extend(items[:start])
         if end and global_settings('preset_include_end_index', True):
             end += 1
         return items[start:end]
