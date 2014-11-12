@@ -662,7 +662,7 @@ class TextPastryPasteCommand(sublime_plugin.TextCommand):
 
 
 class TextPastryRangeCommand(sublime_plugin.TextCommand):
-    def run(self, edit, start=0, stop=None, step=1, zero_based=False, padding=1, fillchar='0', justify=None,
+    def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
             align=None, prefix=None, suffix=None):
         print('found range command', start, stop, step)
         count = len(self.view.sel())
@@ -670,8 +670,6 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
         stop = int(stop) if stop else start + (count + 1) * step
         step = int(step) if step else 1
         padding = int(padding) if padding else 0
-        if not global_settings('range_zero_based_index', False):
-            pass
         if global_settings('range_include_end_index', True):
             stop += step
         # if stop is negative, step needs to be negative aswell
