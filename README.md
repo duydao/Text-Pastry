@@ -54,12 +54,12 @@ Clears the current selection, looks for the search term and marks them as new se
 
 This Example will select all values inside of the attribute ``name``, the cursor will be placed at the end of the selection. We can place the cursor at the start of the selection by using the ``reverse`` option:
 
-``find name="(.*?)"`` -> name="<mark>lorem-ipsum-dolor</mark><b>|</b>"
+``find name="(.*?)"`` -> name="<b>this value is selected|</b>"
 
 
 In this example, we will place the cursor at the beginning of the value, without a text selection:
 
-``find name="().*?"`` -> name="<b>|</b>lorem-ipsum-dolor"
+``find name="().*?"`` -> name="<b>|</b><i>this value is not selected</i>"
 
 As we can see, we are now able to place the cursor anywhere we want aswell as creating multiple selections with one regex.
 
