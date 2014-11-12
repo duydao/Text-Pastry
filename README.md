@@ -30,7 +30,9 @@ For more information, please visit the [wiki](https://github.com/duydao/Text-Pas
 
 ### Presets ###
 
-Presets are a [list of pre-defined values](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference#default-presets). The range operator is supported, as well as reverse and case modifiers.
+Presets are a [list of pre-defined values](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference#default-presets):
+
+A start/range operator is supported, as well as reverse and case modifiers.
 
 We can extend this list as we like by modifying the text pastry user settings file _(Preferences -> Package Settings -> Text Pastry -> Settings - Default)_
 
@@ -46,7 +48,7 @@ I've added four commands to create, add and modify the current selection:
 <tr><td>filter</td><td>&nbsp;</td><td>search in selection</td></tr>
 </table>
 
-#### find (search) ####
+#### find ####
 
 Clears the current selection, looks for the search term and marks them as new selections. The special thing about this command is how regex groups are handled: if the search term contains a regex-group, the group will be used for selection. As a nice side effect, this will give us the option to **place the cursor anywhere we want to**.
 
@@ -65,7 +67,7 @@ As we can see, we are now able to place the cursor anywhere we want aswell as cr
 
 Search by regular expression and add the result to the current selections.
 
-#### remove (reduce / subtract) ####
+#### remove ####
 
 Search by a regular expression and remove the matching part from the selections.
 
