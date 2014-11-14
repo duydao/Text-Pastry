@@ -60,13 +60,19 @@
         {"match": "^add (.+)", "command": "text_pastry_modify_selection",
             "args": {"context": "file", "operator": "add", "pattern": "$1"} },
 
-        {"match": "^remove (newline|empty)$", "command": "text_pastry_modify_selection",
-            "args": {"context": "selection", "operator": "subtract", "pattern": "\\n"} },
+        {"match": "^remove (lines|empty)$", "command": "text_pastry_modify_selection", 
+            "args": {"context": "selection", "operator": "subtract",  "patterns": ["(?m)^\\s*$", "\\n"]} },
+
+        {"match": "^remove leading$", "command": "text_pastry_modify_selection",
+            "args": {"context": "selection", "operator": "subtract",  "patterns": ["(?m)^$", "\\n", "(?m)^\\s+"]} },
+
+        {"match": "^remove trailing$", "command": "text_pastry_modify_selection",
+            "args": {"context": "selection", "operator": "subtract",  "patterns": ["(?m)^$", "\\n", "(?m)\\s+$"]} },
 
         {"match": "^(remove space|trim)$", "command": "text_pastry_modify_selection",
-            "args": {"context": "selection", "operator": "subtract", "pattern": "^\\s+|(?<=\\n)\\s+|\\n|\\s+(?=\\n)"} },
+            "args": {"context": "selection", "operator": "subtract",  "patterns": ["(?m)^$", "\\n", "(?m)^\\s+", "(?m)\\s+$"]} },
 
-        {"match": "^(?:reduce|remove|subtract) (.+)", "command": "text_pastry_modify_selection",
+        {"match": "^(?:reduce|remove|subtract|split) (.+)", "command": "text_pastry_modify_selection",
             "args": {"context": "selection", "operator": "subtract", "pattern": "$1"} },
 
         {"match": "^filter (.+)", "command": "text_pastry_modify_selection",
