@@ -7,6 +7,10 @@
     "command": "insert_nums",
     "args": {"current": "1", "step": "1", "padding": "1"}
 }, {
+    "caption": "Text Pastry: Range",
+    "command": "text_pastry_show_command_line",
+    "args": {"text": "range "}
+}, {
     "caption": "Text Pastry: Paste Lines",
     "command": "text_pastry_insert_text",
     "args": {"text": "", "clipboard": true, "separator": "\\n"}
@@ -15,10 +19,34 @@
     "command": "text_pastry_insert_text",
     "args": {"text": "", "clipboard": true}
 }, {
-    "caption": "Text Pastry: UUID",
+    "caption": "Text Pastry: uuid (lower-case)",
     "command": "text_pastry_uuid"
 }, {
-    "caption": "Text Pastry: Command Line",
+    "caption": "Text Pastry: UUID",
+    "command": "text_pastry_uuid",
+    "args": {"uppercase": true}
+}, {
+    "caption": "Text Pastry: Find",
+    "command": "text_pastry_show_command_line",
+    "args": {"text": "find "}
+}, {
+    "caption": "Text Pastry: Add selection",
+    "command": "text_pastry_show_command_line",
+    "args": {"text": "add "}
+}, {
+    "caption": "Text Pastry: Reduce selection",
+    "command": "text_pastry_show_command_line",
+    "args": {"text": "reduce "}
+}, {
+    "caption": "Text Pastry: Filter selection",
+    "command": "text_pastry_show_command_line",
+    "args": {"text": "filter "}
+}, {
+    "caption": "Text Pastry: Split selection",
+    "command": "text_pastry_show_command_line",
+    "args": {"text": "filter "}
+}, {
+    "caption": "Text Pastry: Command-Line",
     "command": "text_pastry_show_command_line",
     "args": {"text": ""}
 }, {
@@ -26,6 +54,10 @@
     "command": "text_pastry_show_menu"
 }, {
     "caption": "Text Pastry: Settings",
+    "command": "text_pastry_show_menu",
+    "args": {"settings": true, "back": false}
+}, {
+    "caption": "Text Pastry: Focus",
     "command": "text_pastry_show_menu",
     "args": {"settings": true, "back": false}
 }]
