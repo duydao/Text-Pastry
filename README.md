@@ -67,13 +67,13 @@ As we can see, we are now able to place the cursor anywhere we want aswell as cr
 
 Adds the matches to the current selection. This example will add all words to the current selection.
 
-    add \\w+
+    add \w+
 
 #### remove ####
 
 Removes the matches form the current selection. This example will remove all non-words from the current selection:
 
-    remove \\s+
+    remove \s+
 
 There are some additional shortcuts for remove:
 
