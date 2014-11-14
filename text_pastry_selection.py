@@ -434,7 +434,13 @@ class TextPastryModifySelectionCommand(sublime_plugin.TextCommand):
         if self._options is None or key not in self._options:
             return default
         return self._options[key]
-    def run(self, edit, pattern, keep=True, context=None, operator=None, use_regex=None, inline=False):
+    def run(self, edit, pattern=None, patterns=None, keep=True, context=None, operator=None, use_regex=None, inline=False):
+        if pattern:
+            self.modify(edit, pattern, keep, context, operator, use_regex, inline)
+        elif patterns:
+            for pattern in patterns:
+                self.modify(edit, pattern, keep, context, operator, use_regex, inline)
+    def modify(self, edit, pattern, keep=True, context=None, operator=None, use_regex=None, inline=False):
         # cancel if no pattern
         if not pattern:
             return
