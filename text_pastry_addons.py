@@ -33,11 +33,8 @@ class TextPastryFocusCommand(sublime_plugin.WindowCommand):
         ref = TextPastryFocusCommand
         ref.enabled = True if enable_focus else False
         if ref.enabled:
-            TextPastryPrevViewNextViewCommand.clear_delay()
             # focus mode enabled
             run('hide_panel', {'cancel': True})
-        run('text_pastry_key_binding', {'key': 'down', 'command': 'text_pastry_prev_view'})
-        run('text_pastry_key_binding', {'key': 'up', 'command': 'text_pastry_next_view'})
 class TextPastryPanelListener(sublime_plugin.EventListener):
     listener = ['toggle_side_bar', 'toggle_status_bar', 'toggle_tabs', 'toggle_minimap']
     running = False

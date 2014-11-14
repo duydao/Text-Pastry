@@ -94,7 +94,13 @@ This example will only keep selections inside of parentheses:
 
 ### Yet Another Focus Mode ###
 
-This mode lets us hide the sidebar, tabs and/or statusbar, all by one shortcut.
+This mode lets us hide the side bar, tabs and/or status bar. We can configure what to hide in Packages/User/TextPastryAddons.sublime-settings. By default, Focus mode will toggle the side bar, status bar and the tabs:
+
+    {
+        "focus": ["toggle_side_bar", "toggle_status_bar", "toggle_tabs"]
+    }
+
+In addition, we can toggle the minimap by adding ``"toggle_minimap"`` to the list.
 
 ### Shell (experimental) ###
 

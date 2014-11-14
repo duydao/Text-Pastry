@@ -58,6 +58,5 @@
     "args": {"settings": true, "back": false}
 }, {
     "caption": "Text Pastry: Focus",
-    "command": "text_pastry_show_menu",
-    "args": {"settings": true, "back": false}
+    "command": "text_pastry_focus"
 }]
