@@ -60,6 +60,12 @@
         {"match": "^add (.+)", "command": "text_pastry_modify_selection",
             "args": {"context": "file", "operator": "add", "pattern": "$1"} },
 
+        {"match": "^remove (newline|empty)$", "command": "text_pastry_modify_selection",
+            "args": {"context": "selection", "operator": "subtract", "pattern": "\\n"} },
+
+        {"match": "^(remove space|trim)$", "command": "text_pastry_modify_selection",
+            "args": {"context": "selection", "operator": "subtract", "pattern": "^\\s+|(?<=\\n)\\s+|\\n|\\s+(?=\\n)"} },
+
         {"match": "^(?:reduce|remove|subtract) (.+)", "command": "text_pastry_modify_selection",
             "args": {"context": "selection", "operator": "subtract", "pattern": "$1"} },
 
