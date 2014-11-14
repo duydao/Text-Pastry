@@ -72,6 +72,9 @@
         {"match": "^(remove space|trim)$", "command": "text_pastry_modify_selection",
             "args": {"context": "selection", "operator": "subtract",  "patterns": ["(?m)^$", "\\n", "(?m)^\\s+", "(?m)\\s+$"]} },
 
+        {"match": "^split$", "command": "text_pastry_modify_selection",
+            "args": {"context": "selection", "operator": "subtract", "pattern": "[\\W]"} },
+
         {"match": "^(?:reduce|remove|subtract|split) (.+)", "command": "text_pastry_modify_selection",
             "args": {"context": "selection", "operator": "subtract", "pattern": "$1"} },
 
