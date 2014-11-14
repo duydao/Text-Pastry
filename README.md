@@ -65,26 +65,32 @@ As we can see, we are now able to place the cursor anywhere we want aswell as cr
 
 #### add ####
 
-Search by regular expression and add the result to the current selections.
+Adds the matches to the current selection. This example will add all words to the current selection.
+
+    add \\w+
 
 #### remove ####
 
-Search by a regular expression and remove the matching part from the selections.
+Removes the matches form the current selection. This example will remove all non-words from the current selection:
+
+    remove \\s+
+
+There are some additional shortcuts for remove:
+
+Comamnd | Action
+--- | ---
+remove lines | Removes empty lines (lines containing only spaces will be count as empty).
+remove leading | Removes leading spaces.
+remove trailing | Removes trailing spaces.
+remove space | Removes empty lines, leading spaces and trailing spaces.
 
 #### filter ####
 
-The filter command acts as "find in selection". only matched terms in the curren selection will be selected afterwards.
+The filter command acts as "find in selection". Only matched terms in the curren selection will be selected afterwards.
 
-#### selection modifier - options (experimental) ####
+This example will only keep selections inside of parentheses:
 
-We can add the following options to modify the behaviour of the selection modifier:
-
-<table>
-<tr><td>regex/no-regex</td><td>search term is a regex</td></tr>
-<tr><td>case-sensitive/case-insensitive</td><td>search should be case (in-)sensitive</td></tr>
-<tr><td>in file/selection/both/all/view</td><td>search scope (experimental)</td></tr>
-<tr><td>by lines/words/bounds</td><td>expands the match (experimental)</td></tr>
-</table>
+    filter \((.*?)\) 
 
 **Note:** This options aren't fully tested yet and there may be some some caveats.
 
