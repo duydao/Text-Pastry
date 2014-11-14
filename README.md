@@ -92,8 +92,6 @@ This example will only keep selections inside of parentheses:
 
     filter \((.*?)\) 
 
-**Note:** This options aren't fully tested yet and there may be some some caveats.
-
 ### Yet Another Focus Mode ###
 
 This mode lets us hide the sidebar, tabs and/or statusbar, all by one shortcut.
