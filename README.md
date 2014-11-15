@@ -11,6 +11,12 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Extendable list of commands
 - Create and modify selections
 - Improved paste _(paste the first three lines of the clipboard data to the three selected locations)_
+- Generate date ranges
+
+## Release Notes 1.5.0 ##
+
+New Features:
+- Generate date ranges
 
 ## Release Notes 1.4.0 ##
 
@@ -273,10 +279,8 @@ _Text Pastry_ has a build in support for the [Insert Nums](https://github.com/jb
 Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for examples!
 
 ## Todo ##
-- date ranges
 - formatters
 - wrappers [#20](https://github.com/duydao/Text-Pastry/issues/20)
-- incremental search: add search terms to selection by shortcut (work-in-progress)
 - smart case: determine case-sensitivity by search term
 
 ## Wishlist ##
@@ -284,8 +288,10 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 - yankring
 
 ## Done ##
-- ~~Alphabetical sequence (upper/lower case)~~(1.4.0)
-- ~~Random numbers, strings and sequences~~ (use [Random Everything](https://sublime.wbond.net/packages/Random%20Everything) in combination with commands~~
+- ~~date ranges~~ (1.5.0)
+- ~~ incremental search: add search terms to selection by shortcut (work-in-progress)~~ (1.4.0, use ``add``)
+- ~~Alphabetical sequence (upper/lower case)~~ (1.4.0)
+- ~~Random numbers, strings and sequences~~ (use [Random Everything](https://sublime.wbond.net/packages/Random%20Everything) in combination with commands)
 - ~~Command List Overlay~~
 - ~~Command History~~
 - ~~UUID generation~~
