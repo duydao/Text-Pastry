@@ -2,6 +2,7 @@ import sublime
 import sublime_plugin
 import re
 import operator
+import datetime
 import time
 import uuid
 import subprocess
@@ -765,6 +766,97 @@ class TextPastryUuidCommand(sublime_plugin.TextCommand):
             "command": "UuidCommand",
             "args": {"uppercase": uppercase}
         })
+
+
+class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text, date=None, repeat="day", count=None, date_format=None):
+        selection_count = len(self.view.sel())
+        match = re.search('^\\d+$', text)
+        if count is None and match:
+            count = int(match.group(0))
+        match = re.search('^([\\d]{1,2}[\\.-/][\\d]{1,2}[\\.-/][\\d]{1,4}) ?(.+)?$', text)
+        if match:
+            date = self.parse_date(match.group(1))
+            fmt = match.group(2)
+            if fmt and '%' in fmt:
+                date_format = fmt
+        if date is None:
+            s = None
+            # check if selection is a date
+            if selection_count == 1:
+                s = self.view.substr(self.view.sel()[0]).strip()
+            if s:
+                date = self.parse_date(s)
+        if date is None:
+            # use today as date
+            date = datetime.datetime.now()
+            date = date + datetime.timedelta(hours=-date.hour, minutes=-date.minute, seconds=-date.second, microseconds=-date.microsecond)
+        if count is None:
+            # use selection count if no count was given/found
+            count = selection_count
+        else:
+            # set boundaries of count
+            if count > selection_count and selection_count > 1:
+                count = selection_count
+        if date_format is None:
+            date_format = global_settings('date_format', '%x')
+        # generate item list
+        items = [self.date(date, repeat, x).strftime(date_format) for x in range(count)]
+        # create one text entry if single selection
+        if selection_count == 1:
+            newline = '\r\n' if self.view.line_endings() == 'windows' else '\n' 
+            items = [newline.join(items)]
+        for idx, region in enumerate(self.view.sel()):
+            self.view.replace(edit, region, items[idx])
+    def parse_date(self, s):
+        date = None
+        parse_date_formats = global_settings("parse_date_formats", [])
+        for fmt in parse_date_formats:
+            try:
+                date = datetime.datetime.strptime(s, fmt)
+            except ValueError:
+                pass
+        return date
+    def date(self, start, repeat, value):
+        date = start
+        if repeat == 'week':
+            date = date + datetime.timedelta(weeks=value)
+        elif repeat == 'month':
+            date = self.add_months(date, value)
+        elif repeat == 'year':
+            date = self.add_years(date, value)
+        else:
+            date = date + datetime.timedelta(days = value)
+        return date
+    def add_years(self, d, years):
+        if years == 0:
+            return d
+        try:
+            return d.replace(year = d.year + years)
+        except ValueError:
+            return d.replace(day = 28).replace(year = d.year + years)
+    def add_months(self, d, m):
+        if m == 0:
+            return d
+        years = 0
+        months = m + d.month
+        years = int(months / 12)
+        months = int(months % 12)
+        if months == 0:
+            years -= 1
+            months = 12
+        try:
+            return self.add_years(d, years).replace(month = months)
+        except ValueError:
+            print('month value error', d.strftime("%d.%m.%Y"), years, months, d.month, )
+            years = 0
+            months = m + d.month + 1
+            years = int(months / 12)
+            months = int(months % 12)
+            if months == 0:
+                years -= 1
+                months = 12
+            return self.add_years(d, years).replace(day = 1).replace(month = months) - datetime.timedelta(days = 1)
 
 
 class Parser(object):
