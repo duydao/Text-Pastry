@@ -289,7 +289,7 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 
 ## Done ##
 - ~~date ranges~~ (1.5.0)
-- ~~ incremental search: add search terms to selection by shortcut (work-in-progress)~~ (1.4.0, use ``add``)
+- ~~incremental search: add search terms to selection by shortcut (work-in-progress)~~ (1.4.0, use ``add``)
 - ~~Alphabetical sequence (upper/lower case)~~ (1.4.0)
 - ~~Random numbers, strings and sequences~~ (use [Random Everything](https://sublime.wbond.net/packages/Random%20Everything) in combination with commands)
 - ~~Command List Overlay~~
