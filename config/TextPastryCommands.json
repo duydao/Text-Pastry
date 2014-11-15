@@ -87,8 +87,9 @@
 
         {"match": "^(?:date-format) (.+)$", "command": "text_pastry_setting", "args": {"name": "date_format", "value": "$1"} },
         {"match": "^(?:days|day) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
-        {"match": "^(?:weeks|week) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "week"} },
-        {"match": "^(?:months|month) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "month"} },
-        {"match": "^(?:years|year) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "year"} }
+        {"match": "^(?:weeks|week) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week"} },
+        {"match": "^(?:months|month) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month"} },
+        {"match": "^(?:end-of-month|eom|end-of-the-month|eotm|last-day-of-month|ldomlast-day-of-the-month|ldotm) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "last_day_of_month": true} },
+        {"match": "^(?:years|year) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year"} }
     ]
 }

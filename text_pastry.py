@@ -769,7 +769,7 @@ class TextPastryUuidCommand(sublime_plugin.TextCommand):
 
 
 class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
-    def run(self, edit, text, date=None, repeat="day", count=None, date_format=None):
+    def run(self, edit, text, date=None, step_size="day", count=None, date_format=None, last_day_of_month=False):
         selection_count = len(self.view.sel())
         match = re.search('^\\d+$', text)
         if count is None and match:
@@ -801,7 +801,7 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
         if date_format is None:
             date_format = global_settings('date_format', '%x')
         # generate item list
-        items = [self.date(date, repeat, x).strftime(date_format) for x in range(count)]
+        items = [self.date(date, step_size, x, last_day_of_month).strftime(date_format) for x in range(count)]
         # create one text entry if single selection
         if selection_count == 1:
             newline = '\r\n' if self.view.line_endings() == 'windows' else '\n' 
@@ -817,17 +817,24 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
             except ValueError:
                 pass
         return date
-    def date(self, start, repeat, value):
+    def date(self, start, step_size, value, last_day_of_month):
         date = start
-        if repeat == 'week':
+        if step_size == 'week':
             date = date + datetime.timedelta(weeks=value)
-        elif repeat == 'month':
+        elif step_size == 'month':
             date = self.add_months(date, value)
-        elif repeat == 'year':
+            if last_day_of_month:
+                date = self.adjust_to_last_day_of_month(date)
+        elif step_size == 'year':
             date = self.add_years(date, value)
         else:
             date = date + datetime.timedelta(days = value)
         return date
+    def adjust_to_last_day_of_month(self, date):
+        if date.month == 12:
+            return date.replace(day = 31)
+        else:
+            return date.replace(day = 1).replace(month = date.month + 1) - datetime.timedelta(days = 1)
     def add_years(self, d, years):
         if years == 0:
             return d
@@ -848,7 +855,6 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
         try:
             return self.add_years(d, years).replace(month = months)
         except ValueError:
-            print('month value error', d.strftime("%d.%m.%Y"), years, months, d.month, )
             years = 0
             months = m + d.month + 1
             years = int(months / 12)
