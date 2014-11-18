@@ -2,6 +2,7 @@
 
 _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), designed to reduce repetetive work by extending the [multiple selections](https://www.sublimetext.com/docs/selection) feature of [Sublime Text](http://www.sublimetext.com/).
 
+
 ## Features include: ##
 
 - Incremental numbers/sequences _(1, 2, 3 or 100, 80, 60)_
@@ -13,10 +14,27 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Improved paste _(paste the first three lines of the clipboard data to the three selected locations)_
 - Generate date ranges
 
+
 ## Release Notes 1.5.0 ##
 
 New Features:
 - Generate date ranges
+
+
+## What's new ##
+- 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
+- 1.4.0: [New Features!](https://github.com/duydao/Text-Pastry#release-notes-140)
+- 1.3.6: Bugfix release [#14](https://github.com/duydao/Text-Pastry/issues/14) - Thanks [@shooftie](https://github.com/shooftie)
+- 1.3.5: History navigation, command shortcuts - Thanks [@JAStanton](https://github.com/JAStanton)
+- 1.3.4: Fixed for Sublime Text 3 - Thanks [@forcey](https://github.com/forcey)
+- 1.3.3: New commands: \r(regexp) and \r regex
+- 1.3.2: Bugfix release
+
+
+## Release Notes 1.4.1 ##
+
+- Bugfix release (#23, thanks for reporting this issue, @passalini!)
+
 
 ## Release Notes 1.4.0 ##
 
