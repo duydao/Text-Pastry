@@ -1,11 +1,11 @@
 [{
     "caption": "Text Pastry: From 0 To X",
-    "command": "insert_nums",
-    "args": {"current": "0", "step": "1", "padding": "1"}
+    "command": "text_pastry_range",
+    "args": {"start": 0, "step": 1, "padding": 1}
 }, {
     "caption": "Text Pastry: From 1 To X",
-    "command": "insert_nums",
-    "args": {"current": "1", "step": "1", "padding": "1"}
+    "command": "text_pastry_range",
+    "args": {"start": 1, "step": 1, "padding": 1}
 }, {
     "caption": "Text Pastry: Range",
     "command": "text_pastry_show_command_line",
