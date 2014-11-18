@@ -2,6 +2,7 @@ import sublime
 import sublime_plugin
 import re
 import operator
+import datetime
 import time
 import uuid
 import subprocess
@@ -562,10 +563,11 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 command = item.command
                 text = item.text
                 separator = item.separator
+                # insert nums for history compatibility
                 if command == "insert_nums":
-                    sublime.status_message("insert_nums: " + text)
-                    (current, step, padding) = map(str, text.split(" "))
-                    self.window.run_command(command, {"current": current, "step": step, "padding": padding})
+                    sublime.status_message("text_pastry_range: " + text)
+                    (start, step, padding) = map(str, text.split(" "))
+                    self.window.run_command("text_pastry_range", {"start": start, "step": step, "padding": padding})
                 elif command == "text_pastry_insert_text":
                     self.window.run_command(command, {"text": text, "separator": separator})
                 else:
@@ -597,11 +599,11 @@ class TextPastryShowMenu(sublime_plugin.WindowCommand):
                 else:
                     sublime.message_dialog("No Clipboard Data available")
             elif item.command == "\\i":
-                self.history_manager.append(data={"command": "insert_nums", "args": {"current": "1", "step": "1", "padding": "1"}}, label=item.label)
-                self.window.run_command("insert_nums", {"current": "1", "step": "1", "padding": "1"})
+                self.history_manager.append(data={"command": "text_pastry_range", "args": {"start": 1, "step": 1, "padding": 1}}, label=item.label)
+                self.window.run_command("text_pastry_range", {"start": 1, "step": 1, "padding": 1})
             elif item.command == "\\i0":
-                self.history_manager.append(data={"command": "insert_nums", "args": {"current": "0", "step": "1", "padding": "1"}}, label=item.label)
-                self.window.run_command("insert_nums", {"current": "0", "step": "1", "padding": "1"})
+                self.history_manager.append(data={"command": "text_pastry_range", "args": {"start": 0, "step": 1, "padding": 1}}, label=item.label)
+                self.window.run_command("text_pastry_range", {"start": 0, "step": 1, "padding": 1})
             elif item.command.lower() == "uuid":
                 self.history_manager.append(data={"command": "text_pastry_uuid", "args": {"uppercase": False}}, label=item.label)
                 self.window.run_command("text_pastry_uuid", {"uppercase": False})
@@ -709,8 +711,8 @@ class TextPastryRedoCommand(sublime_plugin.WindowCommand):
             if text and command:
                 sublime.status_message("Running last command")
                 if command == "insert_nums":
-                    (current, step, padding) = map(str, text.split(" "))
-                    self.window.active_view().run_command(command, {"current": current, "step": step, "padding": padding})
+                    (start, step, padding) = map(str, text.split(" "))
+                    self.window.active_view().run_command("text_pastry_range", {"start": start, "step": step, "padding": padding})
                 elif command == "text_pastry_insert_text":
                     self.window.active_view().run_command(command, {"text": text, "separator": separator})
                 else:
