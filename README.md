@@ -12,6 +12,15 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Create and modify selections
 - Improved paste _(paste the first three lines of the clipboard data to the three selected locations)_
 
+## What's new ##
+- 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
+- 1.4.0: [New Features!](https://github.com/duydao/Text-Pastry#release-notes-140)
+- 1.3.6: Bugfix release [#14](https://github.com/duydao/Text-Pastry/issues/14) - Thanks [@shooftie](https://github.com/shooftie)
+- 1.3.5: History navigation, command shortcuts - Thanks [@JAStanton](https://github.com/JAStanton)
+- 1.3.4: Fixed for Sublime Text 3 - Thanks [@forcey](https://github.com/forcey)
+- 1.3.3: New commands: \r(regexp) and \r regex
+- 1.3.2: Bugfix release
+
 ## Release Notes 1.4.0 ##
 
 I'm very excited to announce v1.4.0! The Code was actually released a few months ago, but I need the extra time to check the new features and update the [wiki](https://github.com/duydao/Text-Pastry/wiki).
