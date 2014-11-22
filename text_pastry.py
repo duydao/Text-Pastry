@@ -675,7 +675,7 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
         if global_settings('range_include_end_index', True):
             stop += step
         # if stop is negative, step needs to be negative aswell
-        if (start > stop):
+        if (start > stop and step > 0):
             step = step * -1
         items = [str(x) for x in range(start, stop, step)]
         if padding > 1:
