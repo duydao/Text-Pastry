@@ -16,10 +16,6 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
 - 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
 - 1.4.0: [New Features!](https://github.com/duydao/Text-Pastry#release-notes-140)
-- 1.3.5: History navigation, command shortcuts - Thanks [@JAStanton](https://github.com/JAStanton)
-- 1.3.4: Fixed for Sublime Text 3 - Thanks [@forcey](https://github.com/forcey)
-- 1.3.3: New commands: \r(regexp) and \r regex
-- 1.3.2: Bugfix release
 
 ## Release Notes 1.4.0 ##
 
@@ -121,6 +117,8 @@ The script/code will get some basic information like selected text, index, etc. 
 
 
 ## Releases ##
+- 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
+- 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
 - 1.4.0: New Features: command-line, presets and selection modifiers, focus mode
 - 1.3.7: Bugfix release [#17](https://github.com/duydao/Text-Pastry/issues/17)
 - 1.3.6: Bugfix release [#14](https://github.com/duydao/Text-Pastry/issues/14)
