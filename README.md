@@ -36,6 +36,11 @@ New Features:
 - Bugfix release (#23, thanks for reporting this issue, @passalini!)
 
 
+## What's new ##
+- 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
+- 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
+- 1.4.0: [New Features!](https://github.com/duydao/Text-Pastry#release-notes-140)
+
 ## Release Notes 1.4.0 ##
 
 I'm very excited to announce v1.4.0! The Code was actually released a few months ago, but I need the extra time to check the new features and update the [wiki](https://github.com/duydao/Text-Pastry/wiki).
@@ -136,6 +141,8 @@ The script/code will get some basic information like selected text, index, etc. 
 
 
 ## Releases ##
+- 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
+- 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
 - 1.4.0: New Features: command-line, presets and selection modifiers, focus mode
 - 1.3.7: Bugfix release [#17](https://github.com/duydao/Text-Pastry/issues/17)
 - 1.3.6: Bugfix release [#14](https://github.com/duydao/Text-Pastry/issues/14)
