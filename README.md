@@ -15,15 +15,277 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Generate date ranges
 
 ## What's new ##
-- 1.4.3: Generate date ranges
+- 1.4.3: New commands! Generate date ranges command, repeat argument (x-arg), and the [Auto Step](https://github.com/duydao/Text-Pastry/issues/20) command
 - 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
 - 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
 - 1.4.0: [New Features!](https://github.com/duydao/Text-Pastry#release-notes-140)
 
 ## Release Notes 1.4.3 ##
 
-New Features:
-- Generate date ranges
+This release brings us 3 new features!
+
+## New Features ##
+
+### Generate date ranges ###
+
+New settings:
+
+```
+    "parse_date_formats": [
+    "%d.%m.%Y"
+    ],
+```
+
+parse_date_formats is used to parse the date from the _Text Pastry_ command line. For supported date formats, please check out http://strftime.org/
+
+```
+    "date_format": "%d.%m.%Y",
+```
+
+used to generate the date range. For supported date formats, please check out http://strftime.org/. For our convenience, we can set the date format-setting by calling the date-format command:
+
+```
+    date-format %Y-%m-%d
+```
+
+**date range commands**
+
+Command:
+
+```
+    days x5
+```
+
+Result:
+
+```
+    14.12.2014
+    15.12.2014
+    16.12.2014
+    17.12.2014
+    18.12.2014
+```
+
+Command:
+
+```
+    weeks
+```
+
+Result:
+
+```
+    14.12.2014
+    21.12.2014
+    28.12.2014
+    04.01.2015
+    11.01.2015
+```
+
+Command:
+
+```
+    months
+```
+
+Result:
+
+```
+    14.12.2014
+    14.01.2015
+    14.02.2015
+    14.03.2015
+    14.04.2015
+```
+
+Command:
+
+```
+    end-of-month
+```
+
+Result:
+
+```
+    31.12.2014
+    31.01.2015
+    28.02.2015
+    31.03.2015
+    30.04.2015
+```
+
+Command:
+
+```
+    years
+```
+
+Result:
+
+```
+    14.12.2014
+    14.12.2015
+    14.12.2016
+    14.12.2017
+    14.12.2018
+```
+
+We can add a start date to date range commands:
+
+```
+    weeks 14.03.2015
+```
+
+Result:
+
+```
+    14.03.2015
+    21.03.2015
+    28.03.2015
+    04.04.2015
+    11.04.2015
+```
+
+The date range command supports the newly introduced x-arg! Lets generate 30 dates:
+
+```
+    days x30
+```
+
+```
+    14.12.2014
+    15.12.2014
+    16.12.2014
+    ...
+    10.01.2015
+    11.01.2015
+    12.01.2015
+```
+
+### Repeat argument (x-arg) ###
+Before this release, we had to create empty lines and do a multiselect to create a number sequence. With 1.4.3, we can use this command to create new lines on the fly:
+
+Source:
+```
+    |
+```
+
+
+```
+    1 x5
+```
+
+We will give us this result:
+
+```
+    1|
+    2|
+    3|
+    4|
+    5|
+```
+
+_Text Pastry_ will duplicate the line and add the number sequence to it, so the line doesn't have to be empty:
+
+```
+    <div id="row-|"></div>
+```
+
+Using ``1 x3`` will give us this:
+
+```
+    <div id="row-1"></div>
+    <div id="row-2"></div>
+    <div id="row-3"></div>
+```
+
+The x-arg is supported by the [**UUID/uuid** command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference), the [N M P command](https://github.com/duydao/Text-Pastry/wiki/Examples#insert-nums-syntax), the [range command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference) and the date range command.
+
+**Note:**: Please note that the x-argument will be ignored if we have multiple selections. If we have 5 selections, _Text Pastry_ will behave the same way as before and will fill all selections with a sequence number.
+
+
+### Auto step (aka. Text with sequence [#20](https://github.com/duydao/Text-Pastry/issues/20)) ###
+
+Inspired by @passalini's request, I've added the auto step feature. Use this command:
+
+Command: ```as <text> [step] [x-arg]```
+
+```
+    as row-1
+```
+
+For each selection we've made, _Text Pastry_ will insert the text and increment the number by ``[step]`` (default is ``1``). As example, if we had 4 selections, we will get this:
+
+Source:
+
+```
+    <div id="|"></div>
+    <div id="|"></div>
+    <div id="|"></div>
+    <div id="|"></div>
+```
+
+Result:
+
+```
+    <div id="row-1"></div>
+    <div id="row-2"></div>
+    <div id="row-3"></div>
+    <div id="row-4"></div>
+```
+
+Auto step supports a step size argument:
+
+```
+    as row-0 2
+```
+
+Result:
+
+```
+    <div id="row-0"></div>
+    <div id="row-2"></div>
+    <div id="row-4"></div>
+    <div id="row-6"></div>
+```
+
+Auto Step supports the x-arg:
+
+Source:
+
+```
+    <div id="|"></div>
+```
+
+Command:
+
+```
+    as row-10 10 x10
+```
+
+will expand to this:
+
+```
+    <div id="row-10"></div>
+    <div id="row-20"></div>
+    <div id="row-30"></div>
+    <div id="row-40"></div>
+    <div id="row-50"></div>
+    <div id="row-60"></div>
+    <div id="row-70"></div>
+    <div id="row-80"></div>
+    <div id="row-90"></div>
+    <div id="row-100"></div>
+```
+
+### Generate a bunch of UUIDs ###
+
+The UUID/uuid command supports the newly introduced x-arg. Use this command to generte 100 UUIDs:
+
+```
+    UUID x100
+```
+
 
 ## Release Notes 1.4.0 ##
 

@@ -30,6 +30,17 @@ def global_settings(key, default=None):
     return settings().get(key, default)
 
 
+class TextPastryTools(object):
+    @staticmethod
+    def duplicate(view, edit, region, times):
+        for i in range(0, times):
+            # this code is from sublime text -> packages/default/duplicate.py
+            line = view.line(region)
+            line_contents = view.substr(line) + '\n'
+            view.insert(edit, line.begin(), line_contents)
+            view.sel().add(region)
+
+
 class HistoryHandler(object):
     _stack = None
     index = 0
@@ -438,7 +449,7 @@ class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
 
 class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, text=None, separator=None, clipboard=False,
-            items=None, regex=False, keep_selection=None, repeat=None, strip=None,
+            items=None, regex=False, keep_selection=None, update_selection=None, repeat=None, strip=None,
             threshold=1, align=None):
         if separator: separator = separator.encode('utf8').decode("unicode-escape")
         if clipboard: text = sublime.get_clipboard()
@@ -477,6 +488,10 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
                 last_region = region
             if keep_selection is None:
                 keep_selection = settings().get("keep_selection", False)
+            if update_selection is None:
+                update_selection = settings().get("update_selection", None)
+            # clone the selection
+            cursorPos = [(r.begin(), r.end()) for r in sel];
             if not keep_selection:
                 sel.clear()
                 # add untouched regions
@@ -484,9 +499,20 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
                     sel.add(sublime.Region(region.begin(), region.end()))
                 # add cursor if there is none in the current view
                 if len(sel) == 0:
-                    sel.add(sublime.Region(last_region.end(), last_region.end()))
+                    (begin, end) = cursorPos[-1]
+                    sel.add(sublime.Region(begin, end))
+            else:
+                if update_selection == "begin":
+                    sel.clear()
+                    for begin, end in cursorPos:
+                        sel.add(sublime.Region(begin, begin))
+                elif update_selection == "end":
+                    sel.clear()
+                    for begin, end in cursorPos:
+                        sel.add(sublime.Region(end, end))
         else:
-            sublime.status_message("No text found for Insert Text, canceled")
+            sublime.status_message("No text found for Insert Text, fall back to auto_step")
+            self.view.run_command("text_pastry_auto_step", {"text": text})
 
 
 class TextPastryShowMenu(sublime_plugin.WindowCommand):
@@ -667,11 +693,18 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
             align=None, prefix=None, suffix=None):
         print('found range command', start, stop, step)
-        count = len(self.view.sel())
         start = int(start) if start else 0
-        stop = int(stop) if stop else start + (count + 1) * step
         step = int(step) if step else 1
+        stop = int(stop) if stop else None
         padding = int(padding) if padding else 0
+        # duplicate lines and add to selection on repeat
+        if stop is not None:
+            repeat = abs(start - stop)
+            sel = self.view.sel()
+            if len(sel) == 1:
+                TextPastryTools.duplicate(self.view, edit, sel[0], repeat)
+        # adjust stop if none was given
+        stop = start + (len(self.view.sel()) + 1) * step
         if global_settings('range_include_end_index', True):
             stop += step
         # if stop is negative, step needs to be negative aswell
@@ -761,8 +794,11 @@ class TextPastryCommandWrapperCommand(sublime_plugin.TextCommand):
 
 
 class TextPastryUuidCommand(sublime_plugin.TextCommand):
-    def run(self, edit, uppercase=False):
+    def run(self, edit, uppercase=False, repeat=None):
         uppercase = global_settings("force_uppercase_uuid", False) or uppercase
+        repeat = int(repeat) - 1 if repeat else len(self.view.sel()) - 1
+        if len(self.view.sel()) == 1 and repeat:
+            TextPastryTools.duplicate(self.view, edit, self.view.sel()[0], repeat)
         self.view.run_command("text_pastry_command_wrapper", {
             "command": "UuidCommand",
             "args": {"uppercase": uppercase}
@@ -770,7 +806,11 @@ class TextPastryUuidCommand(sublime_plugin.TextCommand):
 
 
 class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
-    def run(self, edit, text, date=None, step_size="day", count=None, date_format=None, last_day_of_month=False):
+    def run(self, edit, text, date=None, step_size="day", count=None, date_format=None, last_day_of_month=False, repeat=None):
+        # support repeats
+        repeat = int(repeat) - 1 if repeat else len(self.view.sel()) - 1
+        if len(self.view.sel()) == 1 and repeat:
+            TextPastryTools.duplicate(self.view, edit, self.view.sel()[0], repeat)
         selection_count = len(self.view.sel())
         match = re.search('^\\d+$', text)
         if count is None and match:
@@ -864,6 +904,30 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
                 years -= 1
                 months = 12
             return self.add_years(d, years).replace(day = 1).replace(month = months) - datetime.timedelta(days = 1)
+
+
+class TextPastryAutoStepCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text=None, step_size=None, repeat=None):
+        step = int(step_size) if step_size and is_numeric(step_size) else 1
+        if text and step:
+            padding = 1
+            sublime.status_message("text_pastry_auto_step")
+            # match continuous digits/non-digits
+            parts = [m for m in re.findall("([\d]+|[^\d]+)", text)]
+            # find integer parts
+            numbers = [idx for idx, val in enumerate(parts) if is_numeric(val)]
+            repeat = int(repeat) - 1 if repeat else len(self.view.sel()) - 1
+            if len(self.view.sel()) == 1 and repeat:
+                TextPastryTools.duplicate(self.view, edit, self.view.sel()[0], repeat)
+            sel = self.view.sel()
+            for region in sel:
+                self.view.replace(edit, region, ''.join(parts))
+                # increment
+                for i in numbers:
+                    parts[i] = str(int(parts[i]) + step)
+            # keep selection
+            for region in sel:
+                pass
 
 
 class Parser(object):
@@ -1128,6 +1192,7 @@ class StepCommandParser(OptionsParser):
         align = None
         prefix = None
         suffix = None
+        repeat = None
         flags = {}
         remains = []
         for pos, arg in enumerate(self.input_text.split()):
@@ -1157,9 +1222,11 @@ class StepCommandParser(OptionsParser):
             elif arg.lower() in ['prepend', 'append']:
                 align = arg.lower()
             elif arg.lower().startswith('prefix='):
-                prefix = value[7:]
+                prefix = arg[7:]
             elif arg.lower().startswith('suffix='):
-                suffix = value[7:]
+                suffix = arg[7:]
+            elif arg.lower().startswith('x') and re.match(r"^x\d+$", arg) is not None:
+                repeat = int(arg[1:])
             else:
                 remains.append(arg)
         # regex matchers
@@ -1176,9 +1243,13 @@ class StepCommandParser(OptionsParser):
                 remains = []
         if len(remains) == 0 and current is not None:
             # default values if valid
+            start = current
+            stop = None
             step = 1 if step is None else step
             padding = 1 if padding is None else padding
-            return dict(command='text_pastry_range', args={'start': current, 'step': step, 'padding': padding, 'fillchar': fillchar,
+            if repeat is not None and step is not None and step != 0:
+                stop = start + ((repeat -1) * step)
+            return dict(command='text_pastry_range', args={'start': start, 'stop': stop, 'step': step, 'padding': padding, 'fillchar': fillchar,
                         'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix})
 
 
