@@ -29,21 +29,21 @@ Three new commands were added in 1.4.3!
 New settings:
 
 ```
-    "parse_date_formats": [
+"parse_date_formats": [
     "%d.%m.%Y"
-    ],
+],
 ```
 
 parse_date_formats is used to parse the date from the _Text Pastry_ command line. For supported date formats, please check out http://strftime.org/
 
 ```
-    "date_format": "%d.%m.%Y",
+"date_format": "%d.%m.%Y",
 ```
 
 used to generate the date range. For supported date formats, please check out http://strftime.org/. For our convenience, we can set the date format-setting by calling the date-format command:
 
 ```
-    date-format %Y-%m-%d
+date-format %Y-%m-%d
 ```
 
 **date range commands**
@@ -51,113 +51,113 @@ used to generate the date range. For supported date formats, please check out ht
 Command:
 
 ```
-    days x5
+days x5
 ```
 
 Result:
 
 ```
-    14.12.2014
-    15.12.2014
-    16.12.2014
-    17.12.2014
-    18.12.2014
+14.12.2014
+15.12.2014
+16.12.2014
+17.12.2014
+18.12.2014
 ```
 
 Command:
 
 ```
-    weeks
+weeks
 ```
 
 Result:
 
 ```
-    14.12.2014
-    21.12.2014
-    28.12.2014
-    04.01.2015
-    11.01.2015
+14.12.2014
+21.12.2014
+28.12.2014
+04.01.2015
+11.01.2015
 ```
 
 Command:
 
 ```
-    months
+months
 ```
 
 Result:
 
 ```
-    14.12.2014
-    14.01.2015
-    14.02.2015
-    14.03.2015
-    14.04.2015
+14.12.2014
+14.01.2015
+14.02.2015
+14.03.2015
+14.04.2015
 ```
 
 Command:
 
 ```
-    end-of-month
+end-of-month
 ```
 
 Result:
 
 ```
-    31.12.2014
-    31.01.2015
-    28.02.2015
-    31.03.2015
-    30.04.2015
+31.12.2014
+31.01.2015
+28.02.2015
+31.03.2015
+30.04.2015
 ```
 
 Command:
 
 ```
-    years
+years
 ```
 
 Result:
 
 ```
-    14.12.2014
-    14.12.2015
-    14.12.2016
-    14.12.2017
-    14.12.2018
+14.12.2014
+14.12.2015
+14.12.2016
+14.12.2017
+14.12.2018
 ```
 
 We can add a start date to date range commands:
 
 ```
-    weeks 14.03.2015
+weeks 14.03.2015
 ```
 
 Result:
 
 ```
-    14.03.2015
-    21.03.2015
-    28.03.2015
-    04.04.2015
-    11.04.2015
+14.03.2015
+21.03.2015
+28.03.2015
+04.04.2015
+11.04.2015
 ```
 
 The date range command supports the newly introduced x-arg! Lets create 30 dates:
 
 ```
-    days x30
+days x30
 ```
 
 ```
-    14.12.2014
-    15.12.2014
-    16.12.2014
-    ...
-    10.01.2015
-    11.01.2015
-    12.01.2015
+14.12.2014
+15.12.2014
+16.12.2014
+...
+10.01.2015
+11.01.2015
+12.01.2015
 ```
 
 ### Repeat argument (x-arg) ###
