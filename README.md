@@ -22,9 +22,7 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 
 ## Release Notes 1.4.3 ##
 
-This release brings us 3 new features!
-
-## New Features ##
+## New Features! ##
 
 ### Generate date ranges ###
 
