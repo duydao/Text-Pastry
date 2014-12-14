@@ -11,9 +11,16 @@
 
         // generate UUID
         {"match": "^\\\\UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
+        {"match": "^\\\\UUID x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
+        
         {"match": "^UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
+        {"match": "^UUID x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
+        
         {"match": "^\\\\uuid$", "command": "text_pastry_uuid" },
+        {"match": "^\\\\uuid x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
+        
         {"match": "^uuid$", "command": "text_pastry_uuid" },
+        {"match": "^uuid x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
 
         // paste clipboard with custom separator
         {"match": "^\\\\p\\((.*?)\\)?$", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true} },
@@ -83,6 +90,28 @@
 
         {"match": "^range (-?\\d+)[-, ](-?\\d+)[, ](-?\\d+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3"} },
         {"match": "^range (-?\\d+)[-, ](-?\\d+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2"} },
-        {"match": "^range (-?\\d+)$", "command": "text_pastry_range", "args": {"stop": "$1"} }
+        {"match": "^range (-?\\d+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
+
+        // add x-arg support to date ranges
+        {"match": "^(?:days|day) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },
+        {"match": "^(?:weeks|week) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week", "repeat": "$2"} },
+        {"match": "^(?:months|month) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "repeat": "$2"} },
+        {"match": "^(?:end-of-month|eom|end-of-the-month|eotm|last-day-of-month|ldomlast-day-of-the-month|ldotm) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "last_day_of_month": true, "repeat": "$2"} },
+        {"match": "^(?:years|year) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year", "repeat": "$2"} },
+
+        {"match": "^(?:date-format) (.+)$", "command": "text_pastry_setting", "args": {"name": "date_format", "value": "$1"} },
+        {"match": "^(?:days|day) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
+        {"match": "^(?:weeks|week) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week"} },
+        {"match": "^(?:months|month) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month"} },
+        {"match": "^(?:end-of-month|eom|end-of-the-month|eotm|last-day-of-month|ldomlast-day-of-the-month|ldotm) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "last_day_of_month": true} },
+        {"match": "^(?:years|year) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year"} },
+
+        {"match": "^x(\\d+) (.+?) (-?\\d*)$", "command": "text_pastry_auto_step", "args": {"text": "$2", "step_size": "$3", "repeat": "$1"} },
+        {"match": "^x(\\d+) (.+?)$", "command": "text_pastry_auto_step", "args": {"text": "$2", "repeat": "$1"} },
+        {"match": "^(?:s|as) (.+?) (-?\\d+) x(\\d+)$", "command": "text_pastry_auto_step", "args": {"text": "$1", "step_size": "$2", "repeat": "$3"} },
+        {"match": "^(?:s|as) (.+?) x(\\d+) (-?\\d*)$", "command": "text_pastry_auto_step", "args": {"text": "$1", "step_size": "$3", "repeat": "$2"} },
+        {"match": "^(?:s|as) (.+?) x(\\d+)$", "command": "text_pastry_auto_step", "args": {"text": "$1", "repeat": "$2"} },
+        {"match": "^(?:s|as) (.+?) (-?\\d+)$", "command": "text_pastry_auto_step", "args": {"text": "$1", "step_size": "$2"} },
+        {"match": "^(?:s|as) (.*)$", "command": "text_pastry_auto_step", "args": {"text": "$1"} }
     ]
 }
