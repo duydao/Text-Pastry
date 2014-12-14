@@ -144,7 +144,7 @@ Result:
     11.04.2015
 ```
 
-The date range command supports the newly introduced x-arg! Lets generate 30 dates:
+The date range command supports the newly introduced x-arg! Lets create 30 dates:
 
 ```
     days x30
@@ -278,7 +278,7 @@ will expand to this:
 
 ### Generate a bunch of UUIDs ###
 
-The UUID/uuid command supports the newly introduced x-arg. Use this command to generte 100 UUIDs:
+The UUID/uuid command supports the newly introduced x-arg. Use this command to create 100 UUIDs:
 
 ```
     UUID x100
