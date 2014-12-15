@@ -8,9 +8,12 @@
     "repeat_preset": true,
     "insert_text_threshold": 3,
 
+    "date_format": "%x",
+    "parse_date_formats": ["%x", "%d.%m.%Y", "%Y-%m-%d"],
+
     "path": {
         "linux": [],
         "osx": [ "/usr/local/bin" ],
         "windows": []
-    },
+    }
 }
