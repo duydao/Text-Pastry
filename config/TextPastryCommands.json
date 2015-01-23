@@ -1,5 +1,6 @@
 {
     "commands": [
+        {"match": "^(?:\\\\?[iI])$", "command": "text_pastry_step", "args": {"text": "1"}},
         {"match": "^(?:\\\\?[iI])?[\\s(]*(-?\\d+)(?:[\\s,]*(-?\\d+))?(?:[\\s,]*(-?\\d+))?[\\s)]*(.*)", "command": "text_pastry_step", "args": {"text": "$0"}},
 
         // use regex to split the clipboard data
