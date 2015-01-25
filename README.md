@@ -15,7 +15,7 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Generate date ranges
 
 ## What's new ##
-- Bugfix for command ```\i``` [#27](https://github.com/duydao/Text-Pastry/issues/27) - Thanks [@kcko](https://github.com/Kcko)
+- 1.4.4: Bugfix for command ```\i``` [#27](https://github.com/duydao/Text-Pastry/issues/27) - Thanks [@kcko](https://github.com/Kcko)
 - 1.4.3: New commands! Generate date ranges command, repeat argument (x-arg), and the [Auto Step](https://github.com/duydao/Text-Pastry/issues/20) command
 - 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
 - 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
