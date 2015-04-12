@@ -37,6 +37,10 @@
         {"match": "^\\\\p$", "command": "text_pastry_insert_text", "args": {"clipboard": true} },
         {"match": "^p$", "command": "text_pastry_insert_text", "args": {"clipboard": true} },
 
+        // paste by row
+        {"match": "^pr$", "command": "text_pastry_insert_text", "args": {"clipboard": true, "by_rows": true} },
+        {"match": "^pbr$", "command": "text_pastry_insert_text", "args": {"clipboard": true, "by_rows": true} },
+
         // regular text, using whitespace separator
         {"match": "^words no-repeat (.*)", "command": "text_pastry_insert_text", "args": {"text": "$1", "repeat": false} },
         {"match": "^words (.*)", "command": "text_pastry_insert_text", "args": {"text": "$1"} },

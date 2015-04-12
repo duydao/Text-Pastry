@@ -449,8 +449,8 @@ class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
 
 class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, text=None, separator=None, clipboard=False,
-            items=None, regex=False, keep_selection=None, update_selection=None, repeat=None, strip=None,
-            threshold=1, align=None):
+            items=None, regex=False, keep_selection=None, update_selection=None,
+            repeat=None, strip=None, threshold=1, align=None, by_rows=False):
         if separator: separator = separator.encode('utf8').decode("unicode-escape")
         if clipboard: text = sublime.get_clipboard()
         if text:
@@ -460,6 +460,8 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         if items and len(items) >= threshold:
             regions = []
             sel = self.view.sel()
+            if by_rows == True:
+                items = self.by_rows(items, sel)
             if strip is None:
                 strip = False
                 if separator == '\\n' and settings().has("clipboard_strip_newline"): strip = settings().get("clipboard_strip_newline")
@@ -513,6 +515,58 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         else:
             sublime.status_message("No text found for Insert Text, fall back to auto_step")
             self.view.run_command("text_pastry_auto_step", {"text": text})
+    def by_rows(self, data, sel):
+        rows = self.create_matrix(sel)
+        return self.prep_data(data, rows)
+    def create_matrix(self, sel):
+        rows = []
+        r = 0
+        c = None
+        for region in sel:
+            row, col = self.view.rowcol(region.begin())
+            if (r == 0):
+                r = row
+                c = [1]
+            elif (r != row):
+                rows.append(c)
+                # new row
+                r = row
+                c = [1]
+            else:
+                c.append(1)
+        rows.append(c)
+        # extend colums of rows
+        mc = self.count_cols(rows)
+        for r in rows:
+            i = mc - len(r)
+            if (i > 0):
+                r.extend([0]*i)
+        return rows
+    def count_cols(self, rows):
+        # fill rows
+        max_cols = 0
+        for r in rows:
+            cols = 0
+            for c in r:
+                cols += 1
+            if cols > max_cols:
+                max_cols = cols
+        return max_cols
+    def prep_data(self, data, rows):
+        prepped_data = []
+        t1 = [list(i) for i in zip(*rows)];
+        index = 0
+        for row in t1:
+            for idx, val in enumerate(row):
+                if val == 1:
+                    row[idx] = data[index]
+                    index += 1
+                else:
+                    row[idx] = None
+        t2 = [list(i) for i in zip(*t1)]
+        for row in t2:
+            prepped_data.extend([i for i in row if i != None])
+        return prepped_data
 
 
 class TextPastryShowMenu(sublime_plugin.WindowCommand):
