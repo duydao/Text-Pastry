@@ -520,11 +520,11 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         return self.prep_data(data, rows)
     def create_matrix(self, sel):
         rows = []
-        r = 0
+        r = None
         c = None
         for region in sel:
             row, col = self.view.rowcol(region.begin())
-            if (r == 0):
+            if (r == None):
                 r = row
                 c = [1]
             elif (r != row):
@@ -558,7 +558,7 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         index = 0
         for row in t1:
             for idx, val in enumerate(row):
-                if val == 1:
+                if val == 1 and len(data) > index:
                     row[idx] = data[index]
                     index += 1
                 else:
