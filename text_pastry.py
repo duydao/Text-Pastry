@@ -758,7 +758,8 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             if len(sel) == 1:
                 TextPastryTools.duplicate(self.view, edit, sel[0], repeat)
         # adjust stop if none was given
-        stop = start + (len(self.view.sel()) + 1) * step
+        if stop is None:
+            stop = start + (len(self.view.sel()) + 1) * step
         if global_settings('range_include_end_index', True):
             stop += step
         # if stop is negative, step needs to be negative aswell

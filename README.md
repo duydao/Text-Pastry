@@ -15,6 +15,7 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Generate date ranges
 
 ## What's new ##
+- 1.4.7: Fixed range command (stop condition was ignored)
 - 1.4.6: Bugfix release for paste by row - Thanks [@Nieralyte](https://github.com/Nieralyte)
 - 1.4.5: Added the paste by row command (use ```pr``` or ```pbr``` in the command line) [#28](https://github.com/duydao/Text-Pastry/issues/28)
 - 1.4.4: Bugfix for command ```\i``` [#27](https://github.com/duydao/Text-Pastry/issues/27) - Thanks [@kcko](https://github.com/Kcko)
