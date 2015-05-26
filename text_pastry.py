@@ -745,8 +745,9 @@ class TextPastryPasteCommand(sublime_plugin.TextCommand):
 
 class TextPastryRangeCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
-            align=None, prefix=None, suffix=None):
+            align=None, prefix=None, suffix=None, repeat_increment=None):
         print('found range command', start, stop, step)
+        print('repeat increment:', repeat_increment)
         start = int(start) if start else 0
         step = int(step) if step else 1
         stop = int(stop) if stop else None
@@ -766,6 +767,12 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
         if (start > stop and step > 0):
             step = step * -1
         items = [str(x) for x in range(start, stop, step)]
+        if repeat_increment and repeat_increment > 0:
+            tmp = items
+            items = []
+            for val in tmp:
+                for x in range(repeat_increment):
+                    items.append(val)
         if padding > 1:
             fillchar = fillchar if fillchar is not None else '0'
             just = str.ljust if justify == 'left' else str.rjust
@@ -1248,6 +1255,7 @@ class StepCommandParser(OptionsParser):
         prefix = None
         suffix = None
         repeat = None
+        repeat_increment = None
         flags = {}
         remains = []
         for pos, arg in enumerate(self.input_text.split()):
@@ -1280,6 +1288,8 @@ class StepCommandParser(OptionsParser):
                 prefix = arg[7:]
             elif arg.lower().startswith('suffix='):
                 suffix = arg[7:]
+            elif arg.lower().startswith('each='):
+                repeat_increment = int(arg[5:])
             elif arg.lower().startswith('x') and re.match(r"^x\d+$", arg) is not None:
                 repeat = int(arg[1:])
             else:
@@ -1287,7 +1297,7 @@ class StepCommandParser(OptionsParser):
         # regex matchers
         if len(remains) > 0:
             s = ' '.join(remains)
-            regex = r'^(?:\\?[iI])?[\s(]*(-?\d+)(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?[\s)]*$'
+            regex = r'^(?:\\?[iI])?[\s(]*(-?\d+)(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?[\s)]*$'
             m1 = re.match(regex, s)
             if m1:
                 current = int(m1.group(1))
@@ -1295,6 +1305,8 @@ class StepCommandParser(OptionsParser):
                     step = int(m1.group(2))
                 if m1.group(3):
                     padding = int(m1.group(3))
+                if m1.group(4):
+                    repeat_increment = int(m1.group(4))
                 remains = []
         if len(remains) == 0 and current is not None:
             # default values if valid
@@ -1305,7 +1317,7 @@ class StepCommandParser(OptionsParser):
             if repeat is not None and step is not None and step != 0:
                 stop = start + ((repeat -1) * step)
             return dict(command='text_pastry_range', args={'start': start, 'stop': stop, 'step': step, 'padding': padding, 'fillchar': fillchar,
-                        'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix})
+                        'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix, 'repeat_increment': repeat_increment})
 
 
 class Overlay(object):
