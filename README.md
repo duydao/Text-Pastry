@@ -169,11 +169,6 @@ days x30
 ### Repeat argument (x-arg) ###
 Before this release, we had to create empty lines and do a multiselect to create a number sequence. With 1.4.3, we can use this command to create new lines on the fly:
 
-Source:
-```
-    |
-```
-
 
 ```
     1 x5
@@ -203,7 +198,7 @@ Using ``1 x3`` will give us this:
     <div id="row-3"></div>
 ```
 
-The x-arg is supported by the [**UUID/uuid** command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference), the [N M P command](https://github.com/duydao/Text-Pastry/wiki/Examples#insert-nums-syntax), the [range command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference) and the date range command.
+The x-arg is supported by the [**UUID/uuid** command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference), the [N M P command](https://github.com/duydao/Text-Pastry/wiki/Examples#insert-nums-syntax), the [range command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference) and the [date range command](https://github.com/duydao/Text-Pastry/wiki/Date-Range).
 
 **Note:**: Please note that the x-argument will be ignored if we have multiple selections. If we have 5 selections, _Text Pastry_ will behave the same way as before and will fill all selections with a sequence number.
 
