@@ -12,16 +12,16 @@
 
         // generate UUID
         {"match": "^\\\\UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
-        {"match": "^\\\\UUID x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
+        {"match": "^\\\\UUID (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$2"} },
         
         {"match": "^UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
-        {"match": "^UUID x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
+        {"match": "^UUID (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$2"} },
         
         {"match": "^\\\\uuid$", "command": "text_pastry_uuid" },
-        {"match": "^\\\\uuid x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
+        {"match": "^\\\\uuid (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"repeat": "$2"} },
         
         {"match": "^uuid$", "command": "text_pastry_uuid" },
-        {"match": "^uuid x(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$1"} },
+        {"match": "^uuid (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"repeat": "$2"} },
 
         // paste clipboard with custom separator
         {"match": "^\\\\p\\((.*?)\\)?$", "command": "text_pastry_insert_text", "args": {"separator": "$1", "clipboard": true} },
