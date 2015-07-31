@@ -273,6 +273,22 @@ class SelectionCommandParser(OptionsParser):
         return dict(command=command, args=self.options)
 
 
+class SelectionHelper():
+    @classmethod
+    def scroll_into_view(cls, view, regions):
+        if regions and len(regions) > 0:
+            # scroll to the first selection if no selections in viewport
+            found_region = False
+            visible_region = view.visible_region()
+            for region in regions:
+                if region.intersects(visible_region):
+                    # we have found a selection in the visible region, do nothing
+                    found_region = True
+                    break
+            if not found_region:
+                view.show(regions[0], True)
+
+
 class SelectionHistoryManager(HistoryManager):
     file = "TextPastrySelectionHistory.sublime-settings"
     field = 'pattern'
@@ -440,6 +456,7 @@ class TextPastryModifySelectionCommand(sublime_plugin.TextCommand):
         elif patterns:
             for pattern in patterns:
                 self.modify(edit, pattern, keep, context, operator, use_regex, inline)
+        SelectionHelper.scroll_into_view(self.view, self.view.sel())
     def modify(self, edit, pattern, keep=True, context=None, operator=None, use_regex=None, inline=False):
         # cancel if no pattern
         if not pattern:
@@ -803,6 +820,7 @@ class SelectionPreview(threading.Thread):
             scope.append('outline')
         view.add_regions(SelectionPreview.KEY, regions, '.'.join(scope), '', flags)
         view.set_status('tp_dirty', 'dirty')
+        SelectionHelper.scroll_into_view(view, regions)
     @classmethod
     def dirty(cls, view):
         return len(view.get_regions(SelectionPreview.KEY)) > 0
