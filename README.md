@@ -15,6 +15,7 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Generate date ranges
 
 ## What's new ##
+- 1.4.10: Scroll into view on search / after find [#33](https://github.com/duydao/Text-Pastry/issues/33) - Thanks again [@miusuncle](https://github.com/miusuncle)
 - 1.4.9: Bugfix release for uuid x10 [#31](https://github.com/duydao/Text-Pastry/issues/31) - Thanks [@miusuncle](https://github.com/miusuncle)
 - 1.4.8: Added support for repeating increments [#29](https://github.com/duydao/Text-Pastry/issues/29) - Thanks [@mkruselj](https://github.com/mkruselj)
 - 1.4.7: Fixed range command (stop condition was ignored)
