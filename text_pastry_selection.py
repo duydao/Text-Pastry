@@ -819,7 +819,6 @@ class SelectionPreview(threading.Thread):
         elif flags == sublime.DRAW_NO_FILL:
             scope.append('outline')
         view.add_regions(SelectionPreview.KEY, regions, '.'.join(scope), '', flags)
-        view.set_status('tp_dirty', 'dirty')
         SelectionHelper.scroll_into_view(view, regions)
     @classmethod
     def dirty(cls, view):
@@ -829,7 +828,6 @@ class SelectionPreview(threading.Thread):
         view = sublime.active_window().active_view()
         view.erase_regions(SelectionPreview.KEY)
         cls.restore_selection(view)
-        view.erase_status('tp_dirty')
     @classmethod
     def save_selection(cls, view):
         if len(view.sel()) > 0:
