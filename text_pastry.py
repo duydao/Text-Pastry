@@ -907,7 +907,7 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
         items = [self.date(date, step_size, x, last_day_of_month).strftime(date_format) for x in range(count)]
         # create one text entry if single selection
         if selection_count == 1:
-            newline = '\r\n' if self.view.line_endings() == 'windows' else '\n' 
+            newline = '\r\n' if self.view.line_endings() == 'windows' else '\n'
             items = [newline.join(items)]
         for idx, region in enumerate(self.view.sel()):
             self.view.replace(edit, region, items[idx])
@@ -930,6 +930,12 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
                 date = self.adjust_to_last_day_of_month(date)
         elif step_size == 'year':
             date = self.add_years(date, value)
+        elif step_size == 'hour':
+            date = date + datetime.timedelta(hours = value)
+        elif step_size == 'minute':
+            date = date + datetime.timedelta(minutes = value)
+        elif step_size == 'second':
+            date = date + datetime.timedelta(seconds = value)
         else:
             date = date + datetime.timedelta(days = value)
         return date
