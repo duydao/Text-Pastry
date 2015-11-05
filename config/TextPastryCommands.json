@@ -13,13 +13,13 @@
         // generate UUID
         {"match": "^\\\\UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
         {"match": "^\\\\UUID (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$2"} },
-        
+
         {"match": "^UUID$", "command": "text_pastry_uuid", "args": {"uppercase": true} },
         {"match": "^UUID (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"uppercase": true, "repeat": "$2"} },
-        
+
         {"match": "^\\\\uuid$", "command": "text_pastry_uuid" },
         {"match": "^\\\\uuid (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"repeat": "$2"} },
-        
+
         {"match": "^uuid$", "command": "text_pastry_uuid" },
         {"match": "^uuid (x|X)(\\d+)$", "command": "text_pastry_uuid", "args": {"repeat": "$2"} },
 
@@ -58,7 +58,7 @@
         {"match": "^pascal", "command": "convert_to_pascal"},
         {"match": "^dot", "command": "convert_to_dot"},
         {"match": "^dash", "command": "convert_to_dash"},
- 
+
         {"match": "^node (.*)", "command": "text_pastry_nodejs", "args": {"script": "$1"} },
         {"match": "^python (.*)", "command": "text_pastry_python", "args": {"script": "$1"} },
         {"match": "^ruby (.*)", "command": "text_pastry_ruby", "args": {"script": "$1" } },
@@ -72,7 +72,7 @@
         {"match": "^add (.+)", "command": "text_pastry_modify_selection",
             "args": {"context": "file", "operator": "add", "pattern": "$1"} },
 
-        {"match": "^remove (lines|empty)$", "command": "text_pastry_modify_selection", 
+        {"match": "^remove (lines|empty)$", "command": "text_pastry_modify_selection",
             "args": {"context": "selection", "operator": "subtract",  "patterns": ["(?m)^\\s*$", "\\n"]} },
 
         {"match": "^remove leading$", "command": "text_pastry_modify_selection",
@@ -98,6 +98,9 @@
         {"match": "^range (-?\\d+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
 
         // add x-arg support to date ranges
+        {"match": "^(?:seconds|second) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "second", "repeat": "$2"} },
+        {"match": "^(?:minutes|minute) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "minute", "repeat": "$2"} },
+        {"match": "^(?:hours|hour) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "hour", "repeat": "$2"} },
         {"match": "^(?:days|day) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },
         {"match": "^(?:weeks|week) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week", "repeat": "$2"} },
         {"match": "^(?:months|month) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "repeat": "$2"} },
@@ -105,6 +108,9 @@
         {"match": "^(?:years|year) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year", "repeat": "$2"} },
 
         {"match": "^(?:date-format) (.+)$", "command": "text_pastry_setting", "args": {"name": "date_format", "value": "$1"} },
+        {"match": "^(?:seconds|second) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
+        {"match": "^(?:minutes|minute) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
+        {"match": "^(?:hours|hour) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
         {"match": "^(?:days|day) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
         {"match": "^(?:weeks|week) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week"} },
         {"match": "^(?:months|month) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month"} },
