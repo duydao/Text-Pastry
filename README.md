@@ -552,7 +552,7 @@ We can convert the selection to upper, lower or title case.
 
 - `uc` or `upper` - Converts selection to uppercase
 - `lc` or `lower` - Converts selection to lowercase
-- `title` - Converts selection to titlecase
+- `cap` or `caps` - Converts selection to titlecase
 
 ## Examples ##
 
