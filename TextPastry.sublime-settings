@@ -11,6 +11,15 @@
     "date_format": "%x",
     "parse_date_formats": ["%x", "%d.%m.%Y", "%Y-%m-%d"],
 
+    "tracker_enabled": true,
+    "tracker_autostart": false,
+    "tracker_log_enabled": true,
+    "tracker_interval": 0.5,
+
+    "paste_gun_append_clipboard_to_ammo": true,
+    "paste_gun_keep_selection": false,
+    "paste_gun_ammo_xarg": 100,
+
     "path": {
         "linux": [],
         "osx": [ "/usr/local/bin" ],
