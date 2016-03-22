@@ -449,8 +449,8 @@ class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
 
 class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, text=None, separator=None, clipboard=False,
-            items=None, regex=False, keep_selection=None, update_selection=None, repeat=None, strip=None,
-            threshold=1, align=None):
+            items=None, regex=False, keep_selection=None, update_selection=None,
+            repeat=None, strip=None, threshold=1, align=None, by_rows=False):
         if separator: separator = separator.encode('utf8').decode("unicode-escape")
         if clipboard: text = sublime.get_clipboard()
         if text:
@@ -460,6 +460,8 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         if items and len(items) >= threshold:
             regions = []
             sel = self.view.sel()
+            if by_rows == True:
+                items = self.by_rows(items, sel)
             if strip is None:
                 strip = False
                 if separator == '\\n' and settings().has("clipboard_strip_newline"): strip = settings().get("clipboard_strip_newline")
@@ -513,6 +515,58 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         else:
             sublime.status_message("No text found for Insert Text, fall back to auto_step")
             self.view.run_command("text_pastry_auto_step", {"text": text})
+    def by_rows(self, data, sel):
+        rows = self.create_matrix(sel)
+        return self.prep_data(data, rows)
+    def create_matrix(self, sel):
+        rows = []
+        r = None
+        c = None
+        for region in sel:
+            row, col = self.view.rowcol(region.begin())
+            if (r == None):
+                r = row
+                c = [1]
+            elif (r != row):
+                rows.append(c)
+                # new row
+                r = row
+                c = [1]
+            else:
+                c.append(1)
+        rows.append(c)
+        # extend colums of rows
+        mc = self.count_cols(rows)
+        for r in rows:
+            i = mc - len(r)
+            if (i > 0):
+                r.extend([0]*i)
+        return rows
+    def count_cols(self, rows):
+        # fill rows
+        max_cols = 0
+        for r in rows:
+            cols = 0
+            for c in r:
+                cols += 1
+            if cols > max_cols:
+                max_cols = cols
+        return max_cols
+    def prep_data(self, data, rows):
+        prepped_data = []
+        t1 = [list(i) for i in zip(*rows)];
+        index = 0
+        for row in t1:
+            for idx, val in enumerate(row):
+                if val == 1 and len(data) > index:
+                    row[idx] = data[index]
+                    index += 1
+                else:
+                    row[idx] = None
+        t2 = [list(i) for i in zip(*t1)]
+        for row in t2:
+            prepped_data.extend([i for i in row if i != None])
+        return prepped_data
 
 
 class TextPastryShowMenu(sublime_plugin.WindowCommand):
@@ -691,8 +745,9 @@ class TextPastryPasteCommand(sublime_plugin.TextCommand):
 
 class TextPastryRangeCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
-            align=None, prefix=None, suffix=None):
+            align=None, prefix=None, suffix=None, repeat_increment=None):
         print('found range command', start, stop, step)
+        print('repeat increment:', repeat_increment)
         start = int(start) if start else 0
         step = int(step) if step else 1
         stop = int(stop) if stop else None
@@ -704,13 +759,20 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             if len(sel) == 1:
                 TextPastryTools.duplicate(self.view, edit, sel[0], repeat)
         # adjust stop if none was given
-        stop = start + (len(self.view.sel()) + 1) * step
+        if stop is None:
+            stop = start + (len(self.view.sel()) + 1) * step
         if global_settings('range_include_end_index', True):
             stop += step
         # if stop is negative, step needs to be negative aswell
         if (start > stop and step > 0):
             step = step * -1
         items = [str(x) for x in range(start, stop, step)]
+        if repeat_increment and repeat_increment > 0:
+            tmp = items
+            items = []
+            for val in tmp:
+                for x in range(repeat_increment):
+                    items.append(val)
         if padding > 1:
             fillchar = fillchar if fillchar is not None else '0'
             just = str.ljust if justify == 'left' else str.rjust
@@ -845,7 +907,7 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
         items = [self.date(date, step_size, x, last_day_of_month).strftime(date_format) for x in range(count)]
         # create one text entry if single selection
         if selection_count == 1:
-            newline = '\r\n' if self.view.line_endings() == 'windows' else '\n' 
+            newline = '\r\n' if self.view.line_endings() == 'windows' else '\n'
             items = [newline.join(items)]
         for idx, region in enumerate(self.view.sel()):
             self.view.replace(edit, region, items[idx])
@@ -868,6 +930,12 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
                 date = self.adjust_to_last_day_of_month(date)
         elif step_size == 'year':
             date = self.add_years(date, value)
+        elif step_size == 'hour':
+            date = date + datetime.timedelta(hours = value)
+        elif step_size == 'minute':
+            date = date + datetime.timedelta(minutes = value)
+        elif step_size == 'second':
+            date = date + datetime.timedelta(seconds = value)
         else:
             date = date + datetime.timedelta(days = value)
         return date
@@ -1193,6 +1261,7 @@ class StepCommandParser(OptionsParser):
         prefix = None
         suffix = None
         repeat = None
+        repeat_increment = None
         flags = {}
         remains = []
         for pos, arg in enumerate(self.input_text.split()):
@@ -1225,6 +1294,8 @@ class StepCommandParser(OptionsParser):
                 prefix = arg[7:]
             elif arg.lower().startswith('suffix='):
                 suffix = arg[7:]
+            elif arg.lower().startswith('each='):
+                repeat_increment = int(arg[5:])
             elif arg.lower().startswith('x') and re.match(r"^x\d+$", arg) is not None:
                 repeat = int(arg[1:])
             else:
@@ -1232,7 +1303,7 @@ class StepCommandParser(OptionsParser):
         # regex matchers
         if len(remains) > 0:
             s = ' '.join(remains)
-            regex = r'^(?:\\?[iI])?[\s(]*(-?\d+)(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?[\s)]*$'
+            regex = r'^(?:\\?[iI])?[\s(]*(-?\d+)(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?[\s)]*$'
             m1 = re.match(regex, s)
             if m1:
                 current = int(m1.group(1))
@@ -1240,6 +1311,8 @@ class StepCommandParser(OptionsParser):
                     step = int(m1.group(2))
                 if m1.group(3):
                     padding = int(m1.group(3))
+                if m1.group(4):
+                    repeat_increment = int(m1.group(4))
                 remains = []
         if len(remains) == 0 and current is not None:
             # default values if valid
@@ -1250,7 +1323,7 @@ class StepCommandParser(OptionsParser):
             if repeat is not None and step is not None and step != 0:
                 stop = start + ((repeat -1) * step)
             return dict(command='text_pastry_range', args={'start': start, 'stop': stop, 'step': step, 'padding': padding, 'fillchar': fillchar,
-                        'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix})
+                        'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix, 'repeat_increment': repeat_increment})
 
 
 class Overlay(object):

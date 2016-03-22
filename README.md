@@ -15,6 +15,13 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Generate date ranges
 
 ## What's new ##
+- 1.4.10: Scroll into view on search / after find [#33](https://github.com/duydao/Text-Pastry/issues/33) - Thanks again [@miusuncle](https://github.com/miusuncle)
+- 1.4.9: Bugfix release for uuid x10 [#31](https://github.com/duydao/Text-Pastry/issues/31) - Thanks [@miusuncle](https://github.com/miusuncle)
+- 1.4.8: Added support for repeating increments [#29](https://github.com/duydao/Text-Pastry/issues/29) - Thanks [@mkruselj](https://github.com/mkruselj)
+- 1.4.7: Fixed range command (stop condition was ignored)
+- 1.4.6: Bugfix release for paste by row - Thanks [@Nieralyte](https://github.com/Nieralyte)
+- 1.4.5: Added the paste by row command (use ```pr``` or ```pbr``` in the command line) [#28](https://github.com/duydao/Text-Pastry/issues/28)
+- 1.4.4: Bugfix for command ```\i``` [#27](https://github.com/duydao/Text-Pastry/issues/27) - Thanks [@kcko](https://github.com/Kcko)
 - 1.4.3: New commands! Generate date ranges command, repeat argument (x-arg), and the [Auto Step](https://github.com/duydao/Text-Pastry/issues/20) command
 - 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
 - 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
@@ -22,30 +29,28 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 
 ## Release Notes 1.4.3 ##
 
-This release brings us 3 new features!
-
-## New Features ##
+Three new commands were added in 1.4.3!
 
 ### Generate date ranges ###
 
 New settings:
 
 ```
-    "parse_date_formats": [
+"parse_date_formats": [
     "%d.%m.%Y"
-    ],
+],
 ```
 
 parse_date_formats is used to parse the date from the _Text Pastry_ command line. For supported date formats, please check out http://strftime.org/
 
 ```
-    "date_format": "%d.%m.%Y",
+"date_format": "%d.%m.%Y",
 ```
 
 used to generate the date range. For supported date formats, please check out http://strftime.org/. For our convenience, we can set the date format-setting by calling the date-format command:
 
 ```
-    date-format %Y-%m-%d
+date-format %Y-%m-%d
 ```
 
 **date range commands**
@@ -53,122 +58,117 @@ used to generate the date range. For supported date formats, please check out ht
 Command:
 
 ```
-    days x5
+days x5
 ```
 
 Result:
 
 ```
-    14.12.2014
-    15.12.2014
-    16.12.2014
-    17.12.2014
-    18.12.2014
+14.12.2014
+15.12.2014
+16.12.2014
+17.12.2014
+18.12.2014
 ```
 
 Command:
 
 ```
-    weeks
+weeks
 ```
 
 Result:
 
 ```
-    14.12.2014
-    21.12.2014
-    28.12.2014
-    04.01.2015
-    11.01.2015
+14.12.2014
+21.12.2014
+28.12.2014
+04.01.2015
+11.01.2015
 ```
 
 Command:
 
 ```
-    months
+months
 ```
 
 Result:
 
 ```
-    14.12.2014
-    14.01.2015
-    14.02.2015
-    14.03.2015
-    14.04.2015
+14.12.2014
+14.01.2015
+14.02.2015
+14.03.2015
+14.04.2015
 ```
 
 Command:
 
 ```
-    end-of-month
+end-of-month
 ```
 
 Result:
 
 ```
-    31.12.2014
-    31.01.2015
-    28.02.2015
-    31.03.2015
-    30.04.2015
+31.12.2014
+31.01.2015
+28.02.2015
+31.03.2015
+30.04.2015
 ```
 
 Command:
 
 ```
-    years
+years
 ```
 
 Result:
 
 ```
-    14.12.2014
-    14.12.2015
-    14.12.2016
-    14.12.2017
-    14.12.2018
+14.12.2014
+14.12.2015
+14.12.2016
+14.12.2017
+14.12.2018
 ```
 
 We can add a start date to date range commands:
 
 ```
-    weeks 14.03.2015
+weeks 14.03.2015
 ```
 
 Result:
 
 ```
-    14.03.2015
-    21.03.2015
-    28.03.2015
-    04.04.2015
-    11.04.2015
+14.03.2015
+21.03.2015
+28.03.2015
+04.04.2015
+11.04.2015
 ```
 
-The date range command supports the newly introduced x-arg! Lets generate 30 dates:
+The date range command supports the newly introduced x-arg! Lets create 30 dates:
 
 ```
-    days x30
+days x30
 ```
 
 ```
-    14.12.2014
-    15.12.2014
-    16.12.2014
-    ...
-    10.01.2015
-    11.01.2015
-    12.01.2015
+14.12.2014
+15.12.2014
+16.12.2014
+...
+10.01.2015
+11.01.2015
+12.01.2015
 ```
 
 ### Repeat argument (x-arg) ###
 Before this release, we had to create empty lines and do a multiselect to create a number sequence. With 1.4.3, we can use this command to create new lines on the fly:
-
-Source:
-```
-    |
-```
 
 
 ```
@@ -199,7 +199,7 @@ Using ``1 x3`` will give us this:
     <div id="row-3"></div>
 ```
 
-The x-arg is supported by the [**UUID/uuid** command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference), the [N M P command](https://github.com/duydao/Text-Pastry/wiki/Examples#insert-nums-syntax), the [range command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference) and the date range command.
+The x-arg is supported by the [**UUID/uuid** command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference), the [N M P command](https://github.com/duydao/Text-Pastry/wiki/Examples#insert-nums-syntax), the [range command](https://github.com/duydao/Text-Pastry/wiki/Command-Line-Reference) and the [date range command](https://github.com/duydao/Text-Pastry/wiki/Date-Range).
 
 **Note:**: Please note that the x-argument will be ignored if we have multiple selections. If we have 5 selections, _Text Pastry_ will behave the same way as before and will fill all selections with a sequence number.
 
@@ -280,7 +280,7 @@ will expand to this:
 
 ### Generate a bunch of UUIDs ###
 
-The UUID/uuid command supports the newly introduced x-arg. Use this command to generte 100 UUIDs:
+The UUID/uuid command supports the newly introduced x-arg. Use this command to create 100 UUIDs:
 
 ```
     UUID x100
