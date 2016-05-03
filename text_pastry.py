@@ -1262,6 +1262,7 @@ class StepCommandParser(OptionsParser):
         suffix = None
         repeat = None
         repeat_increment = None
+        end = None
         flags = {}
         remains = []
         for pos, arg in enumerate(self.input_text.split()):
@@ -1296,6 +1297,8 @@ class StepCommandParser(OptionsParser):
                 suffix = arg[7:]
             elif arg.lower().startswith('each='):
                 repeat_increment = int(arg[5:])
+            elif arg.lower().startswith('end='):
+                end = int(arg[4:])
             elif arg.lower().startswith('x') and re.match(r"^x\d+$", arg) is not None:
                 repeat = int(arg[1:])
             else:
@@ -1322,6 +1325,8 @@ class StepCommandParser(OptionsParser):
             padding = 1 if padding is None else padding
             if repeat is not None and step is not None and step != 0:
                 stop = start + ((repeat -1) * step)
+            if end:
+                stop = int(end)
             return dict(command='text_pastry_range', args={'start': start, 'stop': stop, 'step': step, 'padding': padding, 'fillchar': fillchar,
                         'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix, 'repeat_increment': repeat_increment})
 
