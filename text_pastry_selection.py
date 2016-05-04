@@ -48,6 +48,7 @@ class CommandLineParser(object):
 
 class OptionsParser(CommandLineParser):
     def add(self, key, value):
+        self.last_option = key
         if key not in self.options:
             self.options[key] = value
             return True
@@ -59,6 +60,7 @@ class OptionsParser(CommandLineParser):
         return self.add(key, False)
     def parse(self):
         self.options = {}
+        self.last_option = None
         self.start_index = -1
         remains = []
         args = self.split(self.input_text)
@@ -90,16 +92,21 @@ class OptionsParser(CommandLineParser):
             elif arg in ['capitalize', 'capitals', 'caps', 'cap']:
                 if not self.enable("capitalize"):
                     remains.append(value)
+            elif arg.lower().startswith('each='):
+                if not self.add('repeat_word', int(arg[5:])):
+                    remains.append(value)
+            elif arg.startswith('x') and re.match(r"^x\d+$", arg) is not None:
+                if not self.add('repeat_word', int(arg[1:])):
+                    remains.append(value)
             else:
                 remains.append(value)
-            if len(remains) == 1 and len(self.options) > 0 and self.start_index < 0:
-                last_option = self.options[-1]
-                index = self.input_text.find(last_option)
-                if index > -1:
+            if remains and self.last_option and self.start_index == -1:
+                index = self.input_text.find(self.last_option)
+                if index >= 0:
                     self.start_index = index + len(last_option)
         if len(self.options) == 0:
             self.remains = self.input_text
-        elif self.start_index:
+        elif self.start_index >= 0:
             self.remains = self.input_text[self.start_index:]
         elif remains:
             # this will eat double spaces

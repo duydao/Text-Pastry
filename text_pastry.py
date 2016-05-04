@@ -13,7 +13,9 @@ import sys
 import hashlib
 import shlex
 import unittest
+import itertools
 from os.path import expanduser, normpath, join, isfile
+
 
 SETTINGS_FILE = "TextPastry.sublime-settings"
 
@@ -450,7 +452,7 @@ class TextPastryShowCommandLine(sublime_plugin.WindowCommand):
 class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
     def run(self, edit, text=None, separator=None, clipboard=False,
             items=None, regex=False, keep_selection=None, update_selection=None,
-            repeat=None, strip=None, threshold=1, align=None, by_rows=False):
+            repeat=None, strip=None, threshold=1, align=None, by_rows=False, repeat_word=0):
         if separator: separator = separator.encode('utf8').decode("unicode-escape")
         if clipboard: text = sublime.get_clipboard()
         if text:
@@ -460,17 +462,20 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         if items and len(items) >= threshold:
             regions = []
             sel = self.view.sel()
+            if repeat_word > 1:
+                items = list(itertools.chain.from_iterable(itertools.repeat(item, repeat_word) for item in items))
             if by_rows == True:
                 items = self.by_rows(items, sel)
             if strip is None:
                 strip = False
                 if separator == '\\n' and settings().has("clipboard_strip_newline"): strip = settings().get("clipboard_strip_newline")
+            # initialize repeat
             if repeat is None:
                 if clipboard and settings().has("repeat_clipboard"):
                     repeat = settings().get("repeat_clipboard")
                 elif settings().has("repeat_words"):
                     repeat = settings().get("repeat_words")
-            if repeat and items:
+            if repeat:
                 while (len(items) < len(sel)):
                     items.extend(items)
             last_region = None
@@ -567,6 +572,13 @@ class TextPastryInsertTextCommand(sublime_plugin.TextCommand):
         for row in t2:
             prepped_data.extend([i for i in row if i != None])
         return prepped_data
+class TextPastryWordsCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text, repeat=None):
+        result = WordsParser(text).parse()
+        if result and 'command' in result and 'args' in result:
+            if repeat is not None:
+                result['args']['repeat'] = repeat
+            self.view.run_command(result['command'], result['args'])
 
 
 class TextPastryShowMenu(sublime_plugin.WindowCommand):
@@ -1072,7 +1084,12 @@ class Parser(object):
             if start or end:
                 items = self.create_preset_command(start, end, options, items)
             items = self.format(items, options)
-            result = dict(command='text_pastry_insert_text', args={'items': items, 'repeat': options.get('repeat'), 'keep_selection': options.get('keep_selection')})
+            result = dict(command='text_pastry_insert_text', args={
+                'items': items,
+                'repeat': options.get('repeat'),
+                'keep_selection': options.get('keep_selection'),
+                'repeat_word': options.get('repeat_word', 0)
+            })
         return result
     def format(self, items, options):
         if options.get('reverse'):
@@ -1166,6 +1183,7 @@ class CommandLineParser(object):
 
 class OptionsParser(CommandLineParser):
     def add(self, key, value):
+        self.last_option = key
         if key not in self.options:
             self.options[key] = value
             return True
@@ -1177,6 +1195,7 @@ class OptionsParser(CommandLineParser):
         return self.add(key, False)
     def parse(self):
         self.options = {}
+        self.last_option = None
         self.start_index = -1
         remains = []
         args = self.split(self.input_text)
@@ -1208,16 +1227,21 @@ class OptionsParser(CommandLineParser):
             elif arg in ['capitalize', 'capitals', 'caps', 'cap']:
                 if not self.enable("capitalize"):
                     remains.append(value)
+            elif arg.lower().startswith('each='):
+                if not self.add('repeat_word', int(arg[5:])):
+                    remains.append(value)
+            elif arg.startswith('x') and re.match(r"^x\d+$", arg) is not None:
+                if not self.add('repeat_word', int(arg[1:])):
+                    remains.append(value)
             else:
                 remains.append(value)
-            if len(remains) == 1 and len(self.options) > 0 and self.start_index < 0:
-                last_option = self.options[-1]
-                index = self.input_text.find(last_option)
-                if index > -1:
+            if remains and self.last_option and self.start_index == -1:
+                index = self.input_text.find(self.last_option)
+                if index >= 0:
                     self.start_index = index + len(last_option)
         if len(self.options) == 0:
             self.remains = self.input_text
-        elif self.start_index:
+        elif self.start_index >= 0:
             self.remains = self.input_text[self.start_index:]
         elif remains:
             # this will eat double spaces
@@ -1329,6 +1353,86 @@ class StepCommandParser(OptionsParser):
                 stop = int(end)
             return dict(command='text_pastry_range', args={'start': start, 'stop': stop, 'step': step, 'padding': padding, 'fillchar': fillchar,
                         'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix, 'repeat_increment': repeat_increment})
+
+
+class WordsParser(OptionsParser):
+    def parse(self):
+        text=None
+        separator=None
+        clipboard=False
+        items=None
+        regex=False
+        keep_selection=None
+        update_selection=None
+        repeat=None
+        strip=None
+        threshold=1
+        align=None
+        by_rows=False
+        repeat_word=0
+        SEPARATOR_TOKEN=False
+        REPEAT_TOKEN=False
+        flags = {}
+        remains = []
+        for pos, arg in enumerate(self.input_text.split()):
+            if arg in ['-o', '--option', '--options']:
+                flags['options'] = True
+                continue
+            elif arg in ['--separator', '--sep']:
+                SEPARATOR_TOKEN = True
+                continue
+            elif SEPARATOR_TOKEN:
+                separator = arg
+                SEPARATOR_TOKEN = False
+            elif arg in ['--clipboard']:
+                clipboard = True
+            elif arg in ['--no-clipboard']:
+                clipboard = False
+            elif arg in ['--regex']:
+                regex = True
+            elif arg in ['--no-regex']:
+                regex = False
+            elif arg in ['--keep-selection']:
+                keep_selection = True
+            elif arg in ['--no-keep-selection']:
+                keep_selection = False
+            elif arg in ['--update-selection']:
+                update_selection = True
+            elif arg in ['--no-update-selection']:
+                update_selection = False
+            elif arg in ['--repeat']:
+                repeat = True
+            elif arg in ['--no-repeat']:
+                repeat = False
+            elif arg in ['--repeat-word']:
+                REPEAT_TOKEN = True
+            elif REPEAT_TOKEN and arg.isnumeric():
+                repeat_word = int(arg)
+                REPEAT_TOKEN = False
+            elif arg in ['--no-repeat-word']:
+                repeat_word = 0
+            elif arg in ['--strip']:
+                strip = True
+            elif arg in ['--no-strip']:
+                strip = False
+            elif arg in ['--align']:
+                align = True
+            elif arg in ['--no-align']:
+                align = False
+            elif arg in ['--by-row']:
+                by_rows = True
+            elif arg in ['--no-by-row']:
+                by_rows = False
+            elif arg.startswith('x') and re.match(r"^x\d+$", arg) is not None:
+                repeat_word = int(arg[1:])
+            else:
+                remains.append(arg)
+        text = ' '.join(remains)
+        return dict(command='text_pastry_insert_text', args={
+            'text': text, 'separator': separator, 'clipboard': clipboard, 
+            'items': items, 'regex': regex, 'keep_selection': keep_selection, 
+            'update_selection': update_selection, 'repeat': repeat, 'strip': strip, 
+            'threshold': threshold, 'align': align, 'by_rows': by_rows, 'repeat_word': repeat_word})
 
 
 class Overlay(object):
