@@ -375,6 +375,9 @@ class TextPastryClipboardAmmoViewListener(TextPastryClipboardEventListener):
     def on_activated(self, view):
         if self.is_valid(view):
             view.erase_status("inactive")
+            # mark the current index
+            index = view.settings().get('tp_ammo_index', 0)
+            view.run_command('text_pastry_paste_gun_marker', {'index': index})
     def on_deactivated(self, view):
         if self.is_valid(view):
             view.set_status("inactive", "True")
@@ -548,7 +551,7 @@ class TextPastryUpdateViewCommand(sublime_plugin.TextCommand):
 
 
 class TextPastryPasteGunMultiSelectCommand(sublime_plugin.TextCommand):
-    def run(self, edit, separator=None, rotate=False, repeat=True, keep_selection=True):
+    def run(self, edit, separator=None, rotate=False, repeat=True, keep_selection=None):
         if TextPastryPasteGunCommand.index is None:
             TextPastryPasteGunCommand.index = 0
         for idx, region in enumerate(self.view.sel()):
@@ -567,14 +570,13 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
         # setup index
         idx = int(index) - 1
         # prepare data
-        data = self.get_data()
+        data, index = self.get_data()
         # check hash
         current_hash = TextPastryPasteGunCommand.create_hash(data.encode("utf8"))
         if TextPastryPasteGunCommand.hash != current_hash:
-            print('hash changed, resetting index')
             # let's start fresh
             TextPastryPasteGunCommand.reset()
-            idx = 0
+            idx = index
             TextPastryPasteGunCommand.hash = current_hash
             TextPastryPasteGunCommand.index = idx
         elif TextPastryPasteGunCommand.done:
@@ -596,7 +598,6 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
         if len(items) <= idx:
             # cancel if index out of bounds
             return
-        print('paste gun items', len(items), 'idx', idx)
         # get formatted item
         item = self.format(items[idx])
         # replace selection
@@ -604,11 +605,12 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
         self.view.replace(edit, region, item)
         # keep selection setting
         if keep_selection is None:
-            keep_selection = settings().get("paste_gun_keep_selection", settings().get("keep_selection", True))
+            default_value = settings().get("keep_selection", True)
+            keep_selection = settings().get("paste_gun_keep_selection", default_value)
         # clear selection, set cursor to the end
         if not keep_selection:
             sel = self.view.sel()
-            region = sel[0]
+            region = sel[selection_index]
             sel.clear()
             sel.add(sublime.Region(region.end(), region.end()))
         # check rotate flag
@@ -622,6 +624,11 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
             else:
                 # we're done, mark as done
                 TextPastryPasteGunCommand.done = True
+        self.save_index();
+    def save_index(self):
+        # store the index into the view as setting
+        view = ClipboardHelper.ammo_view()
+        view.settings().set('tp_ammo_index', TextPastryPasteGunCommand.index)
     @staticmethod
     def reset():
         TextPastryPasteGunCommand.index = None
@@ -647,14 +654,19 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
             view.replace()
     def get_data(self):
         data = None
+        index = 0
         view = ClipboardHelper.ammo_view()
         if view:
-            view = ClipboardHelper.ammo_view()
             data = view.substr(sublime.Region(0, view.size()))
+            index = view.settings().get('tp_ammo_index', 0)
         else:
             data = sublime.get_clipboard()
-        return data
+        return (data, index)
 class TextPastryPasteGunMarkerCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        if self.view.file_name() and self.view.file_name().endswith("clipboard"):
-            self.view.add_regions("tp_placeholder", self.view.sel(), "markup.inserted.git_gutter", "bookmark", sublime.DRAW_NO_OUTLINE | sublime.DRAW_EMPTY)
+    def run(self, edit, index=0):
+        region = self.view.line(self.view.text_point(index, 0))
+        self.view.add_regions("tp_placeholder", [region], "text_pastry.marker", "bookmark", sublime.DRAW_NO_OUTLINE | sublime.DRAW_EMPTY)
+    def is_enabled(self):
+        hasClipboard = self.view.file_name() and self.view.file_name().endswith("clipboard")
+        isAmmoView = self.view.settings().get('tp_ammo')
+        return hasClipboard or isAmmoView
