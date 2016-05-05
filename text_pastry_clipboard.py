@@ -381,13 +381,10 @@ class TextPastryClipboardAmmoViewListener(TextPastryClipboardEventListener):
     def on_deactivated(self, view):
         if self.is_valid(view):
             view.set_status("inactive", "True")
-    def on_close(self, view):
+    def on_close_async(self, view):
         if self.is_valid(view):
             # this will prevent on_deactivated_async
             ClipboardTracker.remove_listener(AmmoViewClipboardListener.get_instance())
-    def on_modified_async(self, view):
-        if self.is_valid(view):
-            pass
     def is_valid(self, view):
         return view.settings().get("tp_ammo", False)
 
