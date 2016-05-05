@@ -486,6 +486,15 @@ class TextPastryClipboardTrackerEnabledCommand(sublime_plugin.WindowCommand):
         return settings().get("tracker_enabled", True)
 
 
+class TextPastryResetAmmoPositionCommand(sublime_plugin.WindowCommand):
+    def run(self, edit):
+        TextPastryPasteGunCommand.reset()
+    def is_enabled(self):
+        isAmmoViewEnabled = ClipboardHelper.ammo_view() != None
+        hasHash = TextPastryPasteGunCommand.hash is not None
+        return isAmmoViewEnabled and hasHash
+
+
 class TextPastryUpdateClipboardViewCommand(sublime_plugin.TextCommand):
     def run(self, edit, force=False):
         if self.has_changed() or force:

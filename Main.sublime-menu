@@ -31,24 +31,28 @@
             }]
         }]
     }, {
-        "caption": "Paste Gun",
+        "caption": "Text Pastry",
         "children": [
             {"caption": "Show Clipboard Viewer", "command": "text_pastry_open_clipboard", "checkbox": true},
-            {"caption": "Show Ammo", "command": "text_pastry_open_clipboard_ammo", "checkbox": true},
-            {"caption": "Show Template", "command": "text_pastry_open_clipboard_template", "checkbox": true},
             {"caption": "-"},
-            {"caption": "Clipboard Tracker active", "command": "text_pastry_clipboard_tracker_active", "checkbox": true},
+            {
+                "caption": "Ammo",
+                "children": [
+                    {"caption": "Show Ammo", "command": "text_pastry_open_clipboard_ammo", "checkbox": true},
+                    {"caption": "Reset position in ammo", "command": "text_pastry_reset_ammo_position"},
+                    {"caption": "Append clipboard to ammo", "command": "text_pastry_append_clipboard_to_ammo", "checkbox": true}
+                ]
+            },
             {
                 "caption": "Settings",
                 "children": [
+                    {"caption": "Enable Clipboard Tracking", "command": "text_pastry_clipboard_tracker_enabled", "checkbox": true},
                     {"caption": "Keep selection after paste", "command": "text_pastry_paste_gun_keep_selection", "checkbox": true},
-                    {"caption": "Update clipboard on-the-fly", "command": "text_pastry_clipboard_live_edit", "checkbox": true},
-                    {"caption": "-"},
-                    {"caption": "Append Clipboard to Ammo", "command": "text_pastry_append_clipboard_to_ammo", "checkbox": true},
-                    {"caption": "-"},
-                    {"caption": "Enable Clipboard Tracker", "command": "text_pastry_clipboard_tracker_enabled", "checkbox": true}
+                    {"caption": "Update clipboard viewer on-the-fly", "command": "text_pastry_clipboard_live_edit", "checkbox": true},
                 ]
-            }
+            },
+            {"caption": "-"},
+            {"caption": "Clipboard Tracker is active", "command": "text_pastry_clipboard_tracker_active", "checkbox": true},
         ]
     }
 ]
