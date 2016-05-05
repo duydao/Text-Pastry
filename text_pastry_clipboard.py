@@ -538,13 +538,21 @@ class TextPastryUpdateViewCommand(sublime_plugin.TextCommand):
         return not self.is_running()
 
 
+class TextPastryPasteGunMultiSelectCommand(sublime_plugin.TextCommand):
+    def run(self, edit, separator=None, rotate=False, repeat=True, keep_selection=True):
+        if TextPastryPasteGunCommand.index is None:
+            TextPastryPasteGunCommand.index = 0
+        for idx, region in enumerate(self.view.sel()):
+            self.view.run_command("text_pastry_paste_gun", {
+                "index": TextPastryPasteGunCommand.index + 1, "selection_index": idx,
+                "separator": separator, "rotate": rotate, "repeat": repeat, "keep_selection": keep_selection})
 class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
     panel_name = "tp_clipboard"
     hash = None
     index = None
     done = False
     template_selected = None
-    def run(self, edit, index=1, separator=None, rotate=False, repeat=True, keep_selection=True):
+    def run(self, edit, index=1, selection_index=0, separator=None, rotate=False, repeat=True, keep_selection=None):
         if index is None:
             return
         # setup index
@@ -554,8 +562,10 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
         # check hash
         current_hash = TextPastryPasteGunCommand.create_hash(data.encode("utf8"))
         if TextPastryPasteGunCommand.hash != current_hash:
+            print('hash changed, resetting index')
             # let's start fresh
             TextPastryPasteGunCommand.reset()
+            idx = 0
             TextPastryPasteGunCommand.hash = current_hash
             TextPastryPasteGunCommand.index = idx
         elif TextPastryPasteGunCommand.done:
@@ -581,10 +591,11 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
         # get formatted item
         item = self.format(items[idx])
         # replace selection
-        region = self.view.sel()[0]
+        region = self.view.sel()[selection_index]
         self.view.replace(edit, region, item)
         # keep selection setting
-        keep_selection = settings().get("paste_gun_keep_selection", settings().get("keep_selection", True))
+        if keep_selection is None:
+            keep_selection = settings().get("paste_gun_keep_selection", settings().get("keep_selection", True))
         # clear selection, set cursor to the end
         if not keep_selection:
             sel = self.view.sel()
