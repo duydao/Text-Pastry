@@ -2,8 +2,8 @@
     "run_tests": false,
 
     "preset_zero_based_index": false,
-    "range_zero_based_index": false,
-
+    "range_include_end_index": true,
+    
     "use_regex": true,
     "ignore_case": true,
     "smart_case": true,

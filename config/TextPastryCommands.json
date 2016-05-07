@@ -42,8 +42,8 @@
         {"match": "^pbr$", "command": "text_pastry_insert_text", "args": {"clipboard": true, "by_rows": true} },
 
         // regular text, using whitespace separator
-        {"match": "^words no-repeat (.*)", "command": "text_pastry_insert_text", "args": {"text": "$1", "repeat": false} },
-        {"match": "^words (.*)", "command": "text_pastry_insert_text", "args": {"text": "$1"} },
+        {"match": "^words no-repeat (.*)", "command": "text_pastry_words", "args": {"text": "$1", "repeat": false} },
+        {"match": "^words (.*)", "command": "text_pastry_words", "args": {"text": "$1"} },
 
         // build-in commands
         {"match": "^uc$", "command": "upper_case"},
@@ -98,24 +98,18 @@
         {"match": "^range (-?\\d+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
 
         // add x-arg support to date ranges
-        {"match": "^(?:seconds|second) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "second", "repeat": "$2"} },
-        {"match": "^(?:minutes|minute) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "minute", "repeat": "$2"} },
-        {"match": "^(?:hours|hour) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "hour", "repeat": "$2"} },
-        {"match": "^(?:days|day) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },
-        {"match": "^(?:weeks|week) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week", "repeat": "$2"} },
-        {"match": "^(?:months|month) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "repeat": "$2"} },
-        {"match": "^(?:end-of-month|eom|end-of-the-month|eotm|last-day-of-month|ldomlast-day-of-the-month|ldotm) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "last_day_of_month": true, "repeat": "$2"} },
-        {"match": "^(?:years|year) ?(.*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year", "repeat": "$2"} },
+        {"match": "^(?:days|day) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },
+        {"match": "^(?:weeks|week) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week", "repeat": "$2"} },
+        {"match": "^(?:months|month) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "repeat": "$2"} },
+        {"match": "^(?:end-of-month|eom|end-of-the-month|eotm|last-day-of-month|ldomlast-day-of-the-month|ldotm) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "last_day_of_month": true, "repeat": "$2"} },
+        {"match": "^(?:years|year) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year", "repeat": "$2"} },
 
         {"match": "^(?:date-format) (.+)$", "command": "text_pastry_setting", "args": {"name": "date_format", "value": "$1"} },
-        {"match": "^(?:seconds|second) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
-        {"match": "^(?:minutes|minute) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
-        {"match": "^(?:hours|hour) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
-        {"match": "^(?:days|day) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
-        {"match": "^(?:weeks|week) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week"} },
-        {"match": "^(?:months|month) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month"} },
-        {"match": "^(?:end-of-month|eom|end-of-the-month|eotm|last-day-of-month|ldomlast-day-of-the-month|ldotm) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "last_day_of_month": true} },
-        {"match": "^(?:years|year) ?(.*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year"} },
+        {"match": "^(?:days|day) ?((?:\\b).*)$", "command": "text_pastry_date_range", "args": {"text": "$1"} },
+        {"match": "^(?:weeks|week) ?((?:\\b).*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week"} },
+        {"match": "^(?:months|month) ?((?:\\b).*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month"} },
+        {"match": "^(?:end-of-month|eom|end-of-the-month|eotm|last-day-of-month|ldomlast-day-of-the-month|ldotm) ?((?:\\b).*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "month", "last_day_of_month": true} },
+        {"match": "^(?:years|year) ?((?:\\b).*)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "year"} },
 
         {"match": "^x(\\d+) (.+?) (-?\\d*)$", "command": "text_pastry_auto_step", "args": {"text": "$2", "step_size": "$3", "repeat": "$1"} },
         {"match": "^x(\\d+) (.+?)$", "command": "text_pastry_auto_step", "args": {"text": "$2", "repeat": "$1"} },
