@@ -13,6 +13,7 @@ _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), 
 - Create and modify selections
 - Improved paste _(paste the first three lines of the clipboard data to the three selected locations)_
 - Generate date ranges
+- Convert to upper/lower case
 
 ## What's new ##
 - 1.4.10: Scroll into view on search / after find [#33](https://github.com/duydao/Text-Pastry/issues/33) - Thanks again [@miusuncle](https://github.com/miusuncle)
@@ -544,6 +545,14 @@ _Text Pastry_ has a build in support for the [Insert Nums](https://github.com/jb
 * `N`: the start index.
 * `M` represents the step size which will be added to the index for each selection.
 * `P` must be > 0 and will be used to pad the index with leading zeroes.
+
+### Convert to letter case ###
+
+We can convert the selection to upper, lower or title case.
+
+- `uc` or `upper` - Converts selection to uppercase
+- `lc` or `lower` - Converts selection to lowercase
+- `cap` or `caps` - Converts selection to titlecase
 
 ## Examples ##
 
