@@ -755,18 +755,28 @@ class TextPastryPasteCommand(sublime_plugin.TextCommand):
             pass
 
 
+class TextPastryRangeParserCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text):
+        result = RangeCommandParser(text).parse()
+        self.view.run_command(result['command'], result['args'])
 class TextPastryRangeCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
-            align=None, prefix=None, suffix=None, repeat_increment=None):
+            align=None, prefix=None, suffix=None, repeat_increment=None, loop=None, **kwargs):
         print('found range command', start, stop, step)
-        print('repeat increment:', repeat_increment)
         start = int(start) if start else 0
         step = int(step) if step else 1
         stop = int(stop) if stop else None
         padding = int(padding) if padding else 0
         # duplicate lines and add to selection on repeat
         if stop is not None:
-            repeat = abs(start - stop)
+            multiplier = 1
+            if repeat_increment:
+                multiplier *= int(repeat_increment)
+            if loop:
+                multiplier *= int(loop)
+            repeat = len(range(start, stop, step))
+            if multiplier > 1:
+                repeat = (repeat + 1) * multiplier - 1
             sel = self.view.sel()
             if len(sel) == 1:
                 TextPastryTools.duplicate(self.view, edit, sel[0], repeat)
@@ -800,11 +810,6 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             return '-' + just(s[1:], padding, fillchar)
         else:
             return just(s, padding, fillchar)
-class TextPastryStepCommand(sublime_plugin.TextCommand):
-    def run(self, edit, text):
-        result = StepCommandParser(text).parse()
-        if result and 'command' in result and 'args' in result:
-            self.view.run_command(result['command'], result['args'])
 
 
 class TextPastryRedoCommand(sublime_plugin.WindowCommand):
@@ -865,6 +870,13 @@ class TextPastryCommandWrapperCommand(sublime_plugin.TextCommand):
         except ValueError:
             sublime.status_message("Error while executing Text Pastry Command, canceled")
             pass
+
+
+class TextPastryStepCommand(sublime_plugin.TextCommand):
+    def run(self, edit, text):
+        result = StepCommandParser(text).parse()
+        if result and 'command' in result and 'args' in result:
+            self.view.run_command(result['command'], result['args'])
 
 
 class TextPastryUuidCommand(sublime_plugin.TextCommand):
@@ -1190,7 +1202,6 @@ class CommandLineParser(object):
 
 class OptionsParser(CommandLineParser):
     def add(self, key, value):
-        self.last_option = key
         if key not in self.options:
             self.options[key] = value
             return True
@@ -1202,8 +1213,6 @@ class OptionsParser(CommandLineParser):
         return self.add(key, False)
     def parse(self):
         self.options = {}
-        self.last_option = None
-        self.start_index = -1
         remains = []
         args = self.split(self.input_text)
         if not args:
@@ -1237,19 +1246,19 @@ class OptionsParser(CommandLineParser):
             elif arg.lower().startswith('each='):
                 if not self.add('repeat_word', int(arg[5:])):
                     remains.append(value)
+            elif arg.lower().startswith('padding='):
+                if not self.add('padding', int(arg[8:])):
+                    remains.append(value)
+            elif arg.lower().startswith('loop='):
+                if not self.add('loop', int(arg[5:])):
+                    remains.append(value)
             elif arg.startswith('x') and re.match(r"^x\d+$", arg) is not None:
                 if not self.add('repeat_word', int(arg[1:])):
                     remains.append(value)
             else:
                 remains.append(value)
-            if remains and self.last_option and self.start_index == -1:
-                index = self.input_text.find(self.last_option)
-                if index >= 0:
-                    self.start_index = index + len(last_option)
         if len(self.options) == 0:
             self.remains = self.input_text
-        elif self.start_index >= 0:
-            self.remains = self.input_text[self.start_index:]
         elif remains:
             # this will eat double spaces
             self.remains = ' '.join(remains)
@@ -1281,6 +1290,44 @@ class PresetCommandParser(OptionsParser):
         return (name, start, end, self.options)
 
 
+class RangeCommandParser(OptionsParser):
+    def parse(self):
+        s = super(RangeCommandParser, self).parse()
+        name = None
+        start = None
+        stop = None
+        step = None
+        padding = None
+        remains = []
+        for pos, arg in enumerate(s.split()):
+            if arg in '-:,':
+                pass
+            elif name is None:
+                # first will always be the name
+                name = arg
+            elif start is None and is_numeric(arg):
+                start = int(arg)
+            elif stop is None and is_numeric(arg):
+                stop = int(arg)
+            elif step is None and is_numeric(arg):
+                step = int(arg)
+            elif padding is None and is_numeric(arg):
+                padding = int(arg)
+            else:
+                remains.append(arg)
+        if remains:
+            self.remains = ' '.join(remains)
+            print('remaining commands found:', self.remains)
+            return None
+        args = self.options
+        args.update({'start': start, 'stop': stop, 'step': step})
+        if padding:
+            args['padding'] = padding
+        if 'repeat_word' in args and args['repeat_word']:
+            args['repeat_increment'] = args['repeat_word']
+        return dict(command='text_pastry_range', args=args)
+
+
 class StepCommandParser(OptionsParser):
     def parse(self):
         current = None
@@ -1294,6 +1341,7 @@ class StepCommandParser(OptionsParser):
         repeat = None
         repeat_increment = None
         end = None
+        loop = None
         flags = {}
         remains = []
         for pos, arg in enumerate(self.input_text.split()):
@@ -1330,8 +1378,10 @@ class StepCommandParser(OptionsParser):
                 repeat_increment = int(arg[5:])
             elif arg.lower().startswith('end='):
                 end = int(arg[4:])
+            elif arg.lower().startswith('loop='):
+                loop = int(arg[5:])
             elif arg.lower().startswith('x') and re.match(r"^x\d+$", arg) is not None:
-                repeat = int(arg[1:])
+                repeat_increment = int(arg[1:])
             else:
                 remains.append(arg)
         # regex matchers
@@ -1359,7 +1409,7 @@ class StepCommandParser(OptionsParser):
             if end:
                 stop = int(end)
             return dict(command='text_pastry_range', args={'start': start, 'stop': stop, 'step': step, 'padding': padding, 'fillchar': fillchar,
-                        'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix, 'repeat_increment': repeat_increment})
+                        'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix, 'repeat_increment': repeat_increment, 'loop': loop})
 
 
 class WordsParser(OptionsParser):
@@ -1413,7 +1463,7 @@ class WordsParser(OptionsParser):
                 repeat = False
             elif arg in ['--repeat-word']:
                 REPEAT_TOKEN = True
-            elif REPEAT_TOKEN and arg.isnumeric():
+            elif REPEAT_TOKEN and is_numeric(arg):
                 repeat_word = int(arg)
                 REPEAT_TOKEN = False
             elif arg in ['--no-repeat-word']:
