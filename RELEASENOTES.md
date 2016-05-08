@@ -1,6 +1,6 @@
 # Release Notes 1.5.0
 
-I'm exceited to announce Text Pastry 1.5.0! We've got some new features in this release:
+I'm excited to release Text Pastry 1.5.0! We've got some new features in this release:
 
 - The Text Pastry Piping Bag
 - The Clipboard Viewer
@@ -12,18 +12,28 @@ I'm exceited to announce Text Pastry 1.5.0! We've got some new features in this 
 
 With the Piping Bag feature, we can paste incremental values across multiple files. All we need to do, is to fill the values we want to paste into the piping bag.
 
-Open the command palette and look for "Text Pastry: Show Piping Bag" or open ```Tools -> Text Pastry -> Show Piping Bag```.
-
 
 ## How to use the Piping Bag
+
+Open the command palette and look for "Text Pastry: Show Piping Bag" or open ```Tools -> Text Pastry -> Show Piping Bag```.
+
+Now we need to fill the piping bag with values that we want to paste. *Each line will be used as paste item.*
 
 We can generate a number range to use in the piping bag by using command palette:
 
 ```CMD + Shift + P``` -> Text Pastry: Generate a list of numbers from 1 to 100
 
-*Notice*: This will call the range command to generate the list of numbers. Please beware that this command will only be enabled when we have a single selection in our current view.
+Now we're ready to go!
+- Open a file
+- Make as mani selections as we like
+- Open the command palette and select ```Text Pastry: Pipe into selections```
+- Rinse and repeat
 
-For details on the range command, please check out 3. [Number](https://github.com/duydao/Text-Pastry/wiki/Number-Range)
+Text pastry will progress the lines in the piping bag and starts from the beginning when the end was reached. A marker will be placed in the _Piping Bag_ which indicates the next value that will be pasted.
+
+*Notice*: Please beware that this command will only be visible in the command palette when we have a single selection in our current view.
+
+Generating a list of numbers will call the range command to generate the list of numbers.  For details on the range command, please check out 3. [Number](https://github.com/duydao/Text-Pastry/wiki/Number-Range)
 
 
 ## Clipboard Viewer
