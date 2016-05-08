@@ -662,7 +662,7 @@ class TextPastryPasteGunCommand(sublime_plugin.TextCommand):
 class TextPastryPasteGunMarkerCommand(sublime_plugin.TextCommand):
     def run(self, edit, index=0):
         region = self.view.line(self.view.text_point(index, 0))
-        self.view.add_regions("tp_placeholder", [region], "text_pastry.marker", "bookmark", sublime.DRAW_NO_OUTLINE | sublime.DRAW_EMPTY)
+        self.view.add_regions("tp_placeholder", [region], "text_pastry.marker", "bookmark", sublime.DRAW_NO_FILL)
     def is_enabled(self):
         hasClipboard = self.view.file_name() and self.view.file_name().endswith("clipboard")
         isAmmoView = self.view.settings().get('tp_ammo')
