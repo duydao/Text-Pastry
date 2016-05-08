@@ -51,28 +51,46 @@ We can allow Text Pastry to update the clipboard without switching files by acti
 
 ## Clipboard Tracker
 
+The Clipboard Viewer uses a Clipboard Tracker to check the Clipboard/Pasteboard for changes every few 0.5 seconds. Tracking is disabled by default and can be enabled and configured in our Text Pastry user settings file. The default values are:
+
+{
+    "tracker_enabled": false,
+    "tracker_autostart": false,
+    "tracker_log_enabled": false,
+    "tracker_interval": 0.5,
+}
+
+We can enable the tracker by open the Text Pastry Settings (Preferences -> Package Settings -> Text Pastry -> Settings - User) and add the following line:
+
+```
+    "tracker_enabled": true,
+```
 
 ## Loops
 
-By default, Text Pastry will count the selections and will increment the value for each selection. We can change this behaviour by setting an end value.
+By default, Text Pastry will count the selections and will increment the value for each selection. We can change this behaviour by setting an end value and adding a loop count:
 
-```0 2 2 end=10``` will produce this paste list: ```00 02 04 06 08 10 00 02 04```
+```0 3 2 end=12 loop=2``` will produce this paste list: ```00 03 06 09 12 00 03 06 09 12```
 
 The list will be repeated as soon as the end is reached. We can do the same with the range command:
 
-```range 0 10 2 2``` will produce the same paste list: ```00 02 04 06 08 10 00 02 04```
+```range 0 12 2 padding=2 loop=2``` will give us the same result: ```00 03 06 09 12 00 03 06 09 12```
 
 For details on the range command, please check out 3. [Number](https://github.com/duydao/Text-Pastry/wiki/Number-Range)
 
 ## Duplicate values
 
-we can duplicate values by using the x-arg:
+we can duplicate values by using the each-arg:
 
 ```letters a-c upper x3``` will produce this paste list: ```A A A B B B C C C```
 
 this works for numeric values as well
 
-```0 2 2 end=10 x2``` will produce this paste list: ```00 00 02 02 04 04 06 06 08```
+```0 2 2 end=10 x2``` will produce this paste list: ```00 00 02 02 04 04 06 06 08 08 10 10```
+
+We can use an alias for the x-arg:
+
+```0 2 2 end=10 each=2``` will give us the same result: ```00 00 02 02 04 04 06 06 08 08 10 10```
 
 ***
 
