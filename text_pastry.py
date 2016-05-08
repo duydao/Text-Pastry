@@ -1010,6 +1010,13 @@ class TextPastryAutoStepCommand(sublime_plugin.TextCommand):
                 pass
 
 
+class TextPastryNumberGeneratorCommand(sublime_plugin.TextCommand):
+    def run(self, edit, start=1, stop=10, step=1):
+        self.view.run_command('text_pastry_range', {'start': start, 'stop': stop, 'step': step})
+    def is_enabled(self):
+        return len(self.view.sel()) == 1
+
+
 class Parser(object):
     def parse(self, text):
         if not text:
