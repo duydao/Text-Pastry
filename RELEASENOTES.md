@@ -53,17 +53,19 @@ We can allow Text Pastry to update the clipboard without switching files by acti
 
 The Clipboard Viewer uses a Clipboard Tracker to check the Clipboard/Pasteboard for changes every few 0.5 seconds. Tracking is disabled by default and can be enabled and configured in our Text Pastry user settings file. The default values are:
 
+```
 {
     "tracker_enabled": false,
     "tracker_autostart": false,
     "tracker_log_enabled": false,
     "tracker_interval": 0.5,
 }
+```
 
 We can enable the tracker by open the Text Pastry Settings (Preferences -> Package Settings -> Text Pastry -> Settings - User) and add the following line:
 
 ```
-    "tracker_enabled": true,
+    "tracker_enabled": true
 ```
 
 ## Loops
