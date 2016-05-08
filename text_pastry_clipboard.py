@@ -418,7 +418,7 @@ class TextPastryOpenClipboardAmmoCommand(sublime_plugin.WindowCommand):
             if global_settings("paste_gun_append_clipboard_to_ammo", False):
                 settings["tp_append"] = True
                 ClipboardTracker.add_listener(AmmoViewClipboardListener.get_instance())
-            ClipboardHelper.create_view("Clipboard Ammo", settings)
+            ClipboardHelper.create_view("Piping Bag", settings)
         else:
             sublime.active_window().focus_view(view)
     def is_checked(self):
