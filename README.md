@@ -32,7 +32,7 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 - 1.4.3: New commands! Generate date ranges command, repeat argument (x-arg), and the [Auto Step](https://github.com/duydao/Text-Pastry/issues/20) command
 - 1.4.2: Fix range / negative steps [#24](https://github.com/duydao/Text-Pastry/issues/24) - Thanks [@TheClams](https://github.com/TheClams)
 - 1.4.1: Hotfix for [#23](https://github.com/duydao/Text-Pastry/issues/23) - Thanks [@dufferzafar](https://github.com/dufferzafar)
-- 1.4.0: [New Features!](https://github.com/duydao/Text-Pastry/RELEASENOTES.md#release-notes-140)
+- 1.4.0: [New Features!](https://github.com/duydao/Text-Pastry/blob/master/RELEASENOTES.md#release-notes-140)
 
 ## Further information
 
