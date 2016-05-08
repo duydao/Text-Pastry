@@ -7,7 +7,11 @@
     "command": "text_pastry_range",
     "args": {"start": 1, "step": 1, "padding": 1}
 }, {
-    "caption": "Text Pastry: Range",
+    "caption": "Text Pastry: Generate a list of numbers from 1 to 100",
+    "command": "text_pastry_number_generator",
+    "args": {"start": 1, "stop": 100, "step": 1}
+}, {
+    "caption": "Text Pastry: Range (numeric)",
     "command": "text_pastry_show_command_line",
     "args": {"text": "range "}
 }, {
@@ -49,6 +53,18 @@
     "caption": "Text Pastry: Command-Line",
     "command": "text_pastry_show_command_line",
     "args": {"text": ""}
+}, {
+    "caption": "Text Pastry: Show Piping Bag",
+    "command": "text_pastry_open_clipboard_ammo"
+}, {
+    "caption": "Text Pastry: Pipe into selection",
+    "command": "text_pastry_paste_gun_multi_select"
+}, {
+    "caption": "Text Pastry: Reset the Piping Bag",
+    "command": "text_pastry_reset_ammo_position"
+}, {
+    "caption": "Text Pastry: Show Clipboard Viewer",
+    "command": "text_pastry_open_clipboard"
 }, {
     "caption": "Text Pastry: Menu",
     "command": "text_pastry_show_menu"
