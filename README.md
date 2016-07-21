@@ -3,7 +3,7 @@
 _Text Pastry_ is a free plugin for [Sublime Text](http://www.sublimetext.com/), dedicated to reduce repetetive work by extending the power of [multiple selections](https://www.sublimetext.com/docs/selection).
 
 ## How can I get started?
-If you're familiar with [multiple selections](https://www.sublimetext.com/docs/selection), it's pretty straight forward. Place multiple cursors by using CMD+Click or Ctrl+Click, open the [Command Palette](https://www.sublimetext.com/docs/selection) and select _Text Pastry From 1 to X_. That's it! We've just pasted incrementing numbers.
+If you're familiar with [multiple selections](https://www.sublimetext.com/docs/selection), it's pretty straight forward. Place multiple cursors by using CMD+Click or Ctrl+Click, open the [Command Palette](http://docs.sublimetext.info/en/latest/reference/command_palette.html) and select _Text Pastry From 1 to X_. That's it! We've just pasted incrementing numbers.
 
 Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for examples!
 
