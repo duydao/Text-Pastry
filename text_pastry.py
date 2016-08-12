@@ -1272,7 +1272,7 @@ class PresetCommandParser(OptionsParser):
         start = None
         end = None
         remains = []
-        for arg in shlex.shlex(s):
+        for arg in s.split():
             if arg in '-:,':
                 pass
             elif name is None:
