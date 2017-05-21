@@ -1,3 +1,7 @@
+# Release Notes 1.5.1
+
+Fixed the ```Find by regex``` command (#56)
+
 # Release Notes 1.5.0
 
 I'm excited to release Text Pastry 1.5.0! We've got some new features in this release:

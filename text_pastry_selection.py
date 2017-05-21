@@ -345,7 +345,7 @@ class TextPastrySelectionCommand(sublime_plugin.WindowCommand):
         if not self.window.active_view():
             return
         self.setup()
-        self.use_regex = global_settings('selection_use_regex', False)
+        self.use_regex = global_settings('selection_use_regex', True)
         # kwargs takes precedence
         self.use_regex = kwargs.get('use_regex', self.use_regex)
         self.keep = kwargs.get('keep', self.keep)

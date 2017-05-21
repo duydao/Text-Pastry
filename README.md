@@ -21,6 +21,7 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 - Duplicate values for pasting _(1, 1, 2, 2, 3, 3, 4, 4)_ or _(a, a, a, b, b, b, c, c, c)_
 
 ## What's new ##
+- 1.5.1: Bugfix release for Find by regex [#56](https://github.com/duydao/Text-Pastry/issues/56) - Thanks [@timLinscott]
 - 1.5.0: [New Features!](https://github.com/duydao/Text-Pastry/blob/master/RELEASENOTES.md)
 - 1.4.10: Scroll into view on search / after find [#33](https://github.com/duydao/Text-Pastry/issues/33) - Thanks again [@miusuncle](https://github.com/miusuncle)
 - 1.4.9: Bugfix release for uuid x10 [#31](https://github.com/duydao/Text-Pastry/issues/31) - Thanks [@miusuncle](https://github.com/miusuncle)
