@@ -37,7 +37,7 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 
 ## Further information
 
-If you would like to know more about how _Text Pastry_ can help you out, check out our [Wiki](https://github.com/duydao/Text-Pastry/).
+If you would like to know more about how _Text Pastry_ can help you out, check out our [wiki](https://github.com/duydao/Text-Pastry/wiki).
 
 ## Todo ##
 - formatters
