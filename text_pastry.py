@@ -1095,13 +1095,16 @@ class Parser(object):
         buildin_presets = sublime.load_settings('TextPastryPresets.json')
         presets = buildin_presets.get('presets', {})
         presets.update(global_settings('presets', {}))
-        name, start, end, options = PresetCommandParser(input_text).parse()
+        name, start, end, case, options = PresetCommandParser(input_text).parse()
+
         if name in presets:
             items = presets[name]
             if 'repeat' not in options:
                 options['repeat'] = global_settings('repeat_preset', True)
             if start or end:
                 items = self.create_preset_command(start, end, options, items)
+                if case: items = [x.upper() for x in items]
+
             items = self.format(items, options)
             result = dict(command='text_pastry_insert_text', args={
                 'items': items,
@@ -1271,6 +1274,7 @@ class PresetCommandParser(OptionsParser):
         name = None
         start = None
         end = None
+        case = None
         remains = []
         for arg in s.split():
             if arg in '-:,':
@@ -1280,14 +1284,16 @@ class PresetCommandParser(OptionsParser):
                 name = arg
             elif start is None:
                 start = arg.lower()
+                case = arg.isupper()
             elif end is None:
                 end = arg.lower()
+                case = case or arg.isupper()
             else:
                 remains.append(arg)
         if remains:
             self.remains = ' '.join(remains)
             print('remaining commands found:', self.remains)
-        return (name, start, end, self.options)
+        return (name, start, end, case, self.options)
 
 
 class RangeCommandParser(OptionsParser):
