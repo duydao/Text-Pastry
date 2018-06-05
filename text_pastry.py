@@ -26,6 +26,17 @@ def is_numeric(s):
         return True
     except ValueError:
         return False
+
+def frange(start, stop, step):
+    i = 0
+    r=len(str(step).split('.')[1])
+    args=(start,stop,step)
+    if all(int(i)==float(i) for i in args):
+        start,stop,step=map(int,args)
+    while start + i * step < stop:
+        yield round(start + i * step,r)
+        i += 1
+
 def settings():
     return sublime.load_settings(SETTINGS_FILE)
 def global_settings(key, default=None):
@@ -763,9 +774,10 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
             align=None, prefix=None, suffix=None, repeat_increment=None, loop=None, **kwargs):
         print('found range command', start, stop, step)
-        start = int(start) if start else 0
-        step = int(step) if step else 1
-        stop = int(stop) if stop else None
+        range_ = frange
+        step = float(step) if step else 1
+        start = float(start) if start else 0
+        stop = float(stop) if stop else None
         padding = int(padding) if padding else 0
         # duplicate lines and add to selection on repeat
         if stop is not None:
@@ -774,7 +786,7 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
                 multiplier *= int(repeat_increment)
             if loop:
                 multiplier *= int(loop)
-            repeat = len(range(start, stop, step))
+            repeat = len(tuple(range_(start, stop, step)))
             if multiplier > 1:
                 repeat = (repeat + 1) * multiplier - 1
             sel = self.view.sel()
@@ -788,7 +800,7 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
         # if stop is negative, step needs to be negative aswell
         if (start > stop and step > 0):
             step = step * -1
-        items = [str(x) for x in range(start, stop, step)]
+        items = [str(x) for x in range_(start, stop, step)]
         if repeat_increment and repeat_increment > 0:
             tmp = items
             items = []
@@ -1005,7 +1017,7 @@ class TextPastryAutoStepCommand(sublime_plugin.TextCommand):
             padding = 1
             sublime.status_message("text_pastry_auto_step")
             # match continuous digits/non-digits
-            parts = [m for m in re.findall("([\d]+|[^\d]+)", text)]
+            parts = [m for m in re.findall("(`?[\d]+|[^\d`]+)", text)]
             # find integer parts
             numbers = [idx for idx, val in enumerate(parts) if is_numeric(val)]
             repeat = int(repeat) - 1 if repeat else len(self.view.sel()) - 1
@@ -1013,7 +1025,7 @@ class TextPastryAutoStepCommand(sublime_plugin.TextCommand):
                 TextPastryTools.duplicate(self.view, edit, self.view.sel()[0], repeat)
             sel = self.view.sel()
             for region in sel:
-                self.view.replace(edit, region, ''.join(parts))
+                self.view.replace(edit, region, ''.join(parts).replace('`',''))
                 # increment
                 for i in numbers:
                     parts[i] = str(int(parts[i]) + step)
@@ -1066,9 +1078,9 @@ class Parser(object):
         return result
     def parse_command(self, text):
         result = None
-        buildin_commands = sublime.load_settings('TextPastryCommands.json')
+        builtin_commands = sublime.load_settings('TextPastryCommands.json')
         cmd_shortcuts = global_settings('commands', [])
-        cmd_shortcuts.extend(buildin_commands.get('commands', []))
+        cmd_shortcuts.extend(builtin_commands.get('commands', []))
         for item in cmd_shortcuts:
             # if parser
             if 'parser' in item:
@@ -1095,13 +1107,16 @@ class Parser(object):
         buildin_presets = sublime.load_settings('TextPastryPresets.json')
         presets = buildin_presets.get('presets', {})
         presets.update(global_settings('presets', {}))
-        name, start, end, options = PresetCommandParser(input_text).parse()
+        name, start, end, case, options = PresetCommandParser(input_text).parse()
+
         if name in presets:
             items = presets[name]
             if 'repeat' not in options:
                 options['repeat'] = global_settings('repeat_preset', True)
             if start or end:
                 items = self.create_preset_command(start, end, options, items)
+                if case: items = [x.upper() for x in items]
+
             items = self.format(items, options)
             result = dict(command='text_pastry_insert_text', args={
                 'items': items,
@@ -1271,6 +1286,7 @@ class PresetCommandParser(OptionsParser):
         name = None
         start = None
         end = None
+        case = None
         remains = []
         for arg in s.split():
             if arg in '-:,':
@@ -1280,14 +1296,16 @@ class PresetCommandParser(OptionsParser):
                 name = arg
             elif start is None:
                 start = arg.lower()
+                case = arg.isupper()
             elif end is None:
                 end = arg.lower()
+                case = case or arg.isupper()
             else:
                 remains.append(arg)
         if remains:
             self.remains = ' '.join(remains)
             print('remaining commands found:', self.remains)
-        return (name, start, end, self.options)
+        return (name, start, end, case, self.options)
 
 
 class RangeCommandParser(OptionsParser):
@@ -1377,7 +1395,7 @@ class StepCommandParser(OptionsParser):
             elif arg.lower().startswith('each='):
                 repeat_increment = int(arg[5:])
             elif arg.lower().startswith('end='):
-                end = int(arg[4:])
+                end = float(arg[4:])
             elif arg.lower().startswith('loop='):
                 loop = int(arg[5:])
             elif arg.lower().startswith('x') and re.match(r"^x\d+$", arg) is not None:
@@ -1387,12 +1405,12 @@ class StepCommandParser(OptionsParser):
         # regex matchers
         if len(remains) > 0:
             s = ' '.join(remains)
-            regex = r'^(?:\\?[iI])?[\s(]*(-?\d+)(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?[\s)]*$'
+            regex = r'^(?:\\?[iI])?[\s(]*(-?[\d\.]+)(?:[\s,]*(-?[\d\.]+))?(?:[\s,]*(-?\d+))?(?:[\s,]*(-?\d+))?[\s)]*$'
             m1 = re.match(regex, s)
             if m1:
-                current = int(m1.group(1))
+                current = float(m1.group(1))
                 if m1.group(2):
-                    step = int(m1.group(2))
+                    step = float(m1.group(2))
                 if m1.group(3):
                     padding = int(m1.group(3))
                 if m1.group(4):
@@ -1407,7 +1425,7 @@ class StepCommandParser(OptionsParser):
             if repeat is not None and step is not None and step != 0:
                 stop = start + ((repeat -1) * step)
             if end:
-                stop = int(end)
+                stop = float(end)
             return dict(command='text_pastry_range', args={'start': start, 'stop': stop, 'step': step, 'padding': padding, 'fillchar': fillchar,
                         'justify': justify, 'align': align, 'prefix': prefix, 'suffix': suffix, 'repeat_increment': repeat_increment, 'loop': loop})
 
