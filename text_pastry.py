@@ -27,16 +27,23 @@ def is_numeric(s):
     except ValueError:
         return False
 
+sign = lambda x: (1, -1)[x < 0]
 def frange(start, stop, step):
     i = 0
-    r=len(str(step).split('.')[1])
+    r=len(str(step).split('.')[-1])
     args=(start,stop,step)
+    if not step :return []
     if all(int(i)==float(i) for i in args):
         start,stop,step=map(int,args)
-    while start + i * step < stop:
-        yield round(start + i * step,r)
-        i += 1
-
+    if sign(step)==1:
+        while start + i * step < stop:
+            yield round(start + i * step,r)
+            i += 1
+    else:
+        while start + i * step > stop:
+            yield round(start + i * step,r)
+            i += 1
+            
 def settings():
     return sublime.load_settings(SETTINGS_FILE)
 def global_settings(key, default=None):
