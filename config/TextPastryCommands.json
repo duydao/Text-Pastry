@@ -45,7 +45,7 @@
         {"match": "^words no-repeat (.*)", "command": "text_pastry_words", "args": {"text": "$1", "repeat": false} },
         {"match": "^words (.*)", "command": "text_pastry_words", "args": {"text": "$1"} },
 
-        // build-in commands
+        // built-in commands
         {"match": "^uc$", "command": "upper_case"},
         {"match": "^upper$", "command": "upper_case"},
         {"match": "^lc$", "command": "lower_case"},
