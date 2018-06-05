@@ -1005,7 +1005,7 @@ class TextPastryAutoStepCommand(sublime_plugin.TextCommand):
             padding = 1
             sublime.status_message("text_pastry_auto_step")
             # match continuous digits/non-digits
-            parts = [m for m in re.findall("([\d]+|[^\d]+)", text)]
+            parts = [m for m in re.findall("(`?[\d]+|[^\d`]+)", text)]
             # find integer parts
             numbers = [idx for idx, val in enumerate(parts) if is_numeric(val)]
             repeat = int(repeat) - 1 if repeat else len(self.view.sel()) - 1
@@ -1013,7 +1013,7 @@ class TextPastryAutoStepCommand(sublime_plugin.TextCommand):
                 TextPastryTools.duplicate(self.view, edit, self.view.sel()[0], repeat)
             sel = self.view.sel()
             for region in sel:
-                self.view.replace(edit, region, ''.join(parts))
+                self.view.replace(edit, region, ''.join(parts).replace('`',''))
                 # increment
                 for i in numbers:
                     parts[i] = str(int(parts[i]) + step)
