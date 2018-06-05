@@ -93,10 +93,10 @@
         {"match": "^filter (.+)", "command": "text_pastry_modify_selection",
             "args": {"context": "selection", "operator": null, "pattern": "$1"} },
 
-        {"match": "^range (-?\\d+)[-, ](-?\\d+)[, ](-?\\d+)[, ](\\d+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4"} },
-        {"match": "^range (-?\\d+)[-, ](-?\\d+)[, ](-?\\d+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3"} },
-        {"match": "^range (-?\\d+)[-, ](-?\\d+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2"} },
-        {"match": "^range (-?\\d+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
+        {"match": "^range (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d\\.]+)[, ](.)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4", "fillchar": "$5"} },
+        {"match": "^range (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3"} },
+        {"match": "^range (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2"} },
+        {"match": "^range (-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
         {"match": "^range (.*)$", "command": "text_pastry_range_parser", "args": {"text": "$0"} },
 
         // add x-arg support to date ranges
