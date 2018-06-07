@@ -908,6 +908,10 @@ class TextPastryDateRangeCommand(sublime_plugin.TextCommand):
             if fmt and '%' in fmt:
                 date_format = fmt
         if date is None:
+            # try to see if text is a date
+            if text:
+                date = self.parse_date(text)
+        if date is None:
             s = None
             # check if selection is a date
             if selection_count == 1:
