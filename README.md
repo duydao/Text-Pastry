@@ -77,7 +77,7 @@ __in alphabetical order__
 
 The MIT License (MIT)
 
-Copyright (c) 2016 Duy Dao, https://github.com/duydao/Text-Pastry
+Copyright (c) 2019 Duy Dao, https://github.com/duydao/Text-Pastry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -102,5 +102,5 @@ THE SOFTWARE.
 
 For further information, please take the time to look at following links:
 
-* Sublime Text 3: http://www.sublimetext.com/3/
+* Sublime Text: http://www.sublimetext.com/
 * Sublime Package Control: https://sublime.wbond.net/installation
