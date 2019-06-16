@@ -767,19 +767,24 @@ class TextPastryRangeParserCommand(sublime_plugin.TextCommand):
         result = RangeCommandParser(text).parse()
         self.view.run_command(result['command'], result['args'])
 class TextPastryRangeCommand(sublime_plugin.TextCommand):
-    def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
+    def run(self, edit, start=None, stop=None, step=1, padding=1, fillchar='0', justify=None,
             align=None, prefix=None, suffix=None, repeat_increment=None, loop=None, precision=0,
             **kwargs):
         print('found range command', start, stop, step, padding, precision, justify)
-        start = Decimal(start) if is_decimal(start) else 0
+        start = Decimal(start) if start is not None and is_decimal(start) else None
+        stop = Decimal(stop) if stop is not None and is_decimal(stop) else None
         step = Decimal(step) if is_decimal(step) else 1
-        stop = Decimal(stop) if is_decimal(stop) else None
         padding = int(padding) if is_numeric(padding) else 0
         repeat_increment = int(repeat_increment) if repeat_increment and is_numeric(repeat_increment) else None
         loop = int(loop) if loop and is_numeric(loop) else None
         precision = int(precision) if is_numeric(precision) else 0
         # duplicate lines and add to selection on repeat
         if stop is not None:
+            if start is None:
+                if stop == 1:
+                    start = Decimal(len(self.view.sel()))
+                elif stop == 0:
+                    start = Decimal(len(self.view.sel()) - 1)
             multiplier = 1
             if repeat_increment:
                 multiplier *= repeat_increment
@@ -791,9 +796,12 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             sel = self.view.sel()
             if len(sel) == 1:
                 TextPastryTools.duplicate(self.view, edit, sel[0], repeat)
+        if start is None:
+            start = Decimal(0)
+        print(start)
         # adjust stop if none was given
         if stop is None:
-            stop = start + (len(self.view.sel()) + 1) * step
+            stop = start + Decimal(len(self.view.sel()) + 1) * step
         if global_settings('range_include_end_index', True):
             stop += step
         # if stop is negative, step needs to be negative aswell
@@ -804,8 +812,9 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             tmp = items
             items = []
             for val in tmp:
-                for x in self.drange(repeat_increment):
+                for x in range(repeat_increment):
                     items.append(val)
+        print('range command args', start, stop, step, "items", items)
         if precision > 1:
             items = ["{:.{}f}".format(x, precision) for x in items]
             if not justify:
@@ -819,6 +828,8 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             items = [prefix + x for x in items]
         if suffix:
             items = [x + suffix for x in items]
+        # make sure we deliver strings
+        items = [str(x) for x in items]
         self.view.run_command("text_pastry_insert_text", {"items": items, "align": align})
     def pad(self, s, just, padding, fillchar):
         if s.startswith('-'):
@@ -827,14 +838,19 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             return just(s, padding, fillchar)
     def drange(self, start, stop, step):
         r = start
-        while r < stop:
-            yield r
-            r += step
+        if start <= stop:
+            while r <= stop:
+                yield r
+                r += getcontext().abs(step)
+        if start > stop:
+            while r >= stop:
+                yield r
+                r -= getcontext().abs(step)
 
 
 class TextPastryRedoCommand(sublime_plugin.WindowCommand):
     def run(self):
-        hs = sublime.load_settings(TextPastryHistory.file_name)
+        hs = sublime.load_settings("TextPastryHistory.sublime-settings")
         item = hs.get("last_command", {})
         if item and "command" in item and "text" in item and item["command"] and item["text"]:
             text = item.get("text")

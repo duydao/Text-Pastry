@@ -7,6 +7,14 @@
     "command": "text_pastry_range",
     "args": {"start": 1, "step": 1, "padding": 1}
 }, {
+    "caption": "Text Pastry: From X To 0",
+    "command": "text_pastry_range",
+    "args": {"stop": 0, "step": -1, "padding": 1}
+}, {
+    "caption": "Text Pastry: From X To 1",
+    "command": "text_pastry_range",
+    "args": {"stop": 1, "step": -1, "padding": 1}
+}, {
     "caption": "Text Pastry: Generate a list of numbers from 1 to 100",
     "command": "text_pastry_number_generator",
     "args": {"start": 1, "stop": 100, "step": 1}
