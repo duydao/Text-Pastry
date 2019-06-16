@@ -1106,9 +1106,9 @@ class Parser(object):
         return result
     def parse_command(self, text):
         result = None
-        buildin_commands = sublime.load_settings('TextPastryCommands.json')
+        builtin_commands = sublime.load_settings('TextPastryCommands.json')
         cmd_shortcuts = global_settings('commands', [])
-        cmd_shortcuts.extend(buildin_commands.get('commands', []))
+        cmd_shortcuts.extend(builtin_commands.get('commands', []))
         for item in cmd_shortcuts:
             # if parser
             if 'parser' in item:
@@ -1132,8 +1132,8 @@ class Parser(object):
         return result
     def parse_preset(self, input_text):
         result = None
-        buildin_presets = sublime.load_settings('TextPastryPresets.json')
-        presets = buildin_presets.get('presets', {})
+        builtin_presets = sublime.load_settings('TextPastryPresets.json')
+        presets = builtin_presets.get('presets', {})
         presets.update(global_settings('presets', {}))
         name, start, end, options = PresetCommandParser(input_text).parse()
         if name in presets:
