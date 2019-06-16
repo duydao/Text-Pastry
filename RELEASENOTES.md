@@ -1,3 +1,9 @@
+# Release Notes 1.6.0
+
+New features!
+
+- Auto detect case in preset letters
+
 # Release Notes 1.5.1
 
 Fixed the ```Find by regex``` command (#56)

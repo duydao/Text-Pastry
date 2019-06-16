@@ -1104,6 +1104,8 @@ class Parser(object):
             items = presets[name]
             if 'repeat' not in options:
                 options['repeat'] = global_settings('repeat_preset', True)
+            if 'to_upper_case' not in options:
+                options['to_upper_case'] = start and start.isupper()
             if start or end:
                 items = self.create_preset_command(start, end, options, items)
             items = self.format(items, options)
@@ -1131,12 +1133,12 @@ class Parser(object):
             start = int(start)
         elif start:
             lower_items = [x.lower() for x in items]
-            start = lower_items.index(start) if start in lower_items else None
+            start = lower_items.index(start.lower()) if start.lower() in lower_items else None
             zero_based = start is not None
         if end and is_numeric(end):
             end = int(end)
         elif end:
-            end = lower_items.index(end) if end in lower_items else None
+            end = lower_items.index(end.lower()) if end.lower() in lower_items else None
             zero_based = end is not None
         if not zero_based and not settings().get('preset_zero_based_index', False):
             if start and start > 0:
@@ -1283,9 +1285,9 @@ class PresetCommandParser(OptionsParser):
                 # first will always be the name of the preset
                 name = arg
             elif start is None:
-                start = arg.lower()
+                start = arg
             elif end is None:
-                end = arg.lower()
+                end = arg
             else:
                 remains.append(arg)
         if remains:
