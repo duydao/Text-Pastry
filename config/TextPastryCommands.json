@@ -100,13 +100,22 @@
         {"match": "^range (-?\\d+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
         {"match": "^range (.*)$", "command": "text_pastry_range_parser", "args": {"text": "$0"} },
 
-        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)[, ](.)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4", "precision": "$5", "fillchar": "$6"} },
-        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4", "precision": "$5"} },
-        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4"} },
-        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3"} },
-        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2"} },
-        {"match": "^drange (-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
-        {"match": "^drange (.*)$", "command": "text_pastry_range_parser", "args": {"text": "$0"} },
+        {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)[, ](.)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "start": "$2", "stop": "$3", "step": "$4", "padding": "$5", "precision": "$6", "fillchar": "$7"} },
+        {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "start": "$2", "stop": "$3", "step": "$4", "padding": "$5", "precision": "$6"} },
+        {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "start": "$2", "stop": "$3", "step": "$4", "padding": "$5"} },
+        {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "start": "$2", "stop": "$3", "step": "$4"} },
+        {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "start": "$2", "stop": "$3"} },
+        {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "stop": "$2"} },
+
+        {"match": "^(range|hrange|hex) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)[, ]([\\d]+|0x[\\da-fA-F]+)[, ]([\\d]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "step": "$4", "width": "$5"} },
+        {"match": "^(range|hrange|hex) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)[, ]([\\d]+|0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "step": "$4"} },
+        {"match": "^(range|hrange|hex) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3"} },
+        {"match": "^(range|hrange|hex) (0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"stop": "$2"} },
+
+        {"match": "^(HRANGE|HEX) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)[, ]([\\d]+|0x[\\da-fA-F]+)[, ]([\\d]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "step": "$4", "width": "$5", "hexFormatFlag": "X"} },
+        {"match": "^(HRANGE|HEX) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)[, ]([\\d]+|0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "step": "$4", "hexFormatFlag": "X"} },
+        {"match": "^(HRANGE|HEX) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "hexFormatFlag": "X"} },
+        {"match": "^(HRANGE|HEX) (0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"stop": "$2", "hexFormatFlag": "X"} },
 
         // add x-arg support to date ranges
         {"match": "^(?:days|day) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },

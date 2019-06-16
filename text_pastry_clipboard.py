@@ -10,14 +10,10 @@ import uuid
 SETTINGS_FILE = "TextPastry.sublime-settings"
 
 def is_numeric(s):
+    if s is None:
+        return False
     try:
         int(s)
-        return True
-    except ValueError:
-        return False
-def is_decimal(s):
-    try:
-        Decimal(s)
         return True
     except ValueError:
         return False
