@@ -1,8 +1,51 @@
 # Release Notes 1.6.0
 
-New features!
+We've added a couple of new features and fixed some bugs. All changes are listed at the [1.6.1 Milestone page](https://github.com/duydao/Text-Pastry/milestone/14?closed=1)
 
-- Auto detect case in preset letters
+## Sublime Text Command Palette:
+There are two new options in the command palette:
+`From X To 0` and `From X To 1` will generate a decrementing list, ending, according to our selection, at `0` or `1`.
+
+## Text Pastry Command Line
+We've added two new commands to the Text Pastry command line. All supported commands and aliases are listed in the [Text Pastry Commands](https://github.com/duydao/Text-Pastry/blob/master/config/TextPastryCommands.json) config file
+
+### Decimal ranges
+
+Use the following command to generate decimal list
+`dec <start> <stop> [step] [padding] [precision] [fillchar]`
+
+for example:
+`dec 1.25 3 0.25` will generate the following list:
+
+`1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00`
+
+Text Pastry will reverse the list when start is lower than stop.
+
+### Hex ranges
+
+Use the following command to generate hexadecimal list
+`hex <start> <stop> [step] [width]`
+
+for example:
+`hex 1.25 3 0.25` will generate the following list:
+
+`1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00`
+
+Text Pastry will reverse the list when start is lower than stop.
 
 # Release Notes 1.5.1
 
