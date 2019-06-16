@@ -15,6 +15,7 @@ import shlex
 import unittest
 import itertools
 from os.path import expanduser, normpath, join, isfile
+from decimal import *
 
 
 SETTINGS_FILE = "TextPastry.sublime-settings"
@@ -23,6 +24,12 @@ SETTINGS_FILE = "TextPastry.sublime-settings"
 def is_numeric(s):
     try:
         int(s)
+        return True
+    except ValueError:
+        return False
+def is_decimal(s):
+    try:
+        Decimal(s)
         return True
     except ValueError:
         return False
@@ -761,20 +768,24 @@ class TextPastryRangeParserCommand(sublime_plugin.TextCommand):
         self.view.run_command(result['command'], result['args'])
 class TextPastryRangeCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=0, stop=None, step=1, padding=1, fillchar='0', justify=None,
-            align=None, prefix=None, suffix=None, repeat_increment=None, loop=None, **kwargs):
-        print('found range command', start, stop, step)
-        start = int(start) if start else 0
-        step = int(step) if step else 1
-        stop = int(stop) if stop else None
-        padding = int(padding) if padding else 0
+            align=None, prefix=None, suffix=None, repeat_increment=None, loop=None, precision=0,
+            **kwargs):
+        print('found range command', start, stop, step, padding, precision, justify)
+        start = Decimal(start) if is_decimal(start) else 0
+        step = Decimal(step) if is_decimal(step) else 1
+        stop = Decimal(stop) if is_decimal(stop) else None
+        padding = int(padding) if is_numeric(padding) else 0
+        repeat_increment = int(repeat_increment) if repeat_increment and is_numeric(repeat_increment) else None
+        loop = int(loop) if loop and is_numeric(loop) else None
+        precision = int(precision) if is_numeric(precision) else 0
         # duplicate lines and add to selection on repeat
         if stop is not None:
             multiplier = 1
             if repeat_increment:
-                multiplier *= int(repeat_increment)
+                multiplier *= repeat_increment
             if loop:
-                multiplier *= int(loop)
-            repeat = len(range(start, stop, step))
+                multiplier *= loop
+            repeat = len(list(self.drange(start, stop, step)))
             if multiplier > 1:
                 repeat = (repeat + 1) * multiplier - 1
             sel = self.view.sel()
@@ -788,17 +799,21 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
         # if stop is negative, step needs to be negative aswell
         if (start > stop and step > 0):
             step = step * -1
-        items = [str(x) for x in range(start, stop, step)]
+        items = [x for x in self.drange(start, stop, step)]
         if repeat_increment and repeat_increment > 0:
             tmp = items
             items = []
             for val in tmp:
-                for x in range(repeat_increment):
+                for x in self.drange(repeat_increment):
                     items.append(val)
+        if precision > 1:
+            items = ["{:.{}f}".format(x, precision) for x in items]
+            if not justify:
+                justify = 'right'
         if padding > 1:
             fillchar = fillchar if fillchar is not None else '0'
             just = str.ljust if justify == 'left' else str.rjust
-            items = [self.pad(x, just, padding, fillchar) for x in items]
+            items = [self.pad(str(x), just, padding, fillchar) for x in items]
         # apply prefix/suffix
         if prefix:
             items = [prefix + x for x in items]
@@ -810,6 +825,11 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
             return '-' + just(s[1:], padding, fillchar)
         else:
             return just(s, padding, fillchar)
+    def drange(self, start, stop, step):
+        r = start
+        while r < stop:
+            yield r
+            r += step
 
 
 class TextPastryRedoCommand(sublime_plugin.WindowCommand):

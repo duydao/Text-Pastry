@@ -100,6 +100,14 @@
         {"match": "^range (-?\\d+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
         {"match": "^range (.*)$", "command": "text_pastry_range_parser", "args": {"text": "$0"} },
 
+        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)[, ](.)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4", "precision": "$5", "fillchar": "$6"} },
+        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4", "precision": "$5"} },
+        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)[, ]([\\d]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4"} },
+        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)[, ](-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2", "step": "$3"} },
+        {"match": "^drange (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"start": "$1", "stop": "$2"} },
+        {"match": "^drange (-?[\\d\\.]+)$", "command": "text_pastry_range", "args": {"stop": "$1"} },
+        {"match": "^drange (.*)$", "command": "text_pastry_range_parser", "args": {"text": "$0"} },
+
         // add x-arg support to date ranges
         {"match": "^(?:days|day) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },
         {"match": "^(?:weeks|week) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week", "repeat": "$2"} },

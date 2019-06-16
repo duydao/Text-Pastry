@@ -15,6 +15,12 @@ def is_numeric(s):
         return True
     except ValueError:
         return False
+def is_decimal(s):
+    try:
+        Decimal(s)
+        return True
+    except ValueError:
+        return False
 def settings():
     return sublime.load_settings(SETTINGS_FILE)
 def global_settings(key, default=None):
