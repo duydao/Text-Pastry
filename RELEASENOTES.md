@@ -1,3 +1,7 @@
+# Release Notes 1.6.1
+
+Fix "Pipe into selection" bug (#71)
+
 # Release Notes 1.6.0
 
 We've added a couple of new features and fixed some bugs. All changes are listed at the [1.6.1 Milestone page](https://github.com/duydao/Text-Pastry/milestone/14?closed=1)

@@ -21,6 +21,7 @@ Check out the [wiki](https://github.com/duydao/Text-Pastry/wiki/Examples) for ex
 - Duplicate values for pasting _(1, 1, 2, 2, 3, 3, 4, 4)_ or _(a, a, a, b, b, b, c, c, c)_
 
 ## What's new ##
+- 1.6.1: Fix "Pipe into selection" bug (#78)
 - 1.6.0: [New features!](https://github.com/duydao/Text-Pastry/blob/master/RELEASENOTES.md) Support for decimal and hexadecimal ranges - Thanks to [@SmartManoj](https://github.com/SmartManoj), [@miusuncle](https://github.com/miusuncle), [@sagunkho](https://github.com/sagunkho), [@slhck](https://github.com/slhck) and [@charleskawczynski](https://github.com/charleskawczynski)
 - 1.5.1: Bugfix release for Find by regex [#56](https://github.com/duydao/Text-Pastry/issues/56) - Thanks [@timLinscott](https://github.com/timLinscott)
 - 1.5.0: [New features!](https://github.com/duydao/Text-Pastry/blob/master/RELEASENOTES.md)
