@@ -821,6 +821,64 @@ class TextPastryRangeCommand(sublime_plugin.TextCommand):
         else:
             return just(s, padding, fillchar)
 
+class TextPastryBinCommand(sublime_plugin.TextCommand):
+    def run(self, edit, start=None, stop=None, step=1, padding=1, fillchar='0', justify=None,
+            align=None, prefix=None, suffix=None, repeat_increment=None, loop=None, **kwargs):
+        print('found bin command', start, stop, step)
+        start = int(start) if is_numeric(start) else None
+        stop = int(stop) if is_numeric(stop) else None
+        step = int(step) if is_numeric(step) else 1
+        padding = int(padding) if is_numeric(padding) else 0
+        # duplicate lines and add to selection on repeat
+        if stop is not None:
+            if start is None:
+                if stop == 1:
+                    start = len(self.view.sel())
+                elif stop == 0:
+                    start = len(self.view.sel()) - 1
+            multiplier = 1
+            if is_numeric(repeat_increment):
+                multiplier *= int(repeat_increment)
+            if is_numeric(loop):
+                multiplier *= int(loop)
+            repeat = len(range(start, stop, step))
+            if multiplier > 1:
+                repeat = (repeat + 1) * multiplier - 1
+            sel = self.view.sel()
+            if len(sel) == 1:
+                TextPastryTools.duplicate(self.view, edit, sel[0], repeat)
+        if start is None:
+            start = 0
+        # adjust stop if none was given
+        if stop is None:
+            stop = start + (len(self.view.sel()) + 1) * step
+        if global_settings('range_include_end_index', True):
+            stop += step
+        # if stop is negative, step needs to be negative aswell
+        if (start > stop and step > 0):
+            step = step * -1
+        items = [str(bin(x)).split("b")[1] for x in range(start, stop, step)]
+        if repeat_increment and repeat_increment > 0:
+            tmp = items
+            items = []
+            for val in tmp:
+                for x in range(repeat_increment):
+                    items.append(val)
+        if padding > 1:
+            fillchar = fillchar if fillchar is not None else '0'
+            just = str.ljust if justify == 'left' else str.rjust
+            items = [self.pad(x, just, padding, fillchar) for x in items]
+        # apply prefix/suffix
+        if prefix:
+            items = [prefix + x for x in items]
+        if suffix:
+            items = [x + suffix for x in items]
+        self.view.run_command("text_pastry_insert_text", {"items": items, "align": align})
+    def pad(self, s, just, padding, fillchar):
+        if s.startswith('-'):
+            return '-' + just(s[1:], padding, fillchar)
+        else:
+            return just(s, padding, fillchar)
 
 class TextPastryDecimalRangeCommand(sublime_plugin.TextCommand):
     def run(self, edit, start=None, stop=None, step=1, padding=1, fillchar='0', justify=None,
