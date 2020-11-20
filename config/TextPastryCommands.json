@@ -117,6 +117,12 @@
         {"match": "^(HRANGE|HEX) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "hexFormatFlag": "X"} },
         {"match": "^(HRANGE|HEX) (0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"stop": "$2", "hexFormatFlag": "X"} },
 
+        {"match": "^bin (-?\\d+)[-, ](-?\\d+)[, ](-?\\d+)[, ](\\d+)[, ](.)$", "command": "text_pastry_bin", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4", "fillchar": "$5"} },
+        {"match": "^bin (-?\\d+)[-, ](-?\\d+)[, ](-?\\d+)[, ](\\d+)$", "command": "text_pastry_bin", "args": {"start": "$1", "stop": "$2", "step": "$3", "padding": "$4"} },
+        {"match": "^bin (-?\\d+)[-, ](-?\\d+)[, ](-?\\d+)$", "command": "text_pastry_bin", "args": {"start": "$1", "stop": "$2", "step": "$3"} },
+        {"match": "^bin (-?\\d+)[-, ](-?\\d+)$", "command": "text_pastry_bin", "args": {"start": "$1", "stop": "$2"} },
+        {"match": "^bin (-?\\d+)$", "command": "text_pastry_bin", "args": {"stop": "$1"} },
+        
         // add x-arg support to date ranges
         {"match": "^(?:days|day) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },
         {"match": "^(?:weeks|week) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week", "repeat": "$2"} },
