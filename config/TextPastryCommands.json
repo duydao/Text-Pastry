@@ -123,6 +123,16 @@
         {"match": "^bin (-?\\d+)[-, ](-?\\d+)$", "command": "text_pastry_bin", "args": {"start": "$1", "stop": "$2"} },
         {"match": "^bin (-?\\d+)$", "command": "text_pastry_bin", "args": {"stop": "$1"} },
         
+        // generate roman
+        {"match": "^ROMAN (\\d+)[-, ](\\d+) (\\d+)$", "command": "text_pastry_roman", "args": {"start": "$1", "stop": "$2", "step": "$3"} },
+        {"match": "^ROMAN (\\d+)[-, ](\\d+)$", "command": "text_pastry_roman", "args": {"start": "$1", "stop": "$2"} },
+        {"match": "^ROMAN (\\d+)$", "command": "text_pastry_roman", "args": {"stop": "$1"} },
+
+        // generate roman lowercase
+        {"match": "^roman (\\d+)[-, ](\\d+) (\\d+)$", "command": "text_pastry_roman", "args": {"start": "$1", "stop": "$2", "step": "$3", "lowercase": true}},
+        {"match": "^roman (\\d+)[-, ](\\d+)$", "command": "text_pastry_roman", "args": {"start": "$1", "stop": "$2", "lowercase": true}},
+        {"match": "^roman (\\d+)$", "command": "text_pastry_roman", "args": {"stop": "$1", "lowercase": true}},
+
         // add x-arg support to date ranges
         {"match": "^(?:days|day) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "repeat": "$2"} },
         {"match": "^(?:weeks|week) ?((?:\\b).*) x(\\d+)$", "command": "text_pastry_date_range", "args": {"text": "$1", "step_size": "week", "repeat": "$2"} },
