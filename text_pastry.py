@@ -1023,6 +1023,62 @@ class TextPastryHexRangeCommand(sublime_plugin.TextCommand):
             return False
 
 
+class TextPastryRomanCommand(sublime_plugin.TextCommand):
+    ints = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    nums = ('M',  'CM', 'D', 'CD','C', 'XC','L','XL','X','IX','V','IV','I')
+    def run(self, edit, start=1, stop=None, step=None,
+        repeat_increment=None, loop=None, lowercase=False):
+        start = int(start) if is_numeric(start) else None
+        stop = int(stop) if is_numeric(stop) else None
+        step = int(step) if is_numeric(step) else 1
+        # duplicate lines and add to selection on repeat
+        if stop is not None:
+            if start is None:
+                if stop == 1:
+                    start = len(self.view.sel())
+                elif stop == 0:
+                    start = len(self.view.sel()) - 1
+            multiplier = 1
+            if is_numeric(repeat_increment):
+                multiplier *= int(repeat_increment)
+            if is_numeric(loop):
+                multiplier *= int(loop)
+            repeat = len(range(start, stop, step))
+            if multiplier > 1:
+                repeat = (repeat + 1) * multiplier - 1
+            sel = self.view.sel()
+            if len(sel) == 1:
+                TextPastryTools.duplicate(self.view, edit, sel[0], repeat)
+        # adjust stop if none was given
+        if stop is None:
+            stop = start + (len(self.view.sel()) + 1) * step
+        # Roman value caps
+        start = start if start > 0 else 1
+        stop = stop if stop < 4000 else 3999
+        # adjust if include end
+        if global_settings('range_include_end_index', True):
+            stop += step
+        items = [self.roman_numeral(r, lowercase) for r in range(start, stop, step)]
+        if repeat_increment and repeat_increment > 0:
+            tmp = items
+            items = []
+            for val in tmp:
+                for x in range(repeat_increment):
+                    items.append(val)
+        self.view.run_command("text_pastry_insert_text", {"items": items})
+    def roman_numeral(self, value, lowercase):
+        if not 0 < value < 4000:
+            return ''
+        result = []
+        for index, int_value in enumerate(self.ints):
+            count = int(value / int_value)
+            result.append(self.nums[index] * count)
+            value -= int_value * count
+        roman = ''.join(result)
+        if lowercase: roman = roman.lower()
+        return roman
+
+
 class TextPastryRedoCommand(sublime_plugin.WindowCommand):
     def run(self):
         hs = sublime.load_settings("TextPastryHistory.sublime-settings")
