@@ -107,6 +107,12 @@
         {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)[-, ](-?[\\d\\.]+)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "start": "$2", "stop": "$3"} },
         {"match": "^(drange|decimal|dec) (-?[\\d\\.]+)$", "command": "text_pastry_decimal_range", "args": {"text": "$1", "stop": "$2"} },
 
+        {"match": "^(gsequence|gprogression|grange|geo) ([\\d\\.]+)[-, ]([\\d\\.]+)[, ]([\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)[, ](.)$", "command": "text_pastry_decimal_geometric_sequence", "args": {"text": "$1", "start": "$2", "stop": "$3", "faktor": "$4", "padding": "$5", "precision": "$6", "fillchar": "$7"} },
+        {"match": "^(gsequence|gprogression|grange|geo) ([\\d\\.]+)[-, ]([\\d\\.]+)[, ]([\\d\\.]+)[, ]([\\d]+)[, ]([\\d]+)$", "command": "text_pastry_decimal_geometric_sequence", "args": {"text": "$1", "start": "$2", "stop": "$3", "faktor": "$4", "padding": "$5", "precision": "$6"} },
+        {"match": "^(gsequence|gprogression|grange|geo) ([\\d\\.]+)[-, ]([\\d\\.]+)[, ]([\\d\\.]+)[, ]([\\d]+)$", "command": "text_pastry_decimal_geometric_sequence", "args": {"text": "$1", "start": "$2", "stop": "$3", "faktor": "$4", "padding": "$5"} },
+        {"match": "^(gsequence|gprogression|grange|geo) ([\\d\\.]+)[-, ]([\\d\\.]+)[, ]([\\d\\.]+)$", "command": "text_pastry_decimal_geometric_sequence", "args": {"text": "$1", "start": "$2", "stop": "$3", "faktor": "$4"} },
+        {"match": "^(gsequence|gprogression|grange|geo) ([\\d\\.]+)[-, ]([\\d\\.]+)$", "command": "text_pastry_decimal_geometric_sequence", "args": {"text": "$1", "start": "$2", "stop": "$3"} },
+
         {"match": "^(range|hrange|hex) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)[, ]([\\d]+|0x[\\da-fA-F]+)[, ]([\\d]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "step": "$4", "width": "$5"} },
         {"match": "^(range|hrange|hex) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)[, ]([\\d]+|0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3", "step": "$4"} },
         {"match": "^(range|hrange|hex) (0x[\\da-fA-F]+)[-, ](0x[\\da-fA-F]+)$", "command": "text_pastry_hex_range", "args": {"start": "$2", "stop": "$3"} },
