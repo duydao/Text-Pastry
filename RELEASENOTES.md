@@ -1,6 +1,18 @@
 # Release Notes 1.6.1
 
 Fix "Pipe into selection" bug (#71)
+Fix #84 by changing the default keybindings for windows (#84)
+
+The legacy keybindings for windows can be added to the default keybindings (Preferences -> Key Bindings) file if requried:
+
+`[
+    { "keys": ["ctrl+alt+n"], "command": "text_pastry_show_command_line", "args": { "text": "" } },
+    { "keys": ["ctrl+alt+t"], "command": "text_pastry_show_menu" },
+    { "keys": ["ctrl+alt+v"], "command": "text_pastry_insert_text", "args": { "clipboard": true, "separator": "\\n" } },
+    { "keys": ["ctrl+alt+b"], "command": "text_pastry_redo" },
+    ...
+]
+`
 
 # Release Notes 1.6.0
 
