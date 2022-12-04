@@ -1,9 +1,4 @@
 [
-    { "keys": ["ctrl+shift+alt+n"], "command": "text_pastry_show_command_line", "args": { "text": "" } },
-    { "keys": ["ctrl+shift+alt+t"], "command": "text_pastry_show_menu" },
-    { "keys": ["ctrl+shift+alt+v"], "command": "text_pastry_insert_text", "args": { "clipboard": true, "separator": "\\n" } },
-    { "keys": ["ctrl+shift+alt+b"], "command": "text_pastry_redo" },
-
     { "keys": ["up"], "command": "text_pastry_history_navigator", "args": { "reverse": true },
       "context": [{ "key": "setting.text_pastry_command_line", "operator": "equal", "operand": true }, {"key": "panel_has_focus"}] },
 

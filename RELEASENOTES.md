@@ -1,9 +1,9 @@
 # Release Notes 1.6.2
-- Fix #84 by changing the default keybindings for windows (#84)
 - Fix toggle_sidebar keybindings bug (#93)
 
-The legacy keybindings for windows can be added to the default keybindings (Preferences -> Key Bindings) file if requried:
+- Fix #84 by removing the default keybindings for windows (#84)
 
+The legacy keybindings for windows can be added to the default keybindings (Preferences -> Key Bindings) file if requried:
 ```
 [
     { "keys": ["ctrl+alt+n"], "command": "text_pastry_show_command_line", "args": { "text": "" } },
