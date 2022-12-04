@@ -1,6 +1,4 @@
-# Release Notes 1.6.1
-
-- Fix "Pipe into selection" bug (#71)
+# Release Notes 1.6.2
 - Fix #84 by changing the default keybindings for windows (#84)
 
 The legacy keybindings for windows can be added to the default keybindings (Preferences -> Key Bindings) file if requried:
@@ -14,6 +12,10 @@ The legacy keybindings for windows can be added to the default keybindings (Pref
     ...
 ]
 ```
+
+# Release Notes 1.6.1
+
+- Fix "Pipe into selection" bug (#71)
 
 # Release Notes 1.6.0
 
