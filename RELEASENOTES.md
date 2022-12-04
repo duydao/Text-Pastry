@@ -5,14 +5,15 @@ Fix #84 by changing the default keybindings for windows (#84)
 
 The legacy keybindings for windows can be added to the default keybindings (Preferences -> Key Bindings) file if requried:
 
-`[
+```
+[
     { "keys": ["ctrl+alt+n"], "command": "text_pastry_show_command_line", "args": { "text": "" } },
     { "keys": ["ctrl+alt+t"], "command": "text_pastry_show_menu" },
     { "keys": ["ctrl+alt+v"], "command": "text_pastry_insert_text", "args": { "clipboard": true, "separator": "\\n" } },
     { "keys": ["ctrl+alt+b"], "command": "text_pastry_redo" },
     ...
 ]
-`
+```
 
 # Release Notes 1.6.0
 
@@ -33,14 +34,16 @@ Use the following command to generate decimal list
 for example:
 `dec 1.25 3 0.25` will generate the following list:
 
-`1.25
+```
+1.25
 1.50
 1.75
 2.00
 2.25
 2.50
 2.75
-3.00`
+3.00
+```
 
 Text Pastry will reverse the list when start is lower than stop.
 
@@ -52,14 +55,16 @@ Use the following command to generate hexadecimal list
 for example:
 `hex 1.25 3 0.25` will generate the following list:
 
-`1.25
+```
+1.25
 1.50
 1.75
 2.00
 2.25
 2.50
 2.75
-3.00`
+3.00
+```
 
 Text Pastry will reverse the list when start is lower than stop.
 
