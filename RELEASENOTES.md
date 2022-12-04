@@ -1,5 +1,6 @@
 # Release Notes 1.6.2
 - Fix #84 by changing the default keybindings for windows (#84)
+- Fix toggle_sidebar keybindings bug (#93)
 
 The legacy keybindings for windows can be added to the default keybindings (Preferences -> Key Bindings) file if requried:
 
